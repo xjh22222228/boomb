@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="80px" viewBox="0 0 100 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-file-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M32,5 L64,5 C65.1045695,5 66,5.8954305 66,7 L66,58 C66,59.1045695 65.1045695,60 64,60 L2,60 C0.8954305,60 1.3527075e-16,59.1045695 0,58 L0,5 L0,2 C-1.3527075e-16,0.8954305 0.8954305,6.46995335e-16 2,4.4408921e-16 L27.0387503,3.55271368e-15 C27.6463177,4.52036193e-15 28.2209436,0.276179438 28.6004879,0.750609905 L32,5 Z" id="path-1"></path>
+        <path d="M32,5 L64,5 C65.1045695,5 66,5.8954305 66,7 L66,56 C66,57.1045695 65.1045695,58 64,58 L2,58 C0.8954305,58 1.3527075e-16,57.1045695 0,56 L0,5 L0,2 C-1.3527075e-16,0.8954305 0.8954305,6.46995335e-16 2,4.4408921e-16 L27.0387503,3.55271368e-15 C27.6463177,4.52036193e-15 28.2209436,0.276179438 28.6004879,0.750609905 L32,5 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-281.000000, -1978.000000)">
+            <g id="fileico/folder_large" transform="translate(281.000000, 1978.000000)">
+                <g id="ic_folder_large">
+                    <rect id="Rectangle-7" x="0" y="0" width="100" height="80"></rect>
+                    <g id="ico_folder-copy-2" transform="translate(17.000000, 9.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Combined-Shape" fill="#5C99E7" xlink:href="#path-1"></use>
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <use id="Combined-Shape" fill="#6AABFF" xlink:href="#path-3"></use>
+                        <polygon id="Rectangle-6" fill="#4C94F0" mask="url(#mask-4)" points="0 0 66 0 66 13 0 13"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

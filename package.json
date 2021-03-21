@@ -1,0 +1,42 @@
+{
+  "name": "battle",
+  "version": "1.0.0",
+  "private": true,
+  "author": "xiejiahe",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@types/bytes": "^3.1.0",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/nprogress": "^0.2.0",
+    "axios": "^0.21.1",
+    "bytes": "^3.1.0",
+    "core-js": "^3.9.1",
+    "element-plus": "^1.0.2-beta.35",
+    "js-base64": "^3.6.0",
+    "lodash.debounce": "^4.0.8",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "viewerjs": "^1.9.0",
+    "vue": "^3.0.4",
+    "vue-class-component": "^8.0.0-0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.11",
+    "@vue/cli-plugin-router": "~4.5.11",
+    "@vue/cli-plugin-typescript": "~4.5.11",
+    "@vue/cli-plugin-vuex": "~4.5.11",
+    "@vue/cli-service": "~4.5.11",
+    "@vue/compiler-sfc": "^3.0.7",
+    "babel-plugin-component": "^1.1.1",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.2.3"
+  }
+}

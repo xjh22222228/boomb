@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="134px" height="134px" viewBox="0 0 134 134" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-zip-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-448.000000, -1587.000000)">
+            <g id="fileico/zip_large" transform="translate(448.000000, 1587.000000)">
+                <g id="ico_zip_large">
+                    <rect id="Rectangle-8" x="0" y="0" width="134" height="134"></rect>
+                    <path d="M11,1.9982312 C11,0.894638583 11.9015377,0 12.991504,0 L121.008496,0 C122.108373,0 123,0.89112382 123,1.9982312 L123,132.001769 C123,133.105361 122.098462,134 121.008496,134 L12.991504,134 C11.8916267,134 11,133.108876 11,132.001769 L11,1.9982312 Z" id="bg" fill="#E4E4E4"></path>
+                    <path d="M12,1.99771747 C12,1.44669333 12.4432021,1 13.0015666,1 L120.998433,1 C121.551583,1 122,1.44866088 122,1.99771747 L122,131.002283 C122,131.553307 121.556798,132 120.998433,132 L13.0015666,132 C12.4484166,132 12,131.551339 12,131.002283 L12,1.99771747 Z" id="bg" fill="#FFFFFF"></path>
+                    <path d="M60,46 L60,51 L68,51 L68,46 L90,46 L90,90 L46,90 L46,46 L60,46 Z M68,51 L68,56 L76,56 L76,51 L68,51 Z M60,56 L60,61 L68,61 L68,56 L60,56 Z M68,61 L68,66 L76,66 L76,61 L68,61 Z M60,66 L60,71 L68,71 L68,66 L60,66 Z M68,71 L68,76 L76,76 L76,71 L68,71 Z" id="Combined-Shape" fill="#4C94F0"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
