@@ -151,7 +151,7 @@ export default defineComponent({
     }
 
     function goDir() {
-      if (!isImage.value) {
+      if (fileType === 'dir') {
         router.replace({
           path: '/',
           query: {
