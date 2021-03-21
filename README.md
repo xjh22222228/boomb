@@ -1,14 +1,14 @@
 
 <p align="center">
   <br />
-  <b>Bed</b>
+  <b>Battle</b>
   <p align="center">Manage your pictures easily.</p>
   <p align="center">
-    <img src="https://img.shields.io/github/v/release/xjh22222228/bed" />
+    <img src="https://img.shields.io/github/v/release/xjh22222228/battle" />
     <img alt="Vue3" src="https://img.shields.io/static/v1.svg?label=&message=Vue3&style=flat-square&color=42b983">
-    <img src="https://img.shields.io/github/license/xjh22222228/bed" />
-    <a href="https://hits.dwyl.com/xjh22222228/bed">
-      <img src="https://hits.dwyl.com/xjh22222228/bed.svg" />
+    <img src="https://img.shields.io/github/license/xjh22222228/battle" />
+    <a href="https://hits.dwyl.com/xjh22222228/battle">
+      <img src="https://hits.dwyl.com/xjh22222228/battle.svg" />
     </a>
   </p>
 </p>
@@ -18,7 +18,7 @@
 
 
 ## Screenshot
-![](https://cdn.jsdelivr.net/gh/xjh22222228/public@gh-pages/bed/screenshot.gif)
+![](media/screenshot.png)
 
 
 
@@ -26,7 +26,7 @@
 ## Usage
 1. [Create a New Repository](https://github.com/new)
 2. Get Token => [https://github.com/settings/tokens](https://github.com/settings/tokens)
-3. Open [https://bed-eta.vercel.app/](https://bed-eta.vercel.app/).
+3. Open [https://battle-nine.vercel.app](https://battle-nine.vercel.app).
 
 
 
