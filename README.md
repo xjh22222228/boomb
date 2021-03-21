@@ -2,14 +2,11 @@
 <p align="center">
   <br />
   <b>Battle</b>
-  <p align="center">Manage your pictures easily.</p>
+  <p align="center">Manage your pictures easily for Github.</p>
   <p align="center">
     <img src="https://img.shields.io/github/v/release/xjh22222228/battle" />
     <img alt="Vue3" src="https://img.shields.io/static/v1.svg?label=&message=Vue3&style=flat-square&color=42b983">
     <img src="https://img.shields.io/github/license/xjh22222228/battle" />
-    <a href="https://hits.dwyl.com/xjh22222228/battle">
-      <img src="https://hits.dwyl.com/xjh22222228/battle.svg" />
-    </a>
   </p>
 </p>
 

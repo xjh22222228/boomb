@@ -25,5 +25,19 @@
   </head>
   <body>
     <div id="xiejiahe-app"></div>
+    <script>
+      var isDev = "<%= process.env.NODE_ENV %>" === 'development';
+      var _hmt = _hmt || [];
+      (function() {
+        if (isDev) {
+          return;
+        }
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?9d67b69b64058e62a3733f6aff7cace3";
+        hm.async = true
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
   </body>
 </html>

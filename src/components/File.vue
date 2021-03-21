@@ -27,10 +27,25 @@
           <template #prepend>
             <a :href="cdn1" target="_blank">CDN1</a>
           </template>
+          <template #append>
+            <i
+              class="el-icon-document-copy copy"
+              :data-clipboard-text="cdn1"
+            >
+            </i>
+          </template>
         </el-input>
+
         <el-input v-model="cdn2">
           <template #prepend>
             <a :href="cdn2" target="_blank">CDN2</a>
+          </template>
+          <template #append>
+            <i
+              class="el-icon-document-copy copy"
+              :data-clipboard-text="cdn2"
+            >
+            </i>
           </template>
         </el-input>
       </div>
@@ -207,6 +222,10 @@ export default defineComponent({
     font-size: 14px;
     margin-top: 3px;
   }
+}
+
+.copy {
+  cursor: pointer;
 }
 
 .file-input {

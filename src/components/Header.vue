@@ -11,14 +11,14 @@
 
       <el-button
         icon="el-icon-plus"
-        @click.native="toggleModal"
+        @click="toggleModal"
       >
         新建文件夹
       </el-button>
     </div>
 
     <div class="right">
-      <span class="user-info">{{ user.name }}</span>
+      <span class="user-info">{{ user.name || user.login }}</span>
       <a :href="user.html_url" target="_blank">
         <el-avatar :src="user.avatar_url"></el-avatar>
       </a>

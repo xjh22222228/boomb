@@ -69,6 +69,7 @@ import { ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
+import { initClipboard } from '@/utils';
 
 export default defineComponent({
   components: { File: FileComponent, Loading },
@@ -182,6 +183,7 @@ export default defineComponent({
     watch(dirList, () => {
       nextTick(() => {
         initViewer()
+        initClipboard()
       })
     })
 
