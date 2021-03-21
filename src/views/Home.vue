@@ -38,9 +38,9 @@
           </template>
       </el-popconfirm>
 
-      <el-checkbox v-model="isCheckAll" class="check-all" v-if="dirList.length > 0">全选</el-checkbox>
-
-      <Loading />
+      <el-checkbox v-model="isCheckAll" class="check-all" v-if="dirList.length > 0">
+        {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : '全选' }}
+      </el-checkbox>
     </div>
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
@@ -282,6 +282,10 @@ export default defineComponent({
 
   .del-btn {
     margin: 20px 0 0 50px;
+  }
+
+  .el-checkbox__label {
+    color: #666 !important;
   }
 }
 

@@ -1,9 +1,12 @@
 <template>
   <header class="header">
+    <Loading />
+
     <div class="left">
       <el-button
         icon="el-icon-upload2"
         class="mr10"
+        type="primary"
       >
         上传文件
         <input multiple type="file" class="file" @change="handleUploadFile($event)" />

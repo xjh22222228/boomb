@@ -3,33 +3,6 @@
     <svg height="80" viewBox="-30 0 255 80" width="255">
       <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
     </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
-    <svg height="80" viewBox="-30 0 255 80" width="255">
-      <ellipse cx="25" cy="20" fill="none" rx="10" ry="10"></ellipse>
-    </svg>
   </div>
 </template>
 
@@ -69,10 +42,9 @@ $delay: 75ms;
 
 .contain {
   position: absolute;
-  top: -10px;
+  top: 10px;
   left: 50%;
-  margin-left: -125px;
-  width: 255px;
+  margin-left: -30px;
   display: none;
 
   svg {

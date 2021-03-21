@@ -37,6 +37,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Loading from '@/components/Loading.vue'
 import Action from '@/components/Action.vue'
+import Sort from '@/components/Sort.vue'
 
 const app = createApp(App)
 
@@ -67,6 +68,7 @@ app.component(Header.name, Header)
 app.component(Footer.name, Footer)
 app.component(Loading.name, Loading)
 app.component(Action.name, Action)
+app.component(Sort.name, Sort)
 
 app
   .use(store)
