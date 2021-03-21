@@ -13,6 +13,11 @@ body {
   overflow-x: hidden;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .w100 {
   width: 100%;
 }
@@ -22,11 +27,11 @@ body {
 }
 
 .mb10 {
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
 }
 
 .mb20 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .zoom-in {

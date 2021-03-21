@@ -27,13 +27,16 @@ import {
   ElCheckbox,
   ElPopconfirm,
   ElForm,
-  ElFormItem
+  ElFormItem,
+  ElMessageBox,
+  ElTooltip
 } from 'element-plus'
 
 import File from '@/components/File.vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Loading from '@/components/Loading.vue'
+import Action from '@/components/Action.vue'
 
 const app = createApp(App)
 
@@ -56,11 +59,14 @@ app.component(ElCheckbox.name, ElCheckbox)
 app.component(ElPopconfirm.name, ElPopconfirm)
 app.component(ElForm.name, ElForm)
 app.component(ElFormItem.name, ElFormItem)
+app.component(ElMessageBox.name, ElMessageBox)
+app.component(ElTooltip.name, ElTooltip)
 
 app.component(File.name, File)
 app.component(Header.name, Header)
 app.component(Footer.name, Footer)
 app.component(Loading.name, Loading)
+app.component(Action.name, Action)
 
 app
   .use(store)

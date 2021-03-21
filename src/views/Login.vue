@@ -31,6 +31,7 @@
           placeholder="输入Token进行验证"
           class="mb20"
           type="password"
+          @keyup.enter="handleLogin"
         >
           <template #prepend>Token</template>
           <template #prefix>

@@ -30,10 +30,5 @@ export default defineComponent({
   color: #fff;
   padding: 30px 0;
   font-size: 16px;
-
-  a {
-    text-decoration: none;
-    color: #fff;
-  }
 }
 </style>

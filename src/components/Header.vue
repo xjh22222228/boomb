@@ -22,14 +22,16 @@
       <a :href="user.html_url" target="_blank">
         <el-avatar :src="user.avatar_url"></el-avatar>
       </a>
-      <img
-        src="@/assets/logout.svg"
-        alt=""
-        class="logout"
-        draggable="false"
-        title="退出"
-        @click="handleLogout"
-      >
+
+      <el-tooltip content="Logout" placement="bottom-start">
+        <img
+          src="@/assets/logout.svg"
+          alt=""
+          class="logout"
+          draggable="false"
+          @click="handleLogout"
+        >
+      </el-tooltip>
     </div>
 
     <el-dialog
