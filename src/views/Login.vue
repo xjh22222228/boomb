@@ -8,6 +8,7 @@
           v-model="id"
           placeholder="xjh22222228/battle"
           class="mb20"
+          @blur="handleIdBlur"
         >
           <template #prepend>&nbsp;&nbsp;&nbsp;I D&nbsp;&nbsp;</template>
           <template #prefix>
@@ -20,7 +21,7 @@
           placeholder="main"
           class="mb20"
         >
-          <template #prepend>&nbsp;分 支</template>
+          <template #prepend>&nbsp;分 支&nbsp;</template>
           <template #prefix>
             <i class="el-input__icon el-icon-attract"></i>
           </template>
@@ -53,21 +54,25 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 import { verifyToken } from '@/services'
+import { IBranch } from '@/store'
 
 export default defineComponent({
   name: 'Login',
 
   setup() {
+    const store = useStore()
     const id = ref('')
-    const branch = ref('main')
+    const branch = ref('')
     const token = ref('')
     const loading = ref(false)
     const valid = computed<boolean>(() => {
       const vid = id.value.split('/').length === 2
       return Boolean(vid && branch.value && token.value)
     })
+    const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 
     const handleLogin = function() {
       loading.value = true
@@ -83,12 +88,28 @@ export default defineComponent({
       })
     }
 
+    function handleIdBlur() {
+      const splitId = id.value.split('/')
+      if (splitId.length === 2 && splitId[0] && splitId[1]) {
+        store.dispatch('getBranchAll', id.value)
+      }
+    }
+
+    // Default branch
+    watch(branchAll, () => {
+      if (branchAll.value.length > 0) {
+        branch.value = branchAll.value[0].name
+      }
+    })
+
     return {
+      branchAll,
       id,
       branch,
       token,
       valid,
       loading,
+      handleIdBlur,
       handleLogin
     }
   }

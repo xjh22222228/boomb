@@ -29,7 +29,9 @@ import {
   ElForm,
   ElFormItem,
   ElMessageBox,
-  ElTooltip
+  ElTooltip,
+  ElSelect,
+  ElOption
 } from 'element-plus'
 
 import File from '@/components/File.vue'
@@ -62,6 +64,8 @@ app.component(ElForm.name, ElForm)
 app.component(ElFormItem.name, ElFormItem)
 app.component(ElMessageBox.name, ElMessageBox)
 app.component(ElTooltip.name, ElTooltip)
+app.component(ElSelect.name, ElSelect)
+app.component(ElOption.name, ElOption)
 
 app.component(File.name, File)
 app.component(Header.name, Header)

@@ -4,7 +4,7 @@ import bytes from 'bytes'
 import config from '../../config'
 import router from '@/router'
 import { createStore } from 'vuex'
-import { createFile, getUser, readDir, deleteFile } from '@/services'
+import { createFile, getUser, readDir, deleteFile, getBranchAll } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64 } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
@@ -29,6 +29,11 @@ export type IFile = {
   sha: string
 }
 
+export type IBranch = {
+  name: string
+  protected: boolean
+}
+
 type State = {
   user: User
   token: string|null
@@ -36,7 +41,8 @@ type State = {
   dir: IFile[]
   cacheDir: {
     [key: string]: IFile[]
-  }
+  },
+  branchAll: IBranch[]
 }
 
 const token = config.token
@@ -58,7 +64,8 @@ export default createStore<State>({
       dir: [],
 
       // 缓存目录列表
-      cacheDir: {}
+      cacheDir: {},
+      branchAll: []
     }
   },
 
@@ -75,6 +82,10 @@ export default createStore<State>({
           return item
         })
         .sort((a: IFile, b: IFile) => a.size - b.size)
+    },
+
+    saveBranchAll(state, branchAll: IBranch[]) {
+      state.branchAll = branchAll.filter((b: IBranch) => !b.protected)
     }
   },
 
@@ -155,6 +166,11 @@ export default createStore<State>({
 
     async deleteFile(_, file: IFile) {
       await deleteFile(file)
+    },
+
+    async getBranchAll({ commit }, owner) {
+      const res = await getBranchAll(owner)
+      commit('saveBranchAll', res.data || [])
     }
   },
 

@@ -7,8 +7,11 @@ import { ElNotification } from 'element-plus'
 
 const token = config.token
 let loadingEl: HTMLElement|null
+const defaultTitle = document.title
 
 function startLoad() {
+  document.title = '马上就好...'
+  NProgress.start()
   loadingEl ||= document.getElementById('loading')
   if (loadingEl) {
     loadingEl.style.display = 'block'
@@ -16,6 +19,8 @@ function startLoad() {
 }
 
 function stopLoad() {
+  document.title = defaultTitle
+  NProgress.done()
   if (loadingEl) {
     loadingEl.style.display = 'none'
   }
@@ -23,9 +28,9 @@ function stopLoad() {
 
 const instance = axios.create({
   baseURL: 'https://api.github.com',
-  timeout: 600000, // 10 minute
+  timeout: 600000 * 3, // 30 minute
   headers: {
-    Authorization: `token ${token}`
+    Authorization: token ? `token ${token}` : undefined
   }
 })
 
@@ -36,7 +41,6 @@ interface ResponseData {
 }
 
 instance.interceptors.request.use(config => {
-  NProgress.start()
   startLoad()
 
   // 不缓存
@@ -55,7 +59,6 @@ instance.interceptors.request.use(config => {
 })
 
 instance.interceptors.response.use(resp => {
-  NProgress.done()
   stopLoad()
 
   const status: number = resp.status
@@ -77,7 +80,6 @@ instance.interceptors.response.use(resp => {
     title: `${error.response?.status ?? -1}`,
     message: error.response?.data?.message || '未知错误'
   })
-  NProgress.done()
   stopLoad()
   return Promise.reject(error)
 })

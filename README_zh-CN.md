@@ -24,7 +24,7 @@
 
 
 
-## 使用
+## 像数 1, 2, 3 一样容易
 1. [创建一个仓库](https://github.com/new)
 2. 申请Token => [https://github.com/settings/tokens](https://github.com/settings/tokens)
 3. 打开 [https://battle-nine.vercel.app](https://battle-nine.vercel.app).

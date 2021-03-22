@@ -138,3 +138,8 @@ export function getCdn(cdn: CDN, path: string, isCache: boolean = true) {
 
   return url
 }
+
+// 获取仓库下的所有分支
+export function getBranchAll(owner: string) {
+  return get(`/repos/${owner}/branches`)
+}

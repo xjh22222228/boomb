@@ -47,7 +47,7 @@ export default defineComponent({
         dangerouslyUseHTMLString: true,
         message: `
           <p class="mb10">Token: ${config.token}</p>
-          <p class="mb10">ID: <a href="https://github.com/${config.id}" target="_blank">${config.id}</a></p>
+          <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
           <p class="mb10">分支: ${config.branch}</p>
         `,
       }).catch(() => {})
