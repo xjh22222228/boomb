@@ -13,9 +13,17 @@ body {
   overflow-x: hidden;
 }
 
+.ch {
+  color: inherit !important;
+}
+
 a {
   text-decoration: none;
-  color: inherit;
+  color: #1890ff;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .w100 {

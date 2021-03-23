@@ -55,14 +55,21 @@
           <slot></slot>
 
           <div class="file">
-            <img
-              :src="fileUrl"
-              alt=""
+            <div
               class="file-icon"
-              :class="{'zoom-in': isImage, 'image': isImage}"
-              draggable="false"
-              @click="goDir"
+              :class="{'no-load': !imgLoad, error: hasError}"
             >
+              <img
+                v-show="!hasError"
+                :src="fileUrl"
+                :class="{'zoom-in': isImage, 'image': isImage}"
+                draggable="false"
+                @click="goDir"
+                @load="imgLoad = false"
+                @error="hasError = true"
+                alt=""
+              />
+            </div>
             <div class="filename">{{ data.name }}</div>
           </div>
         </div>
@@ -103,6 +110,8 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
     const isImage = ref(false)
+    const hasError = ref(false)
+    const imgLoad = ref(true)
     const fileName = props.data.name.toLowerCase()
     const fileType = props.data.type
     const filePath = props.data.path
@@ -181,11 +190,13 @@ export default defineComponent({
       fileType,
       isImage,
       isFile: fileType !== 'dir',
+      hasError,
+      imgLoad,
       cdn1: getCdn(CDN.Jsdelivr, filePath, false),
       cdn2: getCdn(CDN.Github, filePath, false),
 
       handleUploadFile,
-      goDir
+      goDir,
     }
   }
 })
@@ -193,12 +204,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .file {
-  padding: 10px 0;
+  padding: 10px 20px;
   width: 100px;
   text-align: center;
   transition: .1s;
   border-radius: 5px;
-  margin: 0 30px 15px 30px;
+  margin: 0 10px 15px 10px;
   cursor: pointer;
 
   &:hover {
@@ -206,11 +217,39 @@ export default defineComponent({
   }
 
   .file-icon {
+    position: relative;
     width: 100px;
     height: 80px;
-    object-fit: contain;
     border: 1px solid #eee;
     cursor: pointer;
+
+    &.no-load:after {
+      display: none;
+    }
+
+    &.error:after {
+      background: #fff url("~@/assets/error.svg") no-repeat 100% 100%;
+      background-position: center;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &:after {
+      content: "";
+      z-index: 9;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff url("~@/assets/loading.svg") no-repeat;
+      background-size: 80px;
+      background-position: center;
+    }
   }
 
   .filename {
@@ -220,7 +259,7 @@ export default defineComponent({
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 14px;
-    margin-top: 3px;
+    margin-top: 8px;
   }
 }
 

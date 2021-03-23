@@ -9,6 +9,7 @@
           placeholder="xjh22222228/battle"
           class="mb20"
           @blur="handleIdBlur"
+          :disabled="loading"
         >
           <template #prepend>&nbsp;&nbsp;&nbsp;I D&nbsp;&nbsp;</template>
           <template #prefix>
@@ -20,6 +21,7 @@
           v-model="branch"
           placeholder="main"
           class="mb20"
+          :disabled="loading"
         >
           <template #prepend>&nbsp;分 支&nbsp;</template>
           <template #prefix>
@@ -58,15 +60,16 @@ import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { verifyToken } from '@/services'
 import { IBranch } from '@/store'
+import config from '../../config'
 
 export default defineComponent({
   name: 'Login',
 
   setup() {
     const store = useStore()
-    const id = ref('')
-    const branch = ref('')
-    const token = ref('')
+    const id = ref(config.id)
+    const branch = ref(config.branch)
+    const token = ref(config.token)
     const loading = ref(false)
     const valid = computed<boolean>(() => {
       const vid = id.value.split('/').length === 2
@@ -91,7 +94,10 @@ export default defineComponent({
     function handleIdBlur() {
       const splitId = id.value.split('/')
       if (splitId.length === 2 && splitId[0] && splitId[1]) {
-        store.dispatch('getBranchAll', id.value)
+        loading.value = true
+        store.dispatch('getBranchAll', id.value).finally(() => {
+          loading.value = false
+        })
       }
     }
 

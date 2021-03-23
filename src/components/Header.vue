@@ -32,7 +32,7 @@
           alt=""
           class="logout"
           draggable="false"
-          @click="handleLogout"
+          @click="logout"
         >
       </el-tooltip>
     </div>
@@ -66,6 +66,7 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
 import { ElMessage } from 'element-plus'
+import { logout } from '@/utils'
 
 export default defineComponent({
   name: 'Header',
@@ -119,12 +120,6 @@ export default defineComponent({
       }
     }
 
-    function handleLogout() {
-      window.localStorage.clear()
-      window.sessionStorage.clear()
-      window.location.reload()
-    }
-
     return {
       showModal,
       loading,
@@ -134,7 +129,7 @@ export default defineComponent({
       toggleModal,
       createDirectory,
       handleUploadFile,
-      handleLogout
+      logout
     }
   }
 })

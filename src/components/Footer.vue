@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
-    Copyright © 2021 <a href="https://github.com/xjh22222228" target="_blank">xiejiahe</a>
-    <div><a href="https://github.com/xjh22222228/battle" target="_blank">Battle </a> v{{ version }} MIT</div>
+    Copyright © 2021 <a href="https://github.com/xjh22222228" class="ch" target="_blank">xiejiahe</a>
+    <div><a href="https://github.com/xjh22222228/battle" target="_blank" class="ch">Battle </a> v{{ version }} MIT</div>
   </footer>
 </template>
 

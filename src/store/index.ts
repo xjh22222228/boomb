@@ -77,11 +77,6 @@ export default createStore<State>({
     saveDir(state, { data, path }) {
       state.cacheDir[path] = data
       state.dir = data
-        .map((item: IFile) => {
-          item.sizeLabel = bytes(item.size)
-          return item
-        })
-        .sort((a: IFile, b: IFile) => a.size - b.size)
     },
 
     saveBranchAll(state, branchAll: IBranch[]) {
@@ -112,8 +107,15 @@ export default createStore<State>({
 
       readDir(path).then(res => {
         if (isSuccess(res.status)) {
+          const data = res.data
+            .map((item: IFile) => {
+              item.sizeLabel = bytes(item.size)
+              return item
+            })
+            .sort((a: IFile, b: IFile) => a.size - b.size)
+
           commit('saveDir', {
-            data: res.data,
+            data,
             path
           })
         }

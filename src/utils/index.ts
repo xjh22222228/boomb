@@ -30,3 +30,25 @@ export function initClipboard() {
     }, 1000)
   });
 }
+
+export function logout() {
+  const removeKeys = ['token', 'isLogin']
+  const keys = []
+  const len = window.localStorage.length
+
+  for (let i = 0; i < len; i++) {
+    const key = window.localStorage.key(i)
+
+    if (key) {
+      if (removeKeys.includes(key)) {
+        keys.push(key)
+      }
+    }
+  }
+
+  for (let k of keys) {
+    window.localStorage.removeItem(k)
+  }
+
+  window.location.reload()
+}

@@ -7,7 +7,7 @@
         <el-dropdown-menu>
           <el-dropdown-item @click="handleInfo" v-if="isLogin">当前信息</el-dropdown-item>
           <el-dropdown-item>
-            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/battle" target="_blank">BUG / 建议</a>
+            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/battle" target="_blank" class="ch">BUG / 建议</a>
           </el-dropdown-item>
           <el-dropdown-item @click="handleAbout">关于 Battle</el-dropdown-item>
         </el-dropdown-menu>

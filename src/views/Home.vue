@@ -7,7 +7,7 @@
     @dragover.prevent="funcPass"
     @drop="handleDrop"
   >
-    <el-breadcrumb separator=">" class="breadcrumb">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item
         v-for="item of paths"
         :key="item.name"
@@ -38,9 +38,11 @@
           </template>
       </el-popconfirm>
 
-      <el-checkbox v-model="isCheckAll" class="check-all" v-if="dirList.length > 0">
+      <el-checkbox v-model="isCheckAll" class="check-all">
         {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : '全选' }}
       </el-checkbox>
+
+      <Sort />
     </div>
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
