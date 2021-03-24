@@ -48,7 +48,7 @@ export default createI18n({
 
     'zh-CN': {
       what: 'Battle是什么?',
-      getToken: '去申请TOken',
+      getToken: '去申请Token',
       about: '关于 Battle',
       report: 'BUG / 建议',
       info: '当前信息',
