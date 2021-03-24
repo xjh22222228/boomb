@@ -55,7 +55,7 @@
           class="w100"
           :disabled="!valid"
         >
-          {{ t('Login') }}
+          {{ t('login') }}
         </el-button>
       </div>
     </div>
