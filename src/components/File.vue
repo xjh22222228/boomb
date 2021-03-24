@@ -10,7 +10,7 @@
           <el-button
             icon="el-icon-upload2"
           >
-            更换文件
+            {{ t('changeFile') }}
             <input
               type="file"
               class="file-input"
@@ -19,10 +19,10 @@
           </el-button>
         </p>
         <p>
-          {{ isFile ? '文件名:' : '目录名:' }}
+          {{ isFile ? t('fileName') : t('dirName') }}:
           <a :href="cdn1" target="_blank">{{ data.name }}</a>
         </p>
-        <p>文件大小：{{ data.sizeLabel }}</p>
+        <p>{{ t('fileSize') }}: {{ data.sizeLabel }}</p>
         <el-input v-model="cdn1" class="mb10">
           <template #prepend>
             <a :href="cdn1" target="_blank">CDN1</a>
@@ -87,6 +87,7 @@ import { IFile } from '@/store'
 import { getBase64 } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
+import { useI18n } from 'vue-i18n'
 
 const fileCodeImg = require('@/assets/file-code.svg')
 const fileFolderImg = require('@/assets/file-folder.svg')
@@ -106,6 +107,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const { t } = useI18n()
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
@@ -186,6 +188,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       fileUrl,
       fileType,
       isImage,

@@ -1,8 +1,8 @@
 <template>
   <div class="context" id="context-menu">
-    <div class="item" @click="handleRefresh">刷新</div>
-    <div class="item" @click="handleUploadFile">上传文件</div>
-    <div class="item" @click="handleMkdir">新建文件夹</div>
+    <div class="item" @click="handleRefresh">{{ t('refresh') }}</div>
+    <div class="item" @click="handleUploadFile">{{ t('uploadFile') }}</div>
+    <div class="item" @click="handleMkdir">{{ t('createDir') }}</div>
   </div>
 </template>
 
@@ -10,11 +10,13 @@
 import { defineComponent, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'ContextMenu',
 
   setup() {
+    const { t } = useI18n()
     const store = useStore()
     const route = useRoute()
     let menuEl: HTMLElement
@@ -64,6 +66,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       handleRefresh,
       handleUploadFile,
       handleMkdir

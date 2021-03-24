@@ -25,6 +25,7 @@
     "viewerjs": "^1.9.0",
     "vue": "^3.0.4",
     "vue-class-component": "^8.0.0-0",
+    "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

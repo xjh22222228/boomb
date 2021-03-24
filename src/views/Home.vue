@@ -22,9 +22,9 @@
 
     <div class="toolbar">
       <el-popconfirm
-        :title="`您确定要删除${checkList.length}个文件吗？`"
-        confirmButtonText="确定"
-        cancelButtonText="取消"
+        :title="t('confirmDel', {len: checkList.length})"
+        :confirmButtonText="t('ok')"
+        :cancelButtonText="t('cancel')"
         confirmButtonType="danger"
         iconColor="red"
         @confirm="handleDel"
@@ -36,13 +36,13 @@
             :disabled="checkList.length === 0"
             size="mini"
           >
-            批量删除
+            {{ t('bulkDel') }}
           </el-button>
           </template>
       </el-popconfirm>
 
       <el-checkbox v-model="isCheckAll" class="check-all">
-        {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : '全选' }}
+        {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : t('allCheck') }}
       </el-checkbox>
 
       <Sort />
@@ -59,9 +59,9 @@
         </File>
       </div>
     </el-checkbox-group>
-    <el-empty v-else description="空空如也~，赶紧将文件拖到这里吧~"></el-empty>
+    <el-empty v-else :description="t('noData')"></el-empty>
     
-    <div class="total-num">共 {{ dirList.length }} 项</div>
+    <div class="total-num">{{ t('total', {len: dirList.length}) }}</div>
   </div>
 </template>
 
@@ -75,12 +75,14 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
 import { initClipboard } from '@/utils';
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   components: { File: FileComponent, Loading },
   name: 'HomePage',
 
   setup() {
+    const { t } = useI18n()
     const route = useRoute()
     const store = useStore()
     const checkList = ref<number[]>([])
@@ -221,7 +223,7 @@ export default defineComponent({
         fullPath += '/' + path
 
         pathsList[i] = {
-          name: path === '' ? '全部' : path,
+          name: path === '' ? t('all') : path,
           path: fullPath.startsWith('//')
             ? fullPath.slice(1)
             : fullPath === '/'
@@ -234,6 +236,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       checkList,
       isCheckAll,
       dirList,

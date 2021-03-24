@@ -8,7 +8,7 @@
         class="mr10"
         type="primary"
       >
-        上传文件
+        {{ t('uploadFile' )}}
         <input
           multiple
           type="file"
@@ -23,7 +23,7 @@
         @click="toggleModal"
         id="mkdir-btn"
       >
-        新建文件夹
+        {{ t('createDir' )}}
       </el-button>
     </div>
 
@@ -74,11 +74,13 @@ import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
 import { ElMessage } from 'element-plus'
 import { logout } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Header',
 
   setup() {
+    const { t } = useI18n()
     const store = useStore()
     const route = useRoute()
     const showModal = ref(false)
@@ -128,6 +130,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       showModal,
       loading,
       dirName,

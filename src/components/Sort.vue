@@ -1,7 +1,7 @@
 <template>
   <el-dropdown placement="bottom-end" :hide-on-click="false">
     <span class="sorter">
-      {{ sortType === 1 ? '文件大小' : '文件名' }}
+      {{ sortType === 1 ? t('fileSize') : t('fileName') }}
       <i :class="isUp ? 'el-icon-top' : 'el-icon-bottom'"></i>
     </span>
 
@@ -13,7 +13,7 @@
           :class="{active: isUp}"
           @click="isUp = true"
         >
-          升序
+          {{ t('asc' )}}
         </el-dropdown-item>
         <el-dropdown-item
           icon="el-icon-check"
@@ -21,7 +21,7 @@
           :class="{active: !isUp}"
           @click="isUp = false"
         >
-          降序
+          {{ t('desc' )}}
         </el-dropdown-item>
 
         <el-dropdown-item
@@ -31,7 +31,7 @@
           @click="sortType = 1"
           :class="{active: sortType === 1}"
         >
-          文件大小
+          {{ t('fileSize' )}}
         </el-dropdown-item>
         <el-dropdown-item
           icon="el-icon-check"
@@ -39,7 +39,7 @@
           @click="sortType = 2"
           :class="{active: sortType === 2}"
         >
-          文件名
+          {{ t('fileName' )}}
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -51,11 +51,13 @@ import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Sort',
 
   setup() {
+    const { t } = useI18n()
     const store = useStore()
     const route = useRoute()
     const isUp = ref(true)
@@ -93,6 +95,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       isUp,
       sortType
     }

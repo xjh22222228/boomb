@@ -11,7 +11,7 @@
           @blur="handleIdBlur"
           :disabled="loading"
         >
-          <template #prepend>&nbsp;&nbsp;&nbsp;I D&nbsp;&nbsp;</template>
+          <template #prepend>&nbsp;&nbsp;&nbsp;&nbsp;I&nbsp; D&nbsp;&nbsp;</template>
           <template #prefix>
             <i class="el-input__icon el-icon-user"></i>
           </template>
@@ -23,7 +23,7 @@
           class="mb20"
           :disabled="loading"
         >
-          <template #prepend>&nbsp;分 支&nbsp;</template>
+          <template #prepend>Branch</template>
           <template #prefix>
             <i class="el-input__icon el-icon-attract"></i>
           </template>
@@ -31,19 +31,21 @@
 
         <el-input
           v-model="token"
-          placeholder="输入Token进行验证"
+          :placeholder="t('placeholder')"
           class="mb20"
           type="password"
           @keyup.enter="handleLogin"
         >
-          <template #prepend>Token</template>
+          <template #prepend>&nbsp;Token&nbsp;</template>
           <template #prefix>
             <i class="el-input__icon el-icon-lock"></i>
           </template>
         </el-input>
 
         <div class="mb20 tar">
-          <a href="https://github.com/settings/tokens" target="_blank">去申请Token</a>
+          <a href="https://github.com/settings/tokens" target="_blank">
+            {{ t('getToken') }}
+          </a>
         </div>
 
         <el-button
@@ -53,7 +55,7 @@
           class="w100"
           :disabled="!valid"
         >
-          登 录
+          {{ t('Login') }}
         </el-button>
       </div>
     </div>
@@ -61,16 +63,18 @@
 </template>
 
 <script lang="ts">
+import config from '../../config'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { verifyToken } from '@/services'
 import { IBranch } from '@/store'
-import config from '../../config'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Login',
 
   setup() {
+    const { t } = useI18n()
     const store = useStore()
     const id = ref(config.id)
     const branch = ref(config.branch)
@@ -114,6 +118,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       branchAll,
       id,
       branch,

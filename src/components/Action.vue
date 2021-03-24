@@ -1,15 +1,20 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top">
-        <img src="@/assets/liqueur.svg" alt="" class="img">
+      <img src="@/assets/liqueur.svg" alt="" class="img">
 
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="handleInfo" v-if="isLogin">当前信息</el-dropdown-item>
-          <el-dropdown-item>
-            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/battle" target="_blank" class="ch">BUG / 建议</a>
+          <el-dropdown-item
+            @click="handleInfo"
+            v-if="isLogin"
+          >
+            {{ t('info') }}
           </el-dropdown-item>
-          <el-dropdown-item @click="handleAbout">关于 Battle</el-dropdown-item>
+          <el-dropdown-item>
+            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/battle" target="_blank" class="ch">{{ t('report') }}</a>
+          </el-dropdown-item>
+          <el-dropdown-item @click="handleAbout">{{ t('about') }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -21,39 +26,38 @@ import config from '../../config'
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Action',
 
   setup() {
+    const { t } = useI18n()
     const store = useStore()
     const isLogin = computed(() => store.state.isLogin)
 
     const handleAbout = function() {
       ElMessageBox.confirm('', {
-        title: 'Battle 是什么?',
+        title: t('what'),
         dangerouslyUseHTMLString: true,
-        message: `
-          <p class="mb10"><a href="https://github.com/xjh22222228/battle" target="_blank">Battle</a> 是用于轻松管理您的 Github 存储图库。</p>
-          <p class="mb10">有的小伙伴会把它当做图床使用，这完全是您个人选择问题，与作者无任何关系。</p>
-          <p class="mb10">以开源的精神分享，如果对您有帮助，<a href="https://github.com/xjh22222228/battle" target="_blank">Star</a> 支持一下！</p>
-        `,
+        message: t('description'),
       }).catch(() => {})
     }
 
     const handleInfo = function() {
       ElMessageBox.confirm('', {
-        title: '当前登录信息',
+        title: t('info'),
         dangerouslyUseHTMLString: true,
         message: `
           <p class="mb10">Token: ${config.token}</p>
           <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
-          <p class="mb10">分支: ${config.branch}</p>
+          <p class="mb10">Branch: ${config.branch}</p>
         `,
       }).catch(() => {})
     }
 
     return {
+      t,
       isLogin,
       handleAbout,
       handleInfo

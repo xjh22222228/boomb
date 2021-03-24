@@ -8,6 +8,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import i18n from './i18n'
 import {
   ElButton,
   ElRow,
@@ -41,6 +42,7 @@ import Loading from '@/components/Loading.vue'
 import Action from '@/components/Action.vue'
 import Sort from '@/components/Sort.vue'
 import ContextMenu from '@/components/ContextMenu.vue'
+import Language from '@/components/Language.vue'
 
 const app = createApp(App)
 
@@ -75,8 +77,10 @@ app.component(Loading.name, Loading)
 app.component(Action.name, Action)
 app.component(Sort.name, Sort)
 app.component(ContextMenu.name, ContextMenu)
+app.component(Language.name, Language)
 
 app
   .use(store)
   .use(router)
+  .use(i18n)
   .mount('#xiejiahe-app')
