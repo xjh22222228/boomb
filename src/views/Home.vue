@@ -1,8 +1,11 @@
 <template>
   <Header />
 
+  <ContextMenu />
+
   <div
     class="home"
+    id="home"
     @dragenter.prevent="handleDragEnter"
     @dragover.prevent="funcPass"
     @drop="handleDrop"
@@ -56,7 +59,7 @@
         </File>
       </div>
     </el-checkbox-group>
-    <el-empty v-else description="怎么什么都没，赶紧将文件拖到这里吧~"></el-empty>
+    <el-empty v-else description="空空如也~，赶紧将文件拖到这里吧~"></el-empty>
     
     <div class="total-num">共 {{ dirList.length }} 项</div>
   </div>

@@ -9,12 +9,19 @@
         type="primary"
       >
         上传文件
-        <input multiple type="file" class="file" @change="handleUploadFile($event)" />
+        <input
+          multiple
+          type="file"
+          class="file"
+          id="input-file"
+          @change="handleUploadFile($event)"
+        />
       </el-button>
 
       <el-button
         icon="el-icon-plus"
         @click="toggleModal"
+        id="mkdir-btn"
       >
         新建文件夹
       </el-button>

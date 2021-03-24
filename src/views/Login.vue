@@ -41,6 +41,11 @@
             <i class="el-input__icon el-icon-lock"></i>
           </template>
         </el-input>
+
+        <div class="mb20 tar">
+          <a href="https://github.com/settings/tokens" target="_blank">去申请Token</a>
+        </div>
+
         <el-button
           type="primary"
           @click="handleLogin"

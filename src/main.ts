@@ -40,6 +40,7 @@ import Footer from '@/components/Footer.vue'
 import Loading from '@/components/Loading.vue'
 import Action from '@/components/Action.vue'
 import Sort from '@/components/Sort.vue'
+import ContextMenu from '@/components/ContextMenu.vue'
 
 const app = createApp(App)
 
@@ -73,6 +74,7 @@ app.component(Footer.name, Footer)
 app.component(Loading.name, Loading)
 app.component(Action.name, Action)
 app.component(Sort.name, Sort)
+app.component(ContextMenu.name, ContextMenu)
 
 app
   .use(store)
