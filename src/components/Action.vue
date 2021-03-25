@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top">
-      <img src="@/assets/liqueur.svg" alt="" class="img">
+      <img src="favicon.png" alt="" class="img">
 
       <template #dropdown>
         <el-dropdown-menu>
@@ -12,7 +12,7 @@
             {{ t('info') }}
           </el-dropdown-item>
           <el-dropdown-item>
-            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/battle" target="_blank" class="ch">{{ t('report') }}</a>
+            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/boomb" target="_blank" class="ch">{{ t('report') }}</a>
           </el-dropdown-item>
           <el-dropdown-item @click="handleAbout">{{ t('about') }}</el-dropdown-item>
         </el-dropdown-menu>
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import config from '../../config'
+import config from '@/config'
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'

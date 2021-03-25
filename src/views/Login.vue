@@ -1,12 +1,14 @@
 <template>
   <section class="login">
     <div class="wrapper">
-      <h2 class="title">Battle</h2>
+      <h2 class="title">
+        <img src="logo.png" alt="" draggable="false">
+      </h2>
 
       <div class="form">
         <el-input
           v-model="id"
-          placeholder="xjh22222228/battle"
+          placeholder="xjh22222228/boomb"
           class="mb20"
           @blur="handleIdBlur"
           :disabled="loading"
@@ -63,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import config from '../../config'
+import config from '@/config'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { verifyToken } from '@/services'
@@ -94,6 +96,7 @@ export default defineComponent({
         window.localStorage.setItem('id', id.value)
         window.localStorage.setItem('branch', branch.value)
         window.localStorage.setItem('token', token.value)
+        window.localStorage.setItem('isLogin', 'true')
         window.location.reload()
       }).finally(() => {
         loading.value = false
@@ -150,8 +153,12 @@ export default defineComponent({
   margin-top: 100px;
 
   .title {
-    font-size: 42px;
     text-align: center;
+
+    img {
+      width: 300px;
+      pointer-events: none;
+    }
   }
 
   .form {

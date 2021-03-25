@@ -1,7 +1,7 @@
 // Copyright 2021 the xiejiahe. All rights reserved. MIT license.
 
 import bytes from 'bytes'
-import config from '../../config'
+import config from '@/config'
 import router from '@/router'
 import { createStore } from 'vuex'
 import { createFile, getUser, readDir, deleteFile, getBranchAll } from '@/services'
@@ -45,8 +45,6 @@ type State = {
   branchAll: IBranch[]
 }
 
-const token = config.token
-
 export default createStore<State>({
   state() {
     return {
@@ -59,8 +57,8 @@ export default createStore<State>({
         bio: '',
         html_url: ''
       },
-      token,
-      isLogin: !!token,
+      token: config.token,
+      isLogin: config.isLogin,
       dir: [],
 
       // 缓存目录列表

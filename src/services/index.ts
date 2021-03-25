@@ -3,7 +3,7 @@
 // https://docs.github.com/en/rest/reference
 // https://docs.github.com/en/rest/reference/permissions-required-for-github-apps
 
-import config from '../../config'
+import config from '@/config'
 import { get, put, del } from '@/utils/http'
 import { encode } from 'js-base64'
 import { IFile } from '@/store'

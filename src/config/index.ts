@@ -6,4 +6,6 @@ export default {
   branch: window.localStorage.getItem('branch') ?? '',
 
   token: window.localStorage.getItem('token') ?? '',
+
+  isLogin: !!window.localStorage.getItem('isLogin')
 }

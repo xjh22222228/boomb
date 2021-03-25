@@ -3,7 +3,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import config from '../../config'
+import config from '@/config'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -28,7 +28,7 @@ const router = createRouter({
   routes
 })
 
-const isLogin = !!config.token
+const { isLogin } = config
 
 router.beforeEach((to) => {
   if (to.name === 'Login' && isLogin) {

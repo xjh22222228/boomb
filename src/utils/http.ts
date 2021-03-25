@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import NProgress from 'nprogress'
-import config from '../../config'
+import config from '@/config'
 import { ElNotification } from 'element-plus'
 
 const token = config.token
