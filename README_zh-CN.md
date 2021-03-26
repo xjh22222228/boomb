@@ -27,8 +27,7 @@
 
 ## 像数 1, 2, 3 一样容易
 1. [创建一个仓库](https://github.com/new)
-2. 申请Token => [https://github.com/settings/tokens](https://github.com/settings/tokens)
-3. 打开 [https://boomb.cn](https://boomb.cn).
+2. 打开 [https://boomb.cn](https://boomb.cn)
 
 
 
@@ -56,7 +55,7 @@ $ yarn build
 
 如果您是部署到自己服务器上，你可能需要 [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
-但作者不建议您自己部署, 开箱即用，即用即走。
+但作者不建议您自己部署, 开箱即用，用完即走。
 
 
 

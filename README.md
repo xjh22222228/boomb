@@ -26,8 +26,7 @@
 
 ## Usage
 1. [Create a New Repository](https://github.com/new)
-2. Get Token => [https://github.com/settings/tokens](https://github.com/settings/tokens)
-3. Open [https://boomb.cn](https://boomb.cn).
+2. Open [https://boomb.cn](https://boomb.cn).
 
 
 
