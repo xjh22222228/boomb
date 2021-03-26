@@ -26,12 +26,16 @@ function stopLoad() {
   }
 }
 
+const headers: any = {}
+
+if (token) {
+  headers.Authorization = `token ${token}`
+}
+
 const instance = axios.create({
   baseURL: 'https://api.github.com',
   timeout: 600000 * 3, // 30 minute
-  headers: {
-    Authorization: token ? `token ${token}` : undefined
-  }
+  headers
 })
 
 interface ResponseData {
@@ -77,7 +81,7 @@ instance.interceptors.response.use(resp => {
   console.error('Response', error)
   ElNotification({
     type: 'error',
-    title: `${error.response?.status ?? -1}`,
+    title: `${error.response?.status ?? 1001}`,
     message: error.response?.data?.message || '未知错误'
   })
   stopLoad()
