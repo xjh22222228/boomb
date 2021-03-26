@@ -22,6 +22,7 @@
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
+    "query-string": "^7.0.0",
     "viewerjs": "^1.9.0",
     "vue": "^3.0.4",
     "vue-class-component": "^8.0.0-0",

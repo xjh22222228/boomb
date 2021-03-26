@@ -53,6 +53,13 @@ $ yarn start
 $ yarn build
 ```
 
+
+如果您是部署到自己服务器上，你可能需要 [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
+
+但作者不建议您自己部署, 开箱即用，即用即走。
+
+
+
 ## License
 [MIT](LICENSE)
 

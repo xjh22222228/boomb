@@ -52,6 +52,13 @@ $ yarn start
 $ yarn build
 ```
 
+
+If you build it yourself, you may need [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
+
+It is not recommended to build by yourself!
+
+
+
 ## License
 [MIT](LICENSE)
 

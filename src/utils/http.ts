@@ -10,7 +10,7 @@ let loadingEl: HTMLElement|null
 const defaultTitle = document.title
 
 function startLoad() {
-  document.title = '马上就好...'
+  document.title = 'Boomb...Boomb...Boomb'
   NProgress.start()
   loadingEl ||= document.getElementById('loading')
   if (loadingEl) {
@@ -68,7 +68,7 @@ instance.interceptors.response.use(resp => {
     ElNotification({
       type: 'error',
       title: `${status}`,
-      message: `${data.message || '未知错误'}`
+      message: `${data.message || resp.statusText || '未知错误'}`
     })
   }
   

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top">
-      <img src="favicon.png" alt="" class="img">
+      <img src="/favicon.png" alt="" class="img">
 
       <template #dropdown>
         <el-dropdown-menu>

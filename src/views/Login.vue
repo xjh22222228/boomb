@@ -1,8 +1,10 @@
 <template>
+  <div class="auth-loading" v-if="authLoad"></div>
+
   <section class="login">
     <div class="wrapper">
       <h2 class="title">
-        <img src="logo.png" alt="" draggable="false">
+        <img src="/logo.png" alt="" draggable="false">
       </h2>
 
       <div class="form">
@@ -31,30 +33,11 @@
           </template>
         </el-input>
 
-        <el-input
-          v-model="token"
-          :placeholder="t('placeholder')"
-          class="mb20"
-          type="password"
-          @keyup.enter="handleLogin"
-        >
-          <template #prepend>&nbsp;Token&nbsp;</template>
-          <template #prefix>
-            <i class="el-input__icon el-icon-lock"></i>
-          </template>
-        </el-input>
-
-        <div class="mb20 tar">
-          <a href="https://github.com/settings/tokens" target="_blank">
-            {{ t('getToken') }}
-          </a>
-        </div>
-
         <el-button
           type="primary"
-          @click="handleLogin"
+          @click="goAuth"
           :loading="loading"
-          class="w100"
+          class="w100 mt10"
           :disabled="!valid"
         >
           {{ t('login') }}
@@ -66,11 +49,21 @@
 
 <script lang="ts">
 import config from '@/config'
-import { computed, defineComponent, ref, watch } from 'vue'
+import qs from 'query-string'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { verifyToken } from '@/services'
+import { verifyToken, getAccessToken } from '@/services'
 import { IBranch } from '@/store'
 import { useI18n } from 'vue-i18n'
+import { isSuccess } from '@/utils/http'
+
+// https://docs.github.com/cn/github/authenticating-to-github/authorizing-oauth-apps
+// https://docs.github.com/en/developers/apps/scopes-for-oauth-apps
+const clientId = process.env.NODE_ENV === 'development'
+  ? '6c3876cacce17b985c85'
+  : '1bab8338449584e95414'
+const callback = `${window.location.origin}/oauth/redirect`
+const authUrl = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=${callback}&client_id=${clientId}&scope=repo%20repo_deployment%20read:user`
 
 export default defineComponent({
   name: 'Login',
@@ -82,24 +75,33 @@ export default defineComponent({
     const branch = ref(config.branch)
     const token = ref(config.token)
     const loading = ref(false)
+    const authLoad = ref(false)
     const valid = computed<boolean>(() => {
       const vid = id.value.split('/').length === 2
-      return Boolean(vid && branch.value && token.value)
+      return Boolean(vid && branch.value)
     })
     const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 
+    const goAuth = function() {
+      loading.value = true
+      window.localStorage.setItem('id', id.value)
+      window.localStorage.setItem('branch', branch.value)
+      window.location.href = authUrl
+    }
+
     const handleLogin = function() {
+      if (!token.value) return
+
       loading.value = true
       verifyToken(id.value.split('/')[0], token.value).then((res) => {
         if (res.status !== 200) return
-
-        window.localStorage.setItem('id', id.value)
-        window.localStorage.setItem('branch', branch.value)
+        
         window.localStorage.setItem('token', token.value)
         window.localStorage.setItem('isLogin', 'true')
-        window.location.reload()
+        window.location.replace('/')
       }).finally(() => {
         loading.value = false
+        authLoad.value = false
       })
     }
 
@@ -120,7 +122,26 @@ export default defineComponent({
       }
     })
 
+    onMounted(() => {
+      const { query } = qs.parseUrl(window.location.href)
+      const code = query.code as string
+      if (code) {
+        authLoad.value = true
+        getAccessToken(code).then(res => {
+          if (isSuccess(res.status)) {
+            const { accessToken } = res.data.data
+            token.value = accessToken
+            handleLogin()
+          }
+        }).catch(() => authLoad.value = false)
+      }
+
+      handleLogin()
+    })
+
     return {
+      goAuth,
+      authLoad,
       t,
       branchAll,
       id,
@@ -157,13 +178,14 @@ export default defineComponent({
 
     img {
       width: 300px;
+      height: 85px;
       pointer-events: none;
     }
   }
 
   .form {
     margin-top: 50px;
-    padding: 30px 20px;
+    padding: 50px 20px;
     background: #fff;
     width: 500px;
     border-radius: 5px;

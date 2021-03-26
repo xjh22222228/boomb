@@ -32,7 +32,7 @@ export function initClipboard() {
 }
 
 export function logout() {
-  const removeKeys = ['isLogin']
+  const removeKeys = ['token', 'isLogin']
   const keys = []
   const len = window.localStorage.length
 
