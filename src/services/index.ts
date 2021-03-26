@@ -149,7 +149,7 @@ export function getAccessToken(code: string) {
   return get('/api/oauth/token', {
     baseURL: process.env.NODE_ENV === 'development'
       ? 'http://localhost:7001'
-      : 'http://106.52.62.70:7001',
+      : 'https://boomb.xiejiahe.com',
     params: {
       code
     }
