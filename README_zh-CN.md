@@ -37,6 +37,7 @@
 - [Vue3](https://github.com/vuejs/vue-next)
 - [Element Plus](https://github.com/element-plus/element-plus)
 - [TypeScript](https://github.com/Microsoft/TypeScript)
+- [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
 
 
