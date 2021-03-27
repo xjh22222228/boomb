@@ -14,7 +14,7 @@
             <input
               type="file"
               class="file-input"
-              @change="handleUploadFile($event)"
+              @change="handleUpdateFile($event)"
             />
           </el-button>
         </p>
@@ -155,7 +155,7 @@ export default defineComponent({
       }
     })
 
-    const handleUploadFile = async function(e: any) {
+    const handleUpdateFile = async function(e: any) {
       const files = e.target?.files
       if (files.length <= 0) return
 
@@ -170,7 +170,7 @@ export default defineComponent({
           store.dispatch('getDir', route.query.path)
           ElMessage({
             type: 'success',
-            message: '修改文件成功，至少需要10分钟更新！'
+            message: '更新成功, 由于缓存策略需要次日更新'
           })
         }
       })
@@ -198,7 +198,7 @@ export default defineComponent({
       cdn1: getCdn(CDN.Jsdelivr, filePath, false),
       cdn2: getCdn(CDN.Github, filePath, false),
 
-      handleUploadFile,
+      handleUpdateFile,
       goDir,
     }
   }

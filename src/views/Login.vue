@@ -4,7 +4,7 @@
   <section class="login">
     <div class="wrapper">
       <h2 class="title">
-        <img src="/logo.png" alt="" draggable="false">
+        <img :src="`${baseUrl}logo.png`" alt="boomb" draggable="false">
       </h2>
 
       <div class="form">
@@ -140,6 +140,7 @@ export default defineComponent({
     })
 
     return {
+      baseUrl: process.env.BASE_URL,
       goAuth,
       authLoad,
       t,

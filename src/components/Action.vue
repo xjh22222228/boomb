@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top">
-      <img src="/favicon.png" alt="" class="img">
+      <img :src="`${baseUrl}favicon.png`" alt="" class="img">
 
       <template #dropdown>
         <el-dropdown-menu>
@@ -11,6 +11,7 @@
           >
             {{ t('info') }}
           </el-dropdown-item>
+
           <el-dropdown-item>
             <a href="https://issue-helper.vercel.app/?repo=xjh22222228/boomb" target="_blank" class="ch">{{ t('report') }}</a>
           </el-dropdown-item>
@@ -49,7 +50,6 @@ export default defineComponent({
         title: t('info'),
         dangerouslyUseHTMLString: true,
         message: `
-          <p class="mb10">Token: ${config.token}</p>
           <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
           <p class="mb10">Branch: ${config.branch}</p>
         `,
@@ -57,6 +57,7 @@ export default defineComponent({
     }
 
     return {
+      baseUrl: process.env.BASE_URL,
       t,
       isLogin,
       handleAbout,

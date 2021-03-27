@@ -1,7 +1,18 @@
 <template>
   <footer class="footer">
-    Copyright © 2021 <a href="https://github.com/xjh22222228" class="ch" target="_blank">xiejiahe</a>
-    <div><a href="https://github.com/xjh22222228/boomb" target="_blank" class="ch">Bo💣mb </a> v{{ version }} MIT</div>
+    <div class="flag">
+      <a
+        href="https://github.com/xjh22222228/boomb"
+        target="_blank"
+        class="ch"
+      >
+        Bo💣mb
+        <img class="icon" src="@/assets/github.svg" alt="">
+      </a>
+      v{{ version }} MIT
+    </div>
+
+    Copyright © 2021 boomb.com
   </footer>
 </template>
 
@@ -15,7 +26,7 @@ export default defineComponent({
 
   setup() {
     return {
-      version: pkg.version
+      version: pkg.version,
     }
   }
 })
@@ -28,7 +39,17 @@ export default defineComponent({
   color: #666;
   background: #475050;
   color: #fff;
-  padding: 30px 0;
+  padding: 15px 0;
   font-size: 16px;
+
+  .flag {
+    margin-bottom: 5px;
+  }
+
+  .icon {
+    width: 25px;
+    height: 25px;
+    vertical-align: top;
+  }
 }
 </style>

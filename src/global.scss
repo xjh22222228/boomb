@@ -13,6 +13,10 @@ body {
   overflow-x: hidden;
 }
 
+.def-color {
+  color: #666 !important;
+}
+
 .ch {
   color: inherit !important;
 }
@@ -52,4 +56,16 @@ a {
 
 .tar {
   text-align: right;
+}
+
+.cp {
+  cursor: pointer;
+}
+
+.middle {
+  vertical-align: middle;
+}
+
+.bg-transparent {
+  background-color: transparent !important;
 }

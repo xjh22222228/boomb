@@ -28,20 +28,25 @@
     </div>
 
     <div class="right">
-      <span class="user-info">{{ user.name || user.login }}</span>
-      <a :href="user.html_url" target="_blank">
-        <el-avatar :src="user.avatar_url"></el-avatar>
-      </a>
+      <el-dropdown>
+        <el-avatar class="middle cp" :src="user.avatar_url"></el-avatar>
+        <i class="middle el-icon-caret-bottom"></i>
 
-      <el-tooltip content="Logout" placement="bottom-start">
-        <img
-          src="@/assets/logout.svg"
-          alt=""
-          class="logout"
-          draggable="false"
-          @click="logout"
-        >
-      </el-tooltip>
+        <template #dropdown>
+          <el-dropdown-menu trigger="click">
+            <el-dropdown-item class="dropdown-username">
+              <div>Signed in as</div>
+              <a class="ch" :href="user.html_url" target="_blank">
+                <b>{{ user.login || user.name }}</b>
+              </a>
+            </el-dropdown-item>
+
+            <el-dropdown-item divided @click="logout">
+              {{ t('logout') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
 
     <el-dialog
@@ -154,12 +159,9 @@ export default defineComponent({
   border-bottom: 1px solid #dbdbdb;
 
   .right {
+    margin-right: 20px;
     display: flex;
     align-items: center;
-
-    .user-info {
-      margin: 7px 10px 0 0;
-    }
   }
 
   .file {
@@ -171,23 +173,13 @@ export default defineComponent({
     opacity: 0;
     cursor: pointer;
   }
-
-  .logout {
-    width: 30px;
-    height: 30px;
-    margin-left: 15px;
-    cursor: pointer;
-  }
 }
+</style>
 
-.dropdown-item {
-  display: flex;
-  align-items: center;
-
-  .icon {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-  }
+<style lang="scss" scoped>
+.dropdown-username {
+  line-height: 1.8 !important;
+  color: inherit !important;
+  background-color: transparent !important;
 }
 </style>
