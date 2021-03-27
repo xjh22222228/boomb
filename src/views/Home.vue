@@ -164,14 +164,14 @@ export default defineComponent({
     }
 
     async function handleDel() {
-      const promises: Promise<any>[] = [];
-      checkList.value.forEach(idx => {
+      // 只能一个一个删，并行会删除失败
+      for (let idx of checkList.value) {
         const item = dirList.value[idx]
         if (item.type === 'file') {
-          promises.push(store.dispatch('deleteFile', item))
+          await store.dispatch('deleteFile', item)
         }
-      })
-      await Promise.allSettled(promises)
+      }
+
       getDir()
     }
 
@@ -252,16 +252,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@keyframes going {
-  from {
-    transform: translate(-100px, 0);
-  }
-
-  to {
-    transform: translate(200px, 0);
-  }
-}
-
 .home {
   flex: 1;
 

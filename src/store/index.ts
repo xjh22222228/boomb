@@ -6,9 +6,14 @@ import router from '@/router'
 import { createStore } from 'vuex'
 import { createFile, getUser, readDir, deleteFile, getBranchAll } from '@/services'
 import { isSuccess } from '@/utils/http'
-import { getBase64 } from '@/utils'
+import { getBase64, getFileEncode, getExtname } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { FileEncode } from '@/types'
+import { v4 as uuidv4 } from 'uuid'
+
+// Timestamp conflict
+let n = 0;
 
 type User = {
   login: string,
@@ -128,12 +133,38 @@ export default createStore<State>({
     ) {
       const path = route.query.path
       const base64 = await getBase64(file)
+      const dir: IFile[] = state.dir
       let fileName = file.name
-      const now = `${Date.now()}`.slice(-5)
-      const dirs: IFile[] = state.dir
-      const exists = dirs.some(item => item.name === fileName)
-      if (exists) {
-        fileName = `${now}-${fileName}`
+
+      // Repeat
+      const exists = dir.some(item => item.name === fileName)
+      const extname = getExtname(file)
+      const fileEncode = getFileEncode()
+
+      switch (fileEncode) {
+        case FileEncode.RawName:
+          if (exists) {
+            ElMessage.error(`文件 ${fileName} 已存在`)
+            return
+          }
+          break
+
+        case FileEncode.NumRawName:
+          if (exists) {
+            const now = `${Date.now()}`.slice(-5)
+            fileName = `${now}-${fileName}`
+          }
+          
+          break
+
+        case FileEncode.UUID:
+          fileName = `${uuidv4()}${extname}`
+          break
+
+        case FileEncode.Timestamp:
+          n++
+          fileName = `${Date.now() + n}${extname}`
+          break
       }
 
       createFile({
@@ -165,7 +196,11 @@ export default createStore<State>({
     },
 
     async deleteFile(_, file: IFile) {
-      await deleteFile(file)
+      const res = await deleteFile(file)
+      if (isSuccess(res.status)) {
+        ElMessage.success(`${file.path} 已被删除!`)
+      }
+      return res
     },
 
     async getBranchAll({ commit }, owner) {

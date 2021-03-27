@@ -68,7 +68,7 @@ export async function updateFileContent(
   }: Iupdate
 ) {
   return put(`/repos/${id}/contents/${file.path}`, {
-    message: `rebot(CI): update ${file.path}`,
+    message: `boomb(update): ${file.path}`,
     branch,
     content: isEncode ? encode(content) : content,
     sha: file.sha
@@ -89,7 +89,7 @@ export async function createFile(
   }
 
   return put(`/repos/${id}/contents/${path}`, {
-    message: `rebot(CI): create ${path}`,
+    message: `boomb(create): ${path}`,
     branch,
     content: isEncode ? encode(content) : content,
   })
@@ -100,7 +100,7 @@ export async function deleteFile(file: IFile) {
   return del(`/repos/${id}/contents/${file.path}`, {
     params: {
       ref: config.branch,
-      message: `rebot(CI): delete ${file.path}`,
+      message: `boomb(delete): ${file.path}`,
       sha: file.sha
     }
   })

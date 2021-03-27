@@ -20,7 +20,7 @@
 
       <el-button
         icon="el-icon-plus"
-        @click="toggleModal"
+        @click="toggleCreateDirModal"
         id="mkdir-btn"
       >
         {{ t('createDir' )}}
@@ -41,6 +41,10 @@
               </a>
             </el-dropdown-item>
 
+            <el-dropdown-item divided @click="toggleFileRuleModal">
+              {{ t('uploadFileEncode') }}
+            </el-dropdown-item>
+
             <el-dropdown-item divided @click="logout">
               {{ t('logout') }}
             </el-dropdown-item>
@@ -49,26 +53,15 @@
       </el-dropdown>
     </div>
 
-    <el-dialog
-      title="新建文件夹"
-      v-model="showModal"
-      width="500px"
-      :before-close="toggleModal"
-    >
-      <div>
-        <el-input
-          v-model="dirName"
-          placeholder="请输入要新建的目录名"
-        />
-      </div>
+    <create-dir-dialog
+      :visible="showCreateDirModal"
+      :before-close="toggleCreateDirModal"
+    />
 
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="showModal = false">取 消</el-button>
-          <el-button type="primary" @click="createDirectory" :loading="loading">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <file-encode-rule-dialog
+      :visible="showFileRuleModal"
+      :before-close="toggleFileRuleModal"
+    />
   </header>
 </template>
 
@@ -76,8 +69,6 @@
 import { defineComponent, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { IFile } from '@/store'
-import { ElMessage } from 'element-plus'
 import { logout } from '@/utils'
 import { useI18n } from 'vue-i18n'
 
@@ -88,38 +79,15 @@ export default defineComponent({
     const { t } = useI18n()
     const store = useStore()
     const route = useRoute()
-    const showModal = ref(false)
-    const loading = ref(false)
-    const dirName = ref('')
-    const dirList = computed(() => store.state.dir)
+    const showCreateDirModal = ref(false)
+    const showFileRuleModal = ref(false)
 
-    function toggleModal() {
-      showModal.value = !showModal.value
+    function toggleCreateDirModal() {
+      showCreateDirModal.value = !showCreateDirModal.value
     }
 
-    // 新建文件夹
-    function createDirectory() {
-      const v = dirName.value.trim()
-      if (!v) return
-      const dirs: IFile[] = dirList.value
-      const exists = dirs.some(item => item.name === v)
-      if (exists) {
-        ElMessage({
-          type: 'error',
-          message: `已存在 ${v} 文件夹`
-        })
-        return
-      }
-
-      loading.value = true
-      store.dispatch('mkdir', `${route.query.path || ''}/${v}`).then(() => {
-        toggleModal()
-        store.dispatch('getDir', route.query.path)
-        ElMessage({
-          type: 'success',
-          message: `创建文件夹 ${v} 成功`
-        })
-      }).finally(() => loading.value = false)
+    function toggleFileRuleModal() {
+      showFileRuleModal.value = !showFileRuleModal.value
     }
 
     // 上传文件
@@ -132,17 +100,18 @@ export default defineComponent({
           route
         })
       }
+
+      e.target.value = ''
     }
 
     return {
       t,
-      showModal,
-      loading,
-      dirName,
+      showCreateDirModal,
+      showFileRuleModal,
       user: computed(() => store.state.user),
 
-      toggleModal,
-      createDirectory,
+      toggleCreateDirModal,
+      toggleFileRuleModal,
       handleUploadFile,
       logout
     }

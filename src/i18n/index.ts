@@ -39,6 +39,7 @@ export default createI18n({
       refresh: 'Refresh',
       asc: 'ASC',
       desc: 'DESC',
+      uploadFileEncode: 'File upload scheme',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> is used to easily manage your Github storage gallery.</p>
         <p class="mb10">Some friends will use it as a picture bed. This is entirely a matter of your personal choice and has nothing to do with the author.</p>
@@ -71,6 +72,7 @@ export default createI18n({
       refresh: '刷新',
       asc: '升序',
       desc: '降序',
+      uploadFileEncode: '文件上传方案',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> 是用于轻松管理您的 Github 存储图库。</p>
         <p class="mb10">有的小伙伴会把它当做图床使用，这完全是您个人选择问题，与作者无任何关系。</p>

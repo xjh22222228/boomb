@@ -32,7 +32,9 @@ import {
   ElMessageBox,
   ElTooltip,
   ElSelect,
-  ElOption
+  ElOption,
+  ElRadio,
+  ElRadioGroup
 } from 'element-plus'
 
 import File from '@/components/File.vue'
@@ -43,6 +45,8 @@ import Action from '@/components/Action.vue'
 import Sort from '@/components/Sort.vue'
 import ContextMenu from '@/components/ContextMenu.vue'
 import Language from '@/components/Language.vue'
+import FileEncodeRuleDialog from '@/components/FileEncodeRuleDialog.vue'
+import CreateDirDialog from '@/components/CreateDirDialog.vue'
 
 const app = createApp(App)
 
@@ -69,6 +73,8 @@ app.component(ElMessageBox.name, ElMessageBox)
 app.component(ElTooltip.name, ElTooltip)
 app.component(ElSelect.name, ElSelect)
 app.component(ElOption.name, ElOption)
+app.component(ElRadio.name, ElRadio)
+app.component(ElRadioGroup.name, ElRadioGroup)
 
 app.component(File.name, File)
 app.component(Header.name, Header)
@@ -78,6 +84,8 @@ app.component(Action.name, Action)
 app.component(Sort.name, Sort)
 app.component(ContextMenu.name, ContextMenu)
 app.component(Language.name, Language)
+app.component(FileEncodeRuleDialog.name, FileEncodeRuleDialog)
+app.component(CreateDirDialog.name, CreateDirDialog)
 
 app
   .use(store)

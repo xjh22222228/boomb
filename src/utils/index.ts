@@ -1,4 +1,5 @@
 import Clipboard from 'clipboard'
+import { FileEncode } from '@/types'
 
 let clipboard: Clipboard|null
 
@@ -12,6 +13,12 @@ export async function getBase64(file: File): Promise<string> {
       resolve(url)
     }
   })
+}
+
+export function getExtname(file: File): string {
+  const s = file.name.split('.').pop() as string
+
+  return s ? `.${s}` : s
 }
 
 export function initClipboard() {
@@ -51,4 +58,14 @@ export function logout() {
   }
 
   window.location.reload()
+}
+
+export function getFileEncode(): FileEncode {
+  const l = window.localStorage.getItem('fileEncode')
+
+  if (l) {
+    return Number(l) as FileEncode
+  }
+
+  return FileEncode.RawName
 }

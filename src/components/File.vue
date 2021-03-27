@@ -174,6 +174,8 @@ export default defineComponent({
           })
         }
       })
+
+      e.target.value = ''
     }
 
     function goDir() {

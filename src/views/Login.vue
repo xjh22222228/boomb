@@ -1,5 +1,6 @@
 <template>
   <div class="auth-loading" v-if="authLoad"></div>
+  <div class="bg"></div>
 
   <section class="login">
     <div class="wrapper">
@@ -158,28 +159,31 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.login {
+.bg {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: #f0f2f5 url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
+}
+
+.login {
   display: flex;
   justify-content: center;
   overflow: hidden;
 }
 
 .wrapper {
-  z-index: 99;
+  z-index: 3;
   margin-top: 100px;
 
   .title {
     text-align: center;
 
     img {
-      width: 300px;
-      height: 85px;
+      width: 250px;
+      height: 75px;
       pointer-events: none;
     }
   }
@@ -190,6 +194,12 @@ export default defineComponent({
     background: #fff;
     width: 500px;
     border-radius: 5px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .form {
+    width: initial !important;
   }
 }
 </style>
