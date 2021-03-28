@@ -46,7 +46,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, ctx) {
+  setup(props) {
     const loading = ref(false)
     const dirName = ref('')
     const store = useStore()
@@ -70,6 +70,7 @@ export default defineComponent({
       loading.value = true
       store.dispatch('mkdir', `${route.query.path || ''}/${v}`)
         .then(() => {
+          dirName.value = ''
           props.beforeClose()
           store.dispatch('getDir', route.query.path)
           ElMessage({

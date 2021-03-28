@@ -4,7 +4,7 @@ import bytes from 'bytes'
 import config from '@/config'
 import router from '@/router'
 import { createStore } from 'vuex'
-import { createFile, getUser, readDir, deleteFile, getBranchAll } from '@/services'
+import { createFile, getUser, readDir, deleteFile, getBranchAll, deleteDir } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
@@ -27,7 +27,7 @@ type User = {
 
 export type IFile = {
   name: string
-  type: string
+  type: 'dir' | 'file'
   path: string
   sizeLabel: string
   size: number
@@ -196,11 +196,11 @@ export default createStore<State>({
     },
 
     async deleteFile(_, file: IFile) {
-      const res = await deleteFile(file)
-      if (isSuccess(res.status)) {
-        ElMessage.success(`${file.path} 已被删除!`)
-      }
-      return res
+      return await deleteFile(file)
+    },
+
+    async deleteDir(_, dirPath: string) {
+      return await deleteDir(dirPath)
     },
 
     async getBranchAll({ commit }, owner) {

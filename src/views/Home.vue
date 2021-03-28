@@ -170,6 +170,10 @@ export default defineComponent({
         if (item.type === 'file') {
           await store.dispatch('deleteFile', item)
         }
+
+        if (item.type === 'dir') {
+          await store.dispatch('deleteDir', item.path)
+        }
       }
 
       getDir()

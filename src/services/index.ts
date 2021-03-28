@@ -4,9 +4,10 @@
 // https://docs.github.com/en/rest/reference/permissions-required-for-github-apps
 
 import config from '@/config'
-import { get, put, del } from '@/utils/http'
+import { get, put, del, isSuccess } from '@/utils/http'
 import { encode } from 'js-base64'
 import { IFile } from '@/store'
+import { ElMessage } from 'element-plus'
 
 const id = config.id
 const [author] = id.split('/')
@@ -95,15 +96,45 @@ export async function createFile(
   })
 }
 
+// 删除目录, 不能并行否则会被BLOCK
+export async function deleteDir(dirPath: string) {
+  const files: IFile[] = []
+
+  async function getAllFilePath(path: string) {
+    const res = await readDir(path)
+    if (isSuccess(res.status)) {
+      for (let i = 0; i < res.data.length; i++) {
+        const item = res.data[i] as IFile
+        if (item.type === 'dir') {
+          await getAllFilePath(item.path)
+        } else {
+          files.unshift(item)
+        }
+      }
+    }
+  }
+  await getAllFilePath(dirPath)
+
+  for (let file of files) {
+    await deleteFile(file)
+  }
+}
+
 // 删除文件
 export async function deleteFile(file: IFile) {
-  return del(`/repos/${id}/contents/${file.path}`, {
+  const res = await del(`/repos/${id}/contents/${file.path}`, {
     params: {
       ref: config.branch,
       message: `boomb(delete): ${file.path}`,
       sha: file.sha
     }
   })
+
+  if (isSuccess(res.status)) {
+    ElMessage.success(`${file.path} 已被删除!`)
+  }
+
+  return res
 }
 
 export enum CDN {
