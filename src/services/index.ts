@@ -180,7 +180,7 @@ export function getAccessToken(code: string) {
   return get('/api/oauth', {
     baseURL: process.env.NODE_ENV === 'development'
       ? 'http://localhost:7001'
-      : 'https://github-oauth-opal.vercel.app/api/oauth',
+      : 'https://github-oauth-opal.vercel.app',
     params: {
       code
     }
