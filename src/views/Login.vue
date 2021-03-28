@@ -100,7 +100,7 @@ export default defineComponent({
         
         window.localStorage.setItem('token', token.value)
         window.localStorage.setItem('isLogin', 'true')
-        window.location.replace('/')
+        window.location.reload()
       }).finally(() => {
         loading.value = false
         authLoad.value = false
