@@ -177,10 +177,10 @@ export function getBranchAll(owner: string) {
 
 // 授权
 export function getAccessToken(code: string) {
-  return get('/api/oauth/token', {
+  return get('/api/oauth', {
     baseURL: process.env.NODE_ENV === 'development'
       ? 'http://localhost:7001'
-      : 'https://work.xiejiahe.com',
+      : 'https://github-oauth-opal.vercel.app/api/oauth',
     params: {
       code
     }
