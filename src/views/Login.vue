@@ -50,9 +50,9 @@
 
 <script lang="ts">
 import config from '@/config'
-import qs from 'query-string'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import { verifyToken, getAccessToken } from '@/services'
 import { IBranch } from '@/store'
 import { useI18n } from 'vue-i18n'
@@ -71,6 +71,7 @@ export default defineComponent({
 
   setup() {
     const { t } = useI18n()
+    const route = useRoute()
     const store = useStore()
     const id = ref(config.id)
     const branch = ref(config.branch)
@@ -124,7 +125,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      const { query } = qs.parseUrl(window.location.href)
+      const { query } = route
       const code = query.code as string
       if (code) {
         authLoad.value = true

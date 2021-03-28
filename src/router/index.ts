@@ -1,6 +1,6 @@
 // Copyright 2021 the xiejiahe. All rights reserved. MIT license.
 
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import config from '@/config'
@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/login',
+    alias: ['/oauth/redirect'],
     name: 'Login',
     component: Login
   },
@@ -24,7 +25,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
