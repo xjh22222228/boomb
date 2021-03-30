@@ -42,11 +42,15 @@ export default defineComponent({
         title: t('what'),
         dangerouslyUseHTMLString: true,
         message: t('description'),
+        cancelButtonText: t('cancel'),
+        confirmButtonText: t('ok'),
       }).catch(() => {})
     }
 
     const handleInfo = function() {
       ElMessageBox.confirm('', {
+        cancelButtonText: t('cancel'),
+        confirmButtonText: t('ok'),
         title: t('info'),
         dangerouslyUseHTMLString: true,
         message: `
