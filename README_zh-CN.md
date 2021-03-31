@@ -4,7 +4,6 @@
     <img src="public/logo.png" width="300" />
   </a>
   <p align="center">基于 Github 轻松管理您的存储图库</p>
-  <p align="center">有的小伙伴会把它当做图床使用，这完全是您个人选择问题，与作者无任何关系。</p>
   <p align="center">
     <a href="README.md">
       <img src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg?longCache=true&style=flat-square">
@@ -16,11 +15,19 @@
 </p>
 
 
+## 起因
+因为作者常常更新 README 图片，导致每次都需要手动敲命令去处理，如果仓库很大拉下来也需要一定时间，所以此项目用于解决此问题。
+
+如果您合理的使用，可以当做图床、文件分享，不错吧！
+
+以开源的精神分享，如果对您有帮助，Star 支持一下！
+
+
 
 
 
 ## 截图
-![](media/screenshot.png)
+![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/bed/screenshot.gif)
 
 
 
@@ -59,7 +66,4 @@ $ yarn build
 但作者不建议您自己部署, 开箱即用，用完即走。
 
 
-
-## License
-[MIT](LICENSE)
 

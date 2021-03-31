@@ -15,11 +15,18 @@
 </p>
 
 
+Because the author often updates the README picture, it is necessary to manually type commands to process each time. If the warehouse is very large, it will take some time to pull down, so this project is used to solve this problem.
+
+If you use it reasonably, you can use it as a picture bed or file sharing, not bad!
+
+Share in the spirit of open source, if it helps you, Star will support it!
+
+
 
 
 
 ## Screenshot
-![](media/screenshot.png)
+![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/bed/screenshot.gif)
 
 
 
@@ -58,7 +65,4 @@ If you build it yourself, you may need [Github OAuth2](https://github.com/xjh222
 It is not recommended to build by yourself!
 
 
-
-## License
-[MIT](LICENSE)
 

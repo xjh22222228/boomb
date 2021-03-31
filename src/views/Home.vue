@@ -6,8 +6,8 @@
   <div
     class="home"
     id="home"
-    @dragenter.prevent="handleDragEnter"
-    @dragover.prevent="funcPass"
+    @dragenter.prevent.stop="handleDragEnter"
+    @dragover.prevent.stop="funcPass"
     @drop="handleDrop"
   >
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
@@ -70,7 +70,7 @@ import Loading from '@/components/Loading.vue';
 import FileComponent from '../components/File.vue'
 import Viewer from 'viewerjs';
 import debounce from 'lodash.debounce'
-import { ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { Events, ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
@@ -115,8 +115,9 @@ export default defineComponent({
     }
 
     // 复制粘贴上传图片
-    async function copyUpload(event: any) {
+    async function copyUpload(event: Events['onCopy']) {
       const items = event.clipboardData?.items
+      if (!items) return
       let files: File[] = []
 
       if (items.length) {
@@ -136,11 +137,11 @@ export default defineComponent({
       }
     }
 
-    function handleDrop(e: DragEvent) {
+    function handleDrop(e: Events['onDrop']) {
       e.stopPropagation()
       e.preventDefault()
 
-      const files = e!.dataTransfer!.files
+      const files = e.dataTransfer!.files
       if (files) {
         for (let file of files) {
           // 目录 type 为空
