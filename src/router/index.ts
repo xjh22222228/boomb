@@ -1,8 +1,9 @@
 // Copyright 2021 the xiejiahe. All rights reserved. MIT license.
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
+import Home from '@/views/Home.vue'
+import Login from '@/views/Login.vue'
+import NewFile from '@/views/NewFile.vue'
 import config from '@/config'
 
 const routes: RouteRecordRaw[] = [
@@ -16,6 +17,11 @@ const routes: RouteRecordRaw[] = [
     alias: ['/oauth/redirect'],
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/file/new',
+    name: 'NewFile',
+    component: NewFile
   },
   {
     path: '/:pathMatch(.*)*',

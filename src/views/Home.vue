@@ -188,7 +188,9 @@ export default defineComponent({
 
     // 监听路由变化获取目录列表
     watch([() => route.query.path], () => {
-      getDir()
+      if (route.name === 'Home') {
+        getDir()
+      }
     })
 
     // 目录变化初始化图片预览

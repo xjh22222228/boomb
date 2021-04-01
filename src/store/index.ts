@@ -127,6 +127,34 @@ export default createStore<State>({
       })
     },
 
+    async newFile(
+      { state },
+      { fileName, content, path }: { fileName: string, content: string, path: string }
+    ) {
+      const dir: IFile[] = state.dir
+
+      // Repeat
+      const exists = dir.some(item => item.name === fileName)
+
+      if (!fileName || exists) {
+        fileName = uuidv4() + '.txt'
+      }
+
+      const res = await createFile({
+        content,
+        path: `${path || ''}/${fileName}`,
+      })
+
+      if (isSuccess(res.status)) {
+        ElMessage({
+          type: 'success',
+          message: 'Success！'
+        })
+      }
+
+      return res
+    },
+
     async createFile(
       { dispatch, state },
       { file, route }: { file: File, route: RouteLocationNormalizedLoaded }

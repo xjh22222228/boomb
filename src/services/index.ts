@@ -85,8 +85,8 @@ export async function createFile(
     isEncode = true
   }: Iupdate,
 ) {
-  if (path!.startsWith('/')) {
-    path = path!.slice(1)
+  if (path) {
+    path = path.replace(/^\/*/g, '')
   }
 
   return put(`/repos/${id}/contents/${path}`, {

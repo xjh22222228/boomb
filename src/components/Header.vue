@@ -7,6 +7,7 @@
         icon="el-icon-upload2"
         class="mr10"
         type="primary"
+        size="small"
       >
         {{ t('uploadFile' )}}
         <input
@@ -22,6 +23,7 @@
         icon="el-icon-plus"
         @click="toggleCreateDirModal"
         id="mkdir-btn"
+        size="small"
       >
         {{ t('createDir' )}}
       </el-button>
@@ -121,7 +123,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .header {
-  padding: 15px 50px;
+  padding: 15px 50px 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

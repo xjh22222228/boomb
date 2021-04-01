@@ -2,6 +2,7 @@
   <div class="context" id="context-menu">
     <div class="item" @click="handleRefresh">{{ t('refresh') }}</div>
     <div class="item" @click="handleUploadFile">{{ t('uploadFile') }}</div>
+    <div class="item" @click="handleNewFile">{{ t('newFile') }}</div>
     <div class="item" @click="handleMkdir">{{ t('createDir') }}</div>
   </div>
 </template>
@@ -9,7 +10,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
@@ -19,6 +20,7 @@ export default defineComponent({
     const { t } = useI18n()
     const store = useStore()
     const route = useRoute()
+    const router = useRouter()
     let menuEl: HTMLElement
     
     const handleContext = function(e: MouseEvent) {
@@ -65,10 +67,20 @@ export default defineComponent({
       document.getElementById('mkdir-btn')?.click()
     }
 
+    const handleNewFile = function() {
+      router.push({
+        path: '/file/new',
+        query: {
+          path: route.query.path || '/'
+        }
+      })
+    }
+
     return {
       t,
       handleRefresh,
       handleUploadFile,
+      handleNewFile,
       handleMkdir
     }
   }
