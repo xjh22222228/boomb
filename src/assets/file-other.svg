@@ -11,10 +11,6 @@
             <g id="fileico/normal_mini" transform="translate(718.000000, 580.000000)">
                 <g id="ico_normal_mini">
                     <rect id="bg" x="0" y="0" width="40" height="40"></rect>
-                    <g id="Rectangle-23-Copy">
-                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
-                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
-                    </g>
                     <path d="M27,18 L27,28 L13,28 L13,12 L21,12 L21,18 L23,18 L27,18 Z M27,16 L23,16 L23,12 L27,16 Z" id="Combined-Shape" fill="#7C878E"></path>
                 </g>
             </g>

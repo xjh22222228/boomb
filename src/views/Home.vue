@@ -273,6 +273,9 @@ export default defineComponent({
   justify-content: center;
   margin-top: 50px;
 
+  .el-checkbox {
+    margin-left: 15px;
+  }
   .el-checkbox__label {
     display: none;
   }

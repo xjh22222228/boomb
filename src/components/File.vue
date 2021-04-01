@@ -95,6 +95,7 @@ const filePdfImg = require('@/assets/file-pdf.svg')
 const fileZipImg = require('@/assets/file-zip.svg')
 const fileTxtImg = require('@/assets/file-txt.svg')
 const fileDocImg = require('@/assets/file-doc.svg')
+const fileOtherImg = require('@/assets/file-other.svg')
 
 export default defineComponent({
   name: 'File',
@@ -128,6 +129,10 @@ export default defineComponent({
             isImage.value = true
             return getCdn(CDN.Jsdelivr, filePath)
           }
+        }
+
+        if (!filePath.includes('.')) {
+          return fileOtherImg
         }
 
         switch (filePath.split('.').pop()) {

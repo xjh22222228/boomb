@@ -9,6 +9,8 @@
       >
       </el-input>
 
+      <el-checkbox v-model="isTemp" class="check">{{ t('temp') }}</el-checkbox>
+
       <el-button
         size="small"
         @click="handleCancel"
@@ -50,6 +52,7 @@ export default defineComponent({
   setup() {
     const fileName = ref('')
     const content = ref('')
+    const isTemp = ref(false)
     const loading = ref(false)
     const { t } = useI18n()
     const store = useStore()
@@ -62,16 +65,17 @@ export default defineComponent({
       const res = await store.dispatch('newFile', {
         fileName: fileName.value,
         content: content.value,
+        isTemp: isTemp.value,
         path
       })
 
       loading.value = false
 
-      if (isSuccess(res.status)) {
+      if (isSuccess(res?.status)) {
         router.replace({
           name: 'Home',
           query: {
-            path: route.query.path || ''
+            path: isTemp.value ? '/.temp' : route.query.path
           }
         })
       }
@@ -90,6 +94,7 @@ export default defineComponent({
       t,
       fileName,
       content,
+      isTemp,
       loading,
       handlePublish,
       handleCancel
@@ -127,6 +132,11 @@ export default defineComponent({
       height: 100% !important;
       font-size: 18px;
     }
+  }
+
+  .check {
+    margin-top: 10px;
+    margin-right: 10px;
   }
 }
 </style>

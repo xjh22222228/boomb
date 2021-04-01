@@ -129,7 +129,17 @@ export default createStore<State>({
 
     async newFile(
       { state },
-      { fileName, content, path }: { fileName: string, content: string, path: string }
+      {
+        fileName,
+        content,
+        path,
+        isTemp
+      } : {
+        fileName: string,
+        content: string,
+        path: string,
+        isTemp: boolean
+      }
     ) {
       const dir: IFile[] = state.dir
 
@@ -142,7 +152,7 @@ export default createStore<State>({
 
       const res = await createFile({
         content,
-        path: `${path || ''}/${fileName}`,
+        path: isTemp ? `.temp/${fileName}` : `${path}/${fileName}`,
       })
 
       if (isSuccess(res.status)) {
@@ -195,7 +205,7 @@ export default createStore<State>({
           break
       }
 
-      createFile({
+      return await createFile({
         content: base64,
         path: `${path || ''}/${fileName}`,
         isEncode: false
@@ -212,7 +222,7 @@ export default createStore<State>({
 
     async mkdir(_, path: string) {
       try {
-        await createFile({
+        return await createFile({
           content: '',
           // .gitkeep 允许空目录
           path: `${path}/.gitkeep`,
@@ -234,6 +244,7 @@ export default createStore<State>({
     async getBranchAll({ commit }, owner) {
       const res = await getBranchAll(owner)
       commit('saveBranchAll', res.data || [])
+      return res
     }
   },
 
