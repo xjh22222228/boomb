@@ -106,9 +106,8 @@ export default defineComponent({
       const el = document.getElementById('file-wrapper')
       if (el) {
         viewer = new Viewer(el, {
-          filter(image: HTMLElement) {
-            const isImg = image.classList.contains('image')
-            return isImg
+          filter(image: Element) {
+            return image.classList.contains('image')
           }
         })
       }

@@ -40,21 +40,10 @@ export function initClipboard() {
 
 export function logout() {
   const removeKeys = ['token', 'isLogin']
-  const keys = []
-  const len = window.localStorage.length
 
-  for (let i = 0; i < len; i++) {
-    const key = window.localStorage.key(i)
-
-    if (key) {
-      if (removeKeys.includes(key)) {
-        keys.push(key)
-      }
-    }
-  }
-
-  for (let k of keys) {
-    window.localStorage.removeItem(k)
+  for (let i = 0; i < removeKeys.length; i++) {
+    const key = removeKeys[i]
+    window.localStorage.removeItem(key)
   }
 
   window.location.reload()

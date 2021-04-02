@@ -128,7 +128,7 @@ export default createStore<State>({
     },
 
     async newFile(
-      { state },
+      _,
       {
         fileName,
         content,
@@ -141,14 +141,8 @@ export default createStore<State>({
         isTemp: boolean
       }
     ) {
-      const dir: IFile[] = state.dir
 
-      // Repeat
-      const exists = dir.some(item => item.name === fileName)
-
-      if (!fileName || exists) {
-        fileName = uuidv4() + '.txt'
-      }
+      fileName ||= uuidv4() + '.txt'
 
       const res = await createFile({
         content,

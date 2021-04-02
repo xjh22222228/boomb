@@ -74,6 +74,7 @@ export default defineComponent({
         case 1:
           sortDir = dir.value.sort((a: IFile, b: IFile) => a.size - b.size)
           break
+
         case 2:
           sortDir = dir.value.sort((a: IFile, b: IFile) => {
             const aCode = a.name.charCodeAt(0)
