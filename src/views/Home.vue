@@ -139,6 +139,7 @@ export default defineComponent({
     function handleDrop(e: Events['onDrop']) {
       e.stopPropagation()
       e.preventDefault()
+      dragState.value = e.type
 
       const files = e.dataTransfer!.files
       if (files) {
