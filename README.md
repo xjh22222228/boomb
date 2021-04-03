@@ -15,13 +15,22 @@
 </p>
 
 
-Because the author often updates the README picture, it is necessary to manually type commands to process each time. If the warehouse is very large, it will take some time to pull down, so this project is used to solve this problem.
+Because often need to update the README picture, it is necessary to manually type commands to process each time. If the warehouse is very large, it will take some time to pull down, so this project is used to solve this problem.
 
 If you use it reasonably, you can use it as a picture bed or file sharing, not bad!
 
 Share in the spirit of open source, if it helps you, Star will support it!
 
 
+
+## Features
+- No need to deploy, start in 2 steps
+- Ready to use out of the box, leave after use
+- Support drag and drop, paste upload
+- Multiple CDN acceleration
+- Can be used as file sharing
+- Custom file upload scheme
+- Support online new text file
 
 
 
@@ -32,8 +41,8 @@ Share in the spirit of open source, if it helps you, Star will support it!
 
 
 ## Usage
-1. [Create a New Repository](https://github.com/new)
-2. Open [https://boomb.cn](https://boomb.cn).
+1. [Create a New Repository](https://github.com/new) (Or an existing repo)
+2. Open [https://boomb.cn](https://boomb.cn)
 
 
 
