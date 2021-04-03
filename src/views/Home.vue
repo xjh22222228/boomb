@@ -5,10 +5,10 @@
 
   <div
     class="home"
-    id="home"
-    @dragenter.prevent.stop="handleDragEnter"
-    @dragover.prevent.stop="funcPass"
+    @dragover="handleFileDrag"
+    @dragleave="handleFileDrag"
     @drop="handleDrop"
+    :class="{active: dragState === 'dragover'}"
   >
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item
@@ -69,7 +69,6 @@
 import Loading from '@/components/Loading.vue';
 import FileComponent from '../components/File.vue'
 import Viewer from 'viewerjs';
-import debounce from 'lodash.debounce'
 import { Events, ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
@@ -87,8 +86,8 @@ export default defineComponent({
     const store = useStore()
     const checkList = ref<number[]>([])
     const isCheckAll = ref(false)
+    const dragState = ref('')
     const dirList = computed<IFile[]>(() => store.state.dir)
-    let homeEl: HTMLElement
 
     let viewer: Viewer|null
 
@@ -154,13 +153,10 @@ export default defineComponent({
       }
     }
 
-    const removeHomeActive = debounce(() => {
-      homeEl.classList.remove('active')
-    }, 3000)
-
-    function handleDragEnter() {
-      homeEl.classList.add('active')
-      removeHomeActive()
+    function handleFileDrag(e: Events['onDragover']) {
+      e.stopPropagation()
+      e.preventDefault()
+      dragState.value = e.type
     }
 
     async function handleDel() {
@@ -212,7 +208,6 @@ export default defineComponent({
     onMounted(() => {
       getDir()
       document.addEventListener('paste', copyUpload)
-      homeEl = document.querySelector('.home') as HTMLElement
     })
 
     onUnmounted(() => {
@@ -247,11 +242,11 @@ export default defineComponent({
       isCheckAll,
       dirList,
       paths,
+      dragState,
 
       handleDel,
       handleDrop,
-      handleDragEnter,
-      funcPass: () => {},
+      handleFileDrag,
     }
   }
 })
