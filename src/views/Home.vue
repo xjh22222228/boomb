@@ -5,6 +5,7 @@
 
   <div
     class="home"
+    id="home"
     @dragover="handleFileDrag"
     @dragleave="handleFileDrag"
     @drop="handleDrop"
