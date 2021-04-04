@@ -6,19 +6,19 @@ import config from '@/config'
 import { ElNotification } from 'element-plus'
 
 const token = config.token
-let loadingEl: HTMLElement|null
 const defaultTitle = document.title
 
 function startLoad() {
+  const loadingEl = document.getElementById('loading')
   document.title = 'Boomb...Boomb...Boomb'
   NProgress.start()
-  loadingEl ||= document.getElementById('loading')
   if (loadingEl) {
     loadingEl.style.display = 'block'
   }
 }
 
 function stopLoad() {
+  const loadingEl = document.getElementById('loading')
   document.title = defaultTitle
   NProgress.done()
   if (loadingEl) {
