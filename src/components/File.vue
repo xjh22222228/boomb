@@ -6,9 +6,11 @@
       :width="400"
     >
       <div>
-        <p v-if="isFile">
+        <div class="file-wrapper">
           <el-button
             icon="el-icon-upload2"
+            v-if="isFile"
+            class="mr10"
           >
             {{ t('changeFile') }}
             <input
@@ -17,12 +19,14 @@
               @change="handleUpdateFile($event)"
             />
           </el-button>
-        </p>
+          <p>{{ t('fileSize') }}: {{ data.sizeLabel }}</p>
+        </div>
+
         <p>
           {{ isFile ? t('fileName') : t('dirName') }}:
           <a :href="cdn1" target="_blank">{{ data.name }}</a>
         </p>
-        <p>{{ t('fileSize') }}: {{ data.sizeLabel }}</p>
+
         <el-input v-model="cdn1" class="mb10">
           <template #prepend>
             <a :href="cdn1" target="_blank">CDN1</a>
@@ -36,7 +40,7 @@
           </template>
         </el-input>
 
-        <el-input v-model="cdn2">
+        <el-input v-model="cdn2" class="mb10">
           <template #prepend>
             <a :href="cdn2" target="_blank">CDN2</a>
           </template>
@@ -44,6 +48,32 @@
             <i
               class="el-icon-document-copy copy"
               :data-clipboard-text="cdn2"
+            >
+            </i>
+          </template>
+        </el-input>
+
+        <el-input v-model="html" class="mb10">
+          <template #prepend>
+            <a :href="html" target="_blank">HTML</a>
+          </template>
+          <template #append>
+            <i
+              class="el-icon-document-copy copy"
+              :data-clipboard-text="html"
+            >
+            </i>
+          </template>
+        </el-input>
+
+        <el-input v-model="markdown">
+          <template #prepend>
+            <a :href="cdn1" target="_blank">Markdown</a>
+          </template>
+          <template #append>
+            <i
+              class="el-icon-document-copy copy"
+              :data-clipboard-text="markdown"
             >
             </i>
           </template>
@@ -118,6 +148,7 @@ export default defineComponent({
     const fileName = props.data.name.toLowerCase()
     const fileType = props.data.type
     const filePath = props.data.path
+    const CDN1 = getCdn(CDN.Jsdelivr, filePath, false)
 
     // 文件地址
     const fileUrl = computed(() => {
@@ -202,8 +233,10 @@ export default defineComponent({
       isFile: fileType !== 'dir',
       hasError,
       imgLoad,
-      cdn1: getCdn(CDN.Jsdelivr, filePath, false),
+      cdn1: CDN1,
       cdn2: getCdn(CDN.Github, filePath, false),
+      markdown: `![](${CDN1})`,
+      html: `<a href="${CDN1}" target="_blank"><img src="${CDN1}" alt="" /></a>`,
 
       handleUpdateFile,
       goDir,
@@ -284,5 +317,12 @@ export default defineComponent({
   width: 108px;
   height: 42px;
   opacity: 0;
+}
+</style>
+
+<style lang="scss">
+.file-wrapper {
+  display: flex;
+  align-items: center;
 }
 </style>
