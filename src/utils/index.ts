@@ -58,3 +58,25 @@ export function getFileEncode(): FileEncode {
 
   return FileEncode.RawName
 }
+
+export function getCharCode(str: string): number {
+  let n = 0
+  if (!str) {
+    return n
+  }
+
+  // 1.jpg => 1
+  if (!str.startsWith('.')) {
+    str = str.split('.')[0] || ''
+  }
+
+  for (let i = 0; i < str.length; i++) {
+    n += str.charCodeAt(i)
+  }
+
+  return n
+}
+
+export function isMobile() {
+  return 'ontouchstart' in window
+}

@@ -52,6 +52,7 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
 import { useI18n } from 'vue-i18n'
+import { getCharCode } from '@/utils'
 
 export default defineComponent({
   name: 'Sort',
@@ -77,8 +78,8 @@ export default defineComponent({
 
         case 2:
           sortDir = dir.value.sort((a: IFile, b: IFile) => {
-            const aCode = a.name.charCodeAt(0)
-            const bCode = b.name.charCodeAt(0)
+            const aCode = getCharCode(a.name)
+            const bCode = getCharCode(b.name)
             return aCode - bCode
           })
           break
