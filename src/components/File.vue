@@ -4,6 +4,7 @@
       placement="bottom"
       trigger="hover"
       :width="400"
+      :disabled="!isFile"
     >
       <div>
         <div class="file-wrapper">
@@ -19,15 +20,15 @@
               @change="handleUpdateFile($event)"
             />
           </el-button>
-          <p>{{ t('fileSize') }}: {{ data.sizeLabel }}</p>
+          <div>
+            <div>{{ data.sizeLabel }}</div>
+            <div>
+              <a :href="cdn1" target="_blank">{{ data.name }}</a>
+            </div>
+          </div>
         </div>
 
-        <p>
-          {{ isFile ? t('fileName') : t('dirName') }}:
-          <a :href="cdn1" target="_blank">{{ data.name }}</a>
-        </p>
-
-        <el-input v-model="cdn1" class="mb10">
+        <el-input v-model="cdn1" class="mb10 mt10">
           <template #prepend>
             <a :href="cdn1" target="_blank">CDN1</a>
           </template>
