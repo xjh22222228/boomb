@@ -1,5 +1,7 @@
 import Clipboard from 'clipboard'
 import { FileEncode } from '@/types'
+import { IFile } from '@/store'
+import { getCdn, CDN } from '@/services'
 
 let clipboard: Clipboard|null
 
@@ -79,4 +81,61 @@ export function getCharCode(str: string): number {
 
 export function isMobile() {
   return 'ontouchstart' in window
+}
+
+export function isImage(fileName: string): boolean {
+  const imageSuffix = ['.png', '.jpg', '.jpeg', '.gif', 'bmp', '.svg']
+
+  for (let v of imageSuffix) {
+    if (fileName.endsWith(v)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+const fileCodeImg = require('@/assets/file-code.svg')
+const fileFolderImg = require('@/assets/file-folder.svg')
+const filePdfImg = require('@/assets/file-pdf.svg')
+const fileZipImg = require('@/assets/file-zip.svg')
+const fileTxtImg = require('@/assets/file-txt.svg')
+const fileDocImg = require('@/assets/file-doc.svg')
+const fileOtherImg = require('@/assets/file-other.svg')
+
+export function getFileUrl(file: IFile): string {
+  const { type, name, path } = file
+
+  if (type === 'file') {
+    if (isImage(name)) {
+      return getCdn(CDN.Jsdelivr, path)
+    }
+
+    if (!path.includes('.')) {
+      return fileOtherImg
+    }
+
+    switch (path.split('.').pop()) {
+      case 'pdf':
+        return filePdfImg
+
+      case 'txt':
+        return fileTxtImg
+
+      case 'doc':
+      case 'docx':
+        return fileDocImg
+
+      case 'zip':
+      case 'rar':
+      case 'gzip':
+      case 'gz':
+        return fileZipImg
+
+      default:
+        return fileCodeImg
+    }
+  } else {
+    return fileFolderImg
+  }
 }

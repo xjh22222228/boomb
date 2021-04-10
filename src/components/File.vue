@@ -93,7 +93,7 @@
               <img
                 v-show="!hasError"
                 :src="fileUrl"
-                :class="{'zoom-in': isImage, 'image': isImage}"
+                :class="{'zoom-in': isImg, 'image': isImg}"
                 draggable="false"
                 @click="goDir"
                 @load="imgLoad = false"
@@ -110,23 +110,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { getCdn, CDN, updateFileContent } from '@/services'
 import { IFile } from '@/store'
-import { getBase64 } from '@/utils'
+import { getBase64, getFileUrl, isImage } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
 import { useI18n } from 'vue-i18n'
-
-const fileCodeImg = require('@/assets/file-code.svg')
-const fileFolderImg = require('@/assets/file-folder.svg')
-const filePdfImg = require('@/assets/file-pdf.svg')
-const fileZipImg = require('@/assets/file-zip.svg')
-const fileTxtImg = require('@/assets/file-txt.svg')
-const fileDocImg = require('@/assets/file-doc.svg')
-const fileOtherImg = require('@/assets/file-other.svg')
 
 export default defineComponent({
   name: 'File',
@@ -143,54 +135,14 @@ export default defineComponent({
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
-    const isImage = ref(false)
     const hasError = ref(false)
     const imgLoad = ref(true)
     const fileName = props.data.name.toLowerCase()
     const fileType = props.data.type
     const filePath = props.data.path
     const CDN1 = getCdn(CDN.Jsdelivr, filePath, false)
-
-    // 文件地址
-    const fileUrl = computed(() => {
-      if (fileType === 'file') {
-        // 图片
-        const imageSuffix = ['.png', '.jpg', '.jpeg', '.gif', 'bmp', '.svg']
-        for (let v of imageSuffix) {
-          if (fileName.endsWith(v)) {
-            isImage.value = true
-            return getCdn(CDN.Jsdelivr, filePath)
-          }
-        }
-
-        if (!filePath.includes('.')) {
-          return fileOtherImg
-        }
-
-        switch (filePath.split('.').pop()) {
-          case 'pdf':
-            return filePdfImg
-
-          case 'txt':
-            return fileTxtImg
-
-          case 'doc':
-          case 'docx':
-            return fileDocImg
-
-          case 'zip':
-          case 'rar':
-          case 'gzip':
-          case 'gz':
-            return fileZipImg
-
-          default:
-            return fileCodeImg
-        }
-      } else {
-        return fileFolderImg
-      }
-    })
+    const isImg = isImage(fileName)
+    const fileUrl = getFileUrl(props.data)
 
     const handleUpdateFile = async function(e: any) {
       const files = e.target?.files
@@ -230,7 +182,7 @@ export default defineComponent({
       t,
       fileUrl,
       fileType,
-      isImage,
+      isImg,
       isFile: fileType !== 'dir',
       hasError,
       imgLoad,
