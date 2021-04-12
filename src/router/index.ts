@@ -4,13 +4,20 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import NewFile from '@/views/NewFile.vue'
+import Mobile from '@/views/Mobile.vue'
 import config from '@/config'
+import { isMobile } from '@/utils'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: isMobile() ? Mobile : Home
+  },
+  {
+    path: '/app',
+    name: 'Mobile',
+    component: Mobile
   },
   {
     path: '/login',

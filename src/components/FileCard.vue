@@ -121,7 +121,7 @@ import { isSuccess } from '@/utils/http'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  name: 'File',
+  name: 'FileCard',
 
   props: {
     data: {
@@ -181,7 +181,6 @@ export default defineComponent({
     return {
       t,
       fileUrl,
-      fileType,
       isImg,
       isFile: fileType !== 'dir',
       hasError,

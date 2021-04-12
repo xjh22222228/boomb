@@ -2,6 +2,8 @@
   <header class="header">
     <Loading />
 
+    <slot></slot>
+
     <div class="left">
       <el-button
         icon="el-icon-upload2"
@@ -123,7 +125,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .header {
-  padding: 15px 50px 15px 20px;
+  padding: 15px 30px 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

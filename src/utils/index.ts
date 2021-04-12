@@ -2,6 +2,7 @@ import Clipboard from 'clipboard'
 import { FileEncode } from '@/types'
 import { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
+import i18n from '@/i18n'
 
 let clipboard: Clipboard|null
 
@@ -138,4 +139,25 @@ export function getFileUrl(file: IFile): string {
   } else {
     return fileFolderImg
   }
+}
+
+export function generateBreadcrumb(path: string = ''): string[] {
+  let pathsList = path.split('/') as any[]
+
+  let fullPath = '';
+  for (let i = 0; i < pathsList.length; i++) {
+    const path = pathsList[i]
+    fullPath += '/' + path
+
+    pathsList[i] = {
+      name: path === '' ? i18n.global.t('all') : path,
+      path: fullPath.startsWith('//')
+        ? fullPath.slice(1)
+        : fullPath === '/'
+          ? ''
+          : fullPath
+    };
+  }
+
+  return pathsList
 }

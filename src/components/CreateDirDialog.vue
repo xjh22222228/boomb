@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     title="新建文件夹"
-    width="500px"
+    width="300px"
     :model-value="visible"
     :before-close="beforeClose"
   >

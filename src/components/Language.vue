@@ -50,7 +50,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .context {
   z-index: 999;
-  position: fixed;
+  position: absolute;
   top: 15px;
   right: 20px;
   

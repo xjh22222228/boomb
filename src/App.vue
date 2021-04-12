@@ -1,6 +1,4 @@
 <template>
-  <Language />
-
   <div id="container">
     <div class="router-view">
       <router-view />
@@ -8,17 +6,13 @@
 
     <Footer />
   </div>
-
-  <Action />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
-import Action from './components/Action.vue'
 
 export default defineComponent({
-  components: { Action },
   name: 'App',
 
   setup() {

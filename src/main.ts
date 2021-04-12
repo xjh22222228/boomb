@@ -37,7 +37,8 @@ import {
   ElRadioGroup
 } from 'element-plus'
 
-import File from '@/components/File.vue'
+import FileCard from '@/components/FileCard.vue'
+import FileList from '@/components/FileList.vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Loading from '@/components/Loading.vue'
@@ -76,7 +77,8 @@ app.component(ElOption.name, ElOption)
 app.component(ElRadio.name, ElRadio)
 app.component(ElRadioGroup.name, ElRadioGroup)
 
-app.component(File.name, File)
+app.component(FileCard.name, FileCard)
+app.component(FileList.name, FileList)
 app.component(Header.name, Header)
 app.component(Footer.name, Footer)
 app.component(Loading.name, Loading)

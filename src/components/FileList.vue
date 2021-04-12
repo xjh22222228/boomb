@@ -1,0 +1,143 @@
+<template>
+  <div class="wrapper">
+    <div class="left">
+      <img
+        :src="fileUrl"
+        class="image"
+      />
+    </div>
+
+    <div class="middle" @click="goDir">
+      <div :class="{dir: !isFile}">{{ fileName }}</div>
+      <div class="size">{{ isFile ? data.sizeLabel : '' }}</div>
+    </div>
+
+    <div>
+      <slot name="right"></slot>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import { getCdn, CDN, updateFileContent } from '@/services'
+import { IFile } from '@/store'
+import { getBase64, getFileUrl, isImage } from '@/utils'
+import { ElMessage } from 'element-plus'
+import { isSuccess } from '@/utils/http'
+import { useI18n } from 'vue-i18n'
+
+export default defineComponent({
+  name: 'FileList',
+
+  props: {
+    data: {
+      type: Object as PropType<IFile>,
+      default: {}
+    }
+  },
+
+  setup(props) {
+    const { t } = useI18n()
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
+    const hasError = ref(false)
+    const imgLoad = ref(true)
+    const fileName = props.data.name.toLowerCase()
+    const fileType = props.data.type
+    const filePath = props.data.path
+    const CDN1 = getCdn(CDN.Jsdelivr, filePath, false)
+    const isImg = isImage(fileName)
+    const fileUrl = getFileUrl(props.data)
+
+    const handleUpdateFile = async function(e: any) {
+      const files = e.target?.files
+      if (files.length <= 0) return
+
+      const file = files[0] as File
+      const base64 = await getBase64(file)
+
+      updateFileContent(props.data, {
+        content: base64,
+        isEncode: false
+      }).then(res => {
+        if (isSuccess(res.status)) {
+          store.dispatch('getDir', route.query.path)
+          ElMessage({
+            type: 'success',
+            message: '更新成功, 由于缓存策略需要次日更新'
+          })
+        }
+      })
+
+      e.target.value = ''
+    }
+
+    function goDir() {
+      if (fileType === 'dir') {
+        router.replace({
+          path: '/app',
+          query: {
+            path: `/${filePath}`
+          }
+        })
+      }
+    }
+
+    return {
+      t,
+      fileUrl,
+      fileName,
+      isImg,
+      isFile: fileType !== 'dir',
+      hasError,
+      imgLoad,
+      cdn1: CDN1,
+      cdn2: getCdn(CDN.Github, filePath, false),
+      markdown: `![](${CDN1})`,
+      html: `<a href="${CDN1}" target="_blank"><img src="${CDN1}" alt="" /></a>`,
+
+      handleUpdateFile,
+      goDir,
+    }
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.wrapper {
+  display: flex;
+  cursor: pointer;
+  padding: 10px;
+
+  .image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border: 1px solid #f2f2f2;
+  }
+
+  .middle {
+    flex: 1;
+    padding-left: 5px;
+    padding-top: 5px;
+    margin-right: 20px;
+
+    .dir {
+      margin-top: 5px;
+      font-size: 16px;
+    }
+
+    .size {
+      color: #666;
+    }
+
+    div {
+      font-size: 14px;
+    }
+  }
+}
+</style>

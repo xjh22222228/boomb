@@ -1,4 +1,6 @@
 <template>
+  <Action />
+  <Language />
   <div class="auth-loading" v-if="authLoad"></div>
   <div class="bg"></div>
 

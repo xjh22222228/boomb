@@ -1,17 +1,7 @@
 <template>
   <Header />
-  <Action />
-  <ContextMenu />
-  <Language />
 
-  <div
-    class="home"
-    id="home"
-    @dragover="handleFileDrag"
-    @dragleave="handleFileDrag"
-    @drop="handleDrop"
-    :class="{active: dragState === 'dragover'}"
-  >
+  <div class="mobile-page">
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item
         v-for="item of paths"
@@ -46,19 +36,21 @@
       <el-checkbox v-model="isCheckAll" class="check-all">
         {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : t('allCheck') }}
       </el-checkbox>
-
-      <Sort />
     </div>
+
+    <Sort />
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
       <div class="mod-wrapper" id="file-wrapper">
-        <FileCard
+        <FileList
           v-for="(item, idx) of dirList"
           :key="item.path"
           :data="item"
         >
-          <el-checkbox :label="idx"></el-checkbox>
-        </FileCard>
+          <template v-slot:right>
+            <el-checkbox :label="idx"></el-checkbox>
+          </template>
+        </FileList>
       </div>
     </el-checkbox-group>
     <el-empty v-else :description="t('noData')"></el-empty>
@@ -69,7 +61,7 @@
 
 <script lang="ts">
 import Viewer from 'viewerjs';
-import { Events, ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, defineComponent, nextTick, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
@@ -77,7 +69,7 @@ import { initClipboard, generateBreadcrumb } from '@/utils';
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  name: 'HomePage',
+  name: 'Mobile',
 
   setup() {
     const { t } = useI18n()
@@ -85,7 +77,6 @@ export default defineComponent({
     const store = useStore()
     const checkList = ref<number[]>([])
     const isCheckAll = ref(false)
-    const dragState = ref('')
     const dirList = computed<IFile[]>(() => store.state.dir)
 
     let viewer: Viewer|null
@@ -109,54 +100,6 @@ export default defineComponent({
           }
         })
       }
-    }
-
-    // 复制粘贴上传图片
-    async function copyUpload(event: Events['onCopy']) {
-      const items = event.clipboardData?.items
-      if (!items) return
-      let files: File[] = []
-
-      if (items.length) {
-        for (let i = 0; i < items.length; i++) {
-          const file = items[i].getAsFile()
-          if (file instanceof File) {
-            files.push(file)
-          }
-        }
-      }
-
-      for (let file of files) {
-        store.dispatch('createFile', {
-          file,
-          route
-        })
-      }
-    }
-
-    function handleDrop(e: Events['onDrop']) {
-      e.stopPropagation()
-      e.preventDefault()
-      dragState.value = e.type
-
-      const files = e.dataTransfer!.files
-      if (files) {
-        for (let file of files) {
-          // 目录 type 为空
-          if (file.type) {
-            store.dispatch('createFile', {
-              file,
-              route
-            })
-          }
-        }
-      }
-    }
-
-    function handleFileDrag(e: Events['onDragover']) {
-      e.stopPropagation()
-      e.preventDefault()
-      dragState.value = e.type
     }
 
     async function handleDel() {
@@ -183,7 +126,7 @@ export default defineComponent({
 
     // 监听路由变化获取目录列表
     watch([() => route.query.path], () => {
-      if (route.name === 'Home') {
+      if (route.name === 'Mobile') {
         getDir()
       }
     })
@@ -207,11 +150,6 @@ export default defineComponent({
 
     onMounted(() => {
       getDir()
-      document.addEventListener('paste', copyUpload)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('paste', copyUpload)
     })
 
     // 生成面包屑路径
@@ -225,33 +163,20 @@ export default defineComponent({
       isCheckAll,
       dirList,
       paths,
-      dragState,
 
       handleDel,
-      handleDrop,
-      handleFileDrag,
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.home {
+.mobile-page {
   flex: 1;
 
-  &.active {
-    border: 3px dashed #1890ff;
-  }
-
   .mod-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 50px;
+    margin-top: 10px;
 
-    ::v-deep(.el-checkbox) {
-      margin-left: 15px;
-    }
     ::v-deep(.el-checkbox__label) {
       display: none !important;
     }
@@ -265,7 +190,7 @@ export default defineComponent({
     }
 
     .del-btn {
-      margin: 20px 0 0 50px;
+      margin: 20px 0 0 15px;
     }
 
     ::v-deep(.el-checkbox__label) {
@@ -274,7 +199,7 @@ export default defineComponent({
   }
 
   .breadcrumb {
-    padding: 30px 0 0 50px;
+    padding: 30px 0 0 15px;
     font-size: 18px;
   }
 
@@ -283,6 +208,11 @@ export default defineComponent({
     width: 100%;
     text-align: center;
     color: #777;
+  }
+
+  ::v-deep(.sorter) {
+    margin-left: 5px;
+    margin-top: 15px;
   }
 }
 </style>
