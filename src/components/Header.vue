@@ -17,7 +17,7 @@
           type="file"
           class="file"
           id="input-file"
-          @change="handleUploadFile($event)"
+          @change="handleUploadFile"
         />
       </el-button>
 
@@ -96,7 +96,7 @@ export default defineComponent({
 
     // 上传文件
     async function handleUploadFile(e: any) {
-      const files = e.target?.files
+      const files = e.target.files
 
       for (let file of files) {
         store.dispatch('createFile', {

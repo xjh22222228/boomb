@@ -17,7 +17,7 @@
             <input
               type="file"
               class="file-input"
-              @change="handleUpdateFile($event)"
+              @change="handleUpdateFile"
             />
           </el-button>
           <div>
@@ -126,7 +126,7 @@ export default defineComponent({
   props: {
     data: {
       type: Object as PropType<IFile>,
-      default: {}
+      default: () => ({}),
     }
   },
 
@@ -145,7 +145,7 @@ export default defineComponent({
     const fileUrl = getFileUrl(props.data)
 
     const handleUpdateFile = async function(e: any) {
-      const files = e.target?.files
+      const files = e.target.files
       if (files.length <= 0) return
 
       const file = files[0] as File
