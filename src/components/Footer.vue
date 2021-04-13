@@ -34,7 +34,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .footer {
-  z-index: 99;
+  z-index: 11;
   text-align: center;
   color: #666;
   background: #475050;

@@ -147,9 +147,7 @@ export default defineComponent({
     cursor: pointer;
   }
 }
-</style>
 
-<style lang="scss" scoped>
 .dropdown-username {
   line-height: 1.8 !important;
   color: inherit !important;

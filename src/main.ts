@@ -34,7 +34,8 @@ import {
   ElSelect,
   ElOption,
   ElRadio,
-  ElRadioGroup
+  ElRadioGroup,
+  ElDrawer
 } from 'element-plus'
 
 import FileCard from '@/components/FileCard.vue'
@@ -43,6 +44,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Loading from '@/components/Loading.vue'
 import Action from '@/components/Action.vue'
+import ActionApp from '@/components/ActionApp.vue'
 import Sort from '@/components/Sort.vue'
 import ContextMenu from '@/components/ContextMenu.vue'
 import Language from '@/components/Language.vue'
@@ -76,6 +78,7 @@ app.component(ElSelect.name, ElSelect)
 app.component(ElOption.name, ElOption)
 app.component(ElRadio.name, ElRadio)
 app.component(ElRadioGroup.name, ElRadioGroup)
+app.component(ElDrawer.name, ElDrawer)
 
 app.component(FileCard.name, FileCard)
 app.component(FileList.name, FileList)
@@ -83,6 +86,7 @@ app.component(Header.name, Header)
 app.component(Footer.name, Footer)
 app.component(Loading.name, Loading)
 app.component(Action.name, Action)
+app.component(ActionApp.name, ActionApp)
 app.component(Sort.name, Sort)
 app.component(ContextMenu.name, ContextMenu)
 app.component(Language.name, Language)

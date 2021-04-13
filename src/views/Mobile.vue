@@ -1,7 +1,7 @@
 <template>
-  <Header />
-
   <div class="mobile-page">
+    <ActionApp />
+
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item
         v-for="item of paths"
