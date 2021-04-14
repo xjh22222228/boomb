@@ -10,6 +10,13 @@
     <div class="middle" @click="goDir">
       <div :class="{dir: !isFile}">{{ fileName }}</div>
       <div class="size">{{ isFile ? data.sizeLabel : '' }}</div>
+
+      <input
+        type="file"
+        class="file-input"
+        v-if="isFile"
+        @change="handleUpdateFile"
+      />
     </div>
 
     <div>
@@ -112,6 +119,9 @@ export default defineComponent({
   display: flex;
   cursor: pointer;
   padding: 10px;
+  &:active {
+    background-color: #f2f2f2;
+  }
 
   .image {
     width: 50px;
@@ -121,8 +131,9 @@ export default defineComponent({
   }
 
   .middle {
+    position: relative;
     flex: 1;
-    padding-left: 5px;
+    margin-left: 7px;
     padding-top: 5px;
     margin-right: 20px;
 
@@ -137,6 +148,15 @@ export default defineComponent({
 
     div {
       font-size: 14px;
+    }
+
+    .file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
     }
   }
 }
