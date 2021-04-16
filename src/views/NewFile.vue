@@ -10,7 +10,17 @@
       </el-input>
 
       <el-checkbox v-model="isTemp" class="check">{{ t('temp') }}</el-checkbox>
+    </header>
 
+    <el-input
+      class="textarea"
+      type="textarea"
+      placeholder="Hello World..."
+      v-model="content"
+    >
+    </el-input>
+
+    <div class="toolbar">
       <el-button
         size="small"
         @click="handleCancel"
@@ -27,15 +37,7 @@
       >
         {{ t('publish' )}}
       </el-button>
-    </header>
-
-    <el-input
-      class="textarea"
-      type="textarea"
-      placeholder="Hello World..."
-      v-model="content"
-    >
-    </el-input>
+    </div>
   </section>
 </template>
 
@@ -110,7 +112,7 @@ export default defineComponent({
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 45px;
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -136,7 +138,17 @@ export default defineComponent({
 
   .check {
     margin-top: 10px;
-    margin-right: 10px;
+  }
+
+  .toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 7px 15px;
+    text-align: right;
+    border-top: 1px solid #eee;
+    background: #fff;
   }
 }
 </style>
