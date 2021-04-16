@@ -142,6 +142,7 @@ export function getFileUrl(file: IFile): string {
 }
 
 export function generateBreadcrumb(path: string = ''): string[] {
+  path = path === '/' ? '' : path
   let pathsList = path.split('/') as any[]
 
   let fullPath = '';
@@ -150,7 +151,7 @@ export function generateBreadcrumb(path: string = ''): string[] {
     fullPath += '/' + path
 
     pathsList[i] = {
-      name: path === '' ? i18n.global.t('all') : path,
+      name: (path === '' || path === '/') ? i18n.global.t('all') : path,
       path: fullPath.startsWith('//')
         ? fullPath.slice(1)
         : fullPath === '/'
