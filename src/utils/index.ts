@@ -151,7 +151,7 @@ export function generateBreadcrumb(path: string = ''): string[] {
     fullPath += '/' + path
 
     pathsList[i] = {
-      name: (path === '' || path === '/') ? i18n.global.t('all') : path,
+      name: !path ? i18n.global.t('all') : path,
       path: fullPath.startsWith('//')
         ? fullPath.slice(1)
         : fullPath === '/'
