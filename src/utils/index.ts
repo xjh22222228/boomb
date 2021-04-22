@@ -3,6 +3,7 @@ import { FileEncode } from '@/types'
 import { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
 import i18n from '@/i18n'
+import config from '@/config'
 
 let clipboard: Clipboard|null
 
@@ -161,4 +162,10 @@ export function generateBreadcrumb(path: string = ''): string[] {
   }
 
   return pathsList
+}
+
+export function getEditFileUrl(path: string): string {
+  path = path[0] === '/' ? path.slice(1) : path
+  const { id, branch } = config
+  return `https://github.com/${id}/edit/${branch}/${path}`
 }

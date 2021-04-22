@@ -8,20 +8,33 @@
     >
       <div>
         <div class="file-wrapper">
-          <el-button
-            icon="el-icon-upload2"
-            v-if="isFile"
-            class="mr10"
-          >
-            {{ t('changeFile') }}
-            <input
-              type="file"
-              class="file-input"
-              @change="handleUpdateFile"
-            />
-          </el-button>
           <div>
-            <div>{{ data.sizeLabel }}</div>
+            <el-button
+              icon="el-icon-upload2"
+              v-if="isFile"
+              class="mr10"
+            >
+              {{ t('changeFile') }}
+              <input
+                type="file"
+                class="file-input"
+                @change="handleUpdateFile"
+              />
+            </el-button>
+          </div>
+          <div>
+            <div>
+              {{ data.sizeLabel }}
+              ·
+              <a
+                :href="editUrl"
+                class="inline-block ml10 mt10"
+                target="_blank"
+                v-if="isFile && !isImg"
+              >
+                {{ t('editFile') }}
+              </a>
+            </div>
             <div>
               <a :href="cdn1" target="_blank">{{ data.name }}</a>
             </div>
@@ -115,7 +128,7 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { getCdn, CDN, updateFileContent } from '@/services'
 import { IFile } from '@/store'
-import { getBase64, getFileUrl, isImage } from '@/utils'
+import { getBase64, getFileUrl, isImage, getEditFileUrl } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
 import { useI18n } from 'vue-i18n'
@@ -189,6 +202,7 @@ export default defineComponent({
       cdn2: getCdn(CDN.Github, filePath, false),
       markdown: `![](${CDN1})`,
       html: `<a href="${CDN1}" target="_blank"><img src="${CDN1}" alt="" /></a>`,
+      editUrl: getEditFileUrl(filePath),
 
       handleUpdateFile,
       goDir,

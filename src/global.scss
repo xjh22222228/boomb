@@ -58,6 +58,10 @@ a {
   cursor: zoom-in !important;
 }
 
+.tac {
+  text-align: center;
+}
+
 .tar {
   text-align: right;
 }
@@ -72,4 +76,8 @@ a {
 
 .bg-transparent {
   background-color: transparent !important;
+}
+
+.inline-block {
+  display: inline-block;
 }

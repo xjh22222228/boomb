@@ -44,6 +44,7 @@ export default createI18n({
       publish: 'Publish',
       publichFileName: 'Enter the name of the file to be created, if not, it will be randomly generated',
       temp: 'Temp File',
+      editFile: 'Edit This File',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> is used to easily manage your Github storage gallery.</p>
         <p class="mb10">Some friends will use it as a picture bed. This is entirely a matter of your personal choice and has nothing to do with the author.</p>
@@ -81,6 +82,7 @@ export default createI18n({
       publish: '发布',
       publichFileName: '输入要新建的文件名, 如果没有将随机生成',
       temp: '临时文件',
+      editFile: '编辑此文件',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> 是用于轻松管理您的 Github 存储图库。</p>
         <p class="mb10">有的小伙伴会把它当做图床使用，这完全是您个人选择问题，与作者无任何关系。</p>
