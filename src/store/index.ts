@@ -100,6 +100,8 @@ export default createStore<State>({
     async getDir({ commit, state }, path: string) {
       if (!state.isLogin) return
 
+      window.scroll(0, 0)
+
       // 先读取缓存
       if (state.cacheDir[path]) {
         commit('saveDir', {
