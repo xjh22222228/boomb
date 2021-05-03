@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { FileEncode } from "@/types"
+import { FileEncode } from '@/types'
 import { getFileEncode } from '@/utils'
 
 export default defineComponent({
