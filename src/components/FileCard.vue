@@ -101,15 +101,15 @@
           <div class="file">
             <div
               class="file-icon"
-              :class="{'no-load': !imgLoad, error: hasError}"
+              :class="{'no-load': imgLoaded, error: hasError}"
             >
               <img
                 v-show="!hasError"
                 :src="fileUrl"
-                :class="{'zoom-in': isImg, 'image': isImg}"
+                :class="{'zoom-in': isImg}"
                 draggable="false"
                 @click="goDir"
-                @load="imgLoad = false"
+                @load="imgLoaded = true"
                 @error="hasError = true"
                 alt=""
               />
@@ -149,7 +149,7 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
     const hasError = ref(false)
-    const imgLoad = ref(true)
+    const imgLoaded = ref(false)
     const fileName = props.data.name.toLowerCase()
     const fileType = props.data.type
     const filePath = props.data.path
@@ -197,7 +197,7 @@ export default defineComponent({
       isImg,
       isFile: fileType !== 'dir',
       hasError,
-      imgLoad,
+      imgLoaded,
       cdn1: CDN1,
       cdn2: getCdn(CDN.Github, filePath, false),
       markdown: `![](${CDN1})`,
