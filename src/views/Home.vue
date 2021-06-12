@@ -86,7 +86,7 @@ export default defineComponent({
     const checkList = ref<number[]>([])
     const isCheckAll = ref(false)
     const dragState = ref('')
-    const dirList = computed<IFile[]>(() => store.state.dir)
+    const dirList = computed<IFile[]>(() => store.getters.getDir(route))
 
     let viewer: Viewer|null
 

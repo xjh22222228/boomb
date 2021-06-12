@@ -106,7 +106,7 @@
               <img
                 v-show="!hasError"
                 :src="fileUrl"
-                :class="{'zoom-in': isImg}"
+                :class="{'zoom-in': isImg, image: isImg}"
                 draggable="false"
                 @click="goDir"
                 @load="imgLoaded = true"

@@ -3,12 +3,16 @@
 import axios from 'axios'
 import NProgress from 'nprogress'
 import config from '@/config'
+import store from '@/store'
 import { ElNotification } from 'element-plus'
 
 const token = config.token
 const defaultTitle = document.title
 
 function startLoad() {
+  if (!store.state.loading) {
+    return
+  }
   const loadingEl = document.getElementById('loading')
   document.title = 'Boomb...Boomb...Boomb'
   NProgress.start()

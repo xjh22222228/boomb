@@ -43,11 +43,11 @@ type State = {
   user: User
   token: string|null
   isLogin: boolean
-  dir: IFile[]
   cacheDir: {
-    [key: string]: IFile[]
+    [path: string]: IFile[]
   },
-  branchAll: IBranch[]
+  branchAll: IBranch[],
+  loading: boolean
 }
 
 export default createStore<State>({
@@ -64,11 +64,20 @@ export default createStore<State>({
       },
       token: config.token,
       isLogin: config.isLogin,
-      dir: [],
 
       // 缓存目录列表
       cacheDir: {},
-      branchAll: []
+      branchAll: [],
+
+      loading: true, // 读取缓存不加载Loading
+    }
+  },
+
+  getters: {
+    getDir: (state: State) => (route: RouteLocationNormalizedLoaded): IFile[] => {
+      const path = route.query.path as string
+
+      return state.cacheDir[path] || []
     }
   },
 
@@ -79,12 +88,15 @@ export default createStore<State>({
 
     saveDir(state, { data, path }) {
       state.cacheDir[path] = data
-      state.dir = data
     },
 
     saveBranchAll(state, branchAll: IBranch[]) {
       state.branchAll = branchAll.filter((b: IBranch) => !b.protected)
-    }
+    },
+
+    saveLoading(state, loading: boolean) {
+      state.loading = loading
+    },
   },
 
   actions: {
@@ -104,6 +116,7 @@ export default createStore<State>({
 
       // 先读取缓存
       if (state.cacheDir[path]) {
+        commit('saveLoading', false)
         commit('saveDir', {
           data: state.cacheDir[path],
           path
@@ -126,6 +139,8 @@ export default createStore<State>({
         }
       }).catch(() => {
         router.replace('/')
+      }).finally(() => {
+        commit('saveLoading', true)
       })
     },
 
@@ -162,12 +177,12 @@ export default createStore<State>({
     },
 
     async createFile(
-      { dispatch, state },
+      { dispatch, getters },
       { file, route }: { file: File, route: RouteLocationNormalizedLoaded }
     ) {
       const path = route.query.path
       const base64 = await getBase64(file)
-      const dir: IFile[] = state.dir
+      const dir: IFile[] = getters.getDir(route)
       let fileName = file.name
 
       // Repeat

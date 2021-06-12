@@ -51,7 +51,7 @@ export default defineComponent({
     const dirName = ref('')
     const store = useStore()
     const route = useRoute()
-    const dirList = computed(() => store.state.dir)
+    const dirList = computed(() => store.getters.getDir(route))
 
     const handleOk = function() {
       const v = dirName.value.trim()

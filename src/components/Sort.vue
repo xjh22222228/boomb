@@ -62,7 +62,7 @@ export default defineComponent({
     const store = useStore()
     const route = useRoute()
     const isUp = ref(true)
-    const dir = computed<IFile[]>(() => store.state.dir)
+    const dir = computed<IFile[]>(() => store.getters.getDir(route))
 
     // 1=文件大小
     // 2=文件名

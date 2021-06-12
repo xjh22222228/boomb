@@ -77,7 +77,7 @@ export default defineComponent({
     const store = useStore()
     const checkList = ref<number[]>([])
     const isCheckAll = ref(false)
-    const dirList = computed<IFile[]>(() => store.state.dir)
+    const dirList = computed<IFile[]>(() => store.getters.getDir(route))
 
     let viewer: Viewer|null
 
