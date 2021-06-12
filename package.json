@@ -1,6 +1,6 @@
 {
   "name": "boomb",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "private": true,
   "author": "xiejiahe",
   "scripts": {
@@ -18,7 +18,7 @@
     "bytes": "^3.1.0",
     "clipboard": "^2.0.8",
     "core-js": "^3.14.0",
-    "element-plus": "^1.0.2-beta.46",
+    "element-plus": "^1.0.2-beta.47",
     "js-base64": "^3.6.1",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
@@ -26,10 +26,9 @@
     "uuid": "^8.3.2",
     "viewerjs": "^1.9.2",
     "vue": "^3.0.11",
-    "vue-class-component": "^8.0.0-0",
-    "vue-i18n": "^9.1.4",
-    "vue-router": "^4.0.6",
-    "vuex": "^4.0.0-0"
+    "vue-i18n": "^9.1.6",
+    "vue-router": "^4.0.8",
+    "vuex": "^4.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.13",
