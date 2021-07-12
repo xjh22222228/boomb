@@ -1,7 +1,7 @@
 <template>
   <el-dropdown placement="bottom-end" :hide-on-click="false">
     <span class="sorter">
-      {{ sortType === 1 ? t('fileSize') : t('fileName') }}
+      {{ sortType === SortType.FileSize ? t('fileSize') : t('fileName') }}
       <i :class="isUp ? 'el-icon-top' : 'el-icon-bottom'"></i>
     </span>
 
@@ -28,16 +28,16 @@
           divided
           icon="el-icon-check"
           class="item"
-          @click="sortType = 1"
-          :class="{active: sortType === 1}"
+          @click="sortType = SortType.FileSize"
+          :class="{active: sortType === SortType.FileSize}"
         >
           {{ t('fileSize' )}}
         </el-dropdown-item>
         <el-dropdown-item
           icon="el-icon-check"
           class="item"
-          @click="sortType = 2"
-          :class="{active: sortType === 2}"
+          @click="sortType = SortType.FileName"
+          :class="{active: sortType === SortType.FileName}"
         >
           {{ t('fileName' )}}
         </el-dropdown-item>
@@ -54,6 +54,11 @@ import { IFile } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { getCharCode } from '@/utils'
 
+enum SortType {
+  FileSize = 1, // 文件大小
+  FileName // 文件名
+}
+
 export default defineComponent({
   name: 'Sort',
 
@@ -64,19 +69,17 @@ export default defineComponent({
     const isUp = ref(true)
     const dir = computed<IFile[]>(() => store.getters.getDir(route))
 
-    // 1=文件大小
-    // 2=文件名
-    const sortType = ref(1)
+    const sortType = ref(SortType.FileSize)
 
     watch([sortType, isUp], () => {
       let sortDir: IFile[] = []
 
       switch (sortType.value) {
-        case 1:
+        case SortType.FileSize:
           sortDir = dir.value.sort((a: IFile, b: IFile) => a.size - b.size)
           break
 
-        case 2:
+        case SortType.FileName:
           sortDir = dir.value.sort((a: IFile, b: IFile) => {
             const aCode = getCharCode(a.name)
             const bCode = getCharCode(b.name)
@@ -99,7 +102,8 @@ export default defineComponent({
     return {
       t,
       isUp,
-      sortType
+      sortType,
+      SortType
     }
   }
 })

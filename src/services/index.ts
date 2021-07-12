@@ -163,7 +163,7 @@ export function getCdn(cdn: CDN, path: string, isCache: boolean = true) {
       break
   }
 
-  if (isCache) {
+  if (!isCache) {
     url += `?t=${Date.now()}`
   }
 
