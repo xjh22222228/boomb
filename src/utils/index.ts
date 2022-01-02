@@ -142,7 +142,10 @@ export function getFileUrl(file: IFile): string {
   }
 }
 
-export function generateBreadcrumb(path: string = ''): string[] {
+export function generateBreadcrumb(path: string = ''): {
+  name: string
+  path: string
+}[] {
   path = path === '/' ? '' : path
   let pathsList = path.split('/') as any[]
 

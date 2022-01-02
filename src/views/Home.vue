@@ -139,9 +139,9 @@ export default defineComponent({
       e.preventDefault()
       dragState.value = e.type
 
-      const files = e.dataTransfer!.files
+      const files = e.dataTransfer!.files as any
       if (files) {
-        for (let file of files) {
+        files.forEach((file: Record<string, any>) => {
           // 目录 type 为空
           if (file.type) {
             store.dispatch('createFile', {
@@ -149,7 +149,7 @@ export default defineComponent({
               route
             })
           }
-        }
+        })
       }
     }
 
