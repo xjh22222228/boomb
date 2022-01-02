@@ -178,7 +178,7 @@ export function getBranchAll(owner: string) {
 // 授权
 export function getAccessToken(code: string) {
   return get('/api/oauth', {
-    baseURL: process.env.NODE_ENV === 'development'
+    baseURL: import.meta.env.DEV
       ? 'http://localhost:7001'
       : 'https://github-oauth-opal.vercel.app',
     params: {

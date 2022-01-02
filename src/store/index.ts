@@ -1,5 +1,6 @@
 // Copyright 2021 the xiejiahe. All rights reserved. MIT license.
 
+import { nextTick } from 'vue'
 import bytes from 'bytes'
 import config from '@/config'
 import router from '@/router'
@@ -123,7 +124,7 @@ export default createStore<State>({
         })
       }
 
-      readDir(path).then(res => {
+      return readDir(path).then(res => {
         if (isSuccess(res.status)) {
           const data = res.data
             .map((item: IFile) => {
@@ -222,7 +223,16 @@ export default createStore<State>({
         isEncode: false
       }).then(res => {
         if (isSuccess(res.status)) {
-          dispatch('getDir', path)
+          dispatch('getDir', path).then(async () => {
+            await nextTick()
+            const el = document.getElementById('file-' + fileName)
+            if (el) {
+              el.classList.add('actived')
+              el.scrollIntoView({
+                behavior: 'smooth'
+              })
+            }
+          })
           ElMessage({
             type: 'success',
             message: '上传成功！'

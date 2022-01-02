@@ -12,24 +12,15 @@
       v{{ version }} MIT
     </div>
 
-    Copyright © 2021 boomb.com
+    Copyright © 2021 - {{ year }} boomb.com
   </footer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import pkg from '../../package.json'
 
-const pkg = require('../../package.json')
-
-export default defineComponent({
-  name: 'Footer',
-
-  setup() {
-    return {
-      version: pkg.version,
-    }
-  }
-})
+const version = pkg.version
+const year = new Date().getFullYear()
 </script>
 
 <style lang="scss" scoped>
@@ -41,11 +32,9 @@ export default defineComponent({
   color: #fff;
   padding: 15px 0;
   font-size: 16px;
-
   .flag {
     margin-bottom: 5px;
   }
-
   .icon {
     width: 25px;
     height: 25px;

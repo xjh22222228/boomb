@@ -10,7 +10,7 @@
         <div class="file-wrapper">
           <div>
             <el-button
-              icon="el-icon-upload2"
+              :icon="Upload"
               v-if="isFile"
               class="mr10"
             >
@@ -46,11 +46,9 @@
             <a :href="cdn1" target="_blank">CDN1</a>
           </template>
           <template #append>
-            <i
-              class="el-icon-document-copy copy"
-              :data-clipboard-text="cdn1"
-            >
-            </i>
+            <span class="copy" :data-clipboard-text="cdn1">
+              <el-icon><document-copy /></el-icon>
+            </span>
           </template>
         </el-input>
 
@@ -59,11 +57,9 @@
             <a :href="cdn2" target="_blank">CDN2</a>
           </template>
           <template #append>
-            <i
-              class="el-icon-document-copy copy"
-              :data-clipboard-text="cdn2"
-            >
-            </i>
+            <span class="copy" :data-clipboard-text="cdn2">
+              <el-icon><document-copy /></el-icon>
+            </span>
           </template>
         </el-input>
 
@@ -72,11 +68,9 @@
             <a :href="html" target="_blank">HTML</a>
           </template>
           <template #append>
-            <i
-              class="el-icon-document-copy copy"
-              :data-clipboard-text="html"
-            >
-            </i>
+            <span class="copy" :data-clipboard-text="html">
+              <el-icon><document-copy /></el-icon>
+            </span>
           </template>
         </el-input>
 
@@ -85,11 +79,9 @@
             <a :href="cdn1" target="_blank">Markdown</a>
           </template>
           <template #append>
-            <i
-              class="el-icon-document-copy copy"
-              :data-clipboard-text="markdown"
-            >
-            </i>
+            <span class="copy" :data-clipboard-text="markdown">
+              <el-icon><document-copy /></el-icon>
+            </span>
           </template>
         </el-input>
       </div>
@@ -98,7 +90,7 @@
         <div>
           <slot></slot>
 
-          <div class="file">
+          <div class="file" :id="'file-' + data.name">
             <div
               class="file-icon"
               :class="{'no-load': imgLoaded, error: hasError}"
@@ -122,8 +114,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+<script lang="ts" setup>
+import { PropType, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { getCdn, CDN, updateFileContent } from '@/services'
@@ -132,83 +124,66 @@ import { getBase64, getFileUrl, isImage, getEditFileUrl } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
 import { useI18n } from 'vue-i18n'
+import { Upload, DocumentCopy } from '@element-plus/icons-vue'
 
-export default defineComponent({
-  name: 'FileCard',
-
-  props: {
-    data: {
-      type: Object as PropType<IFile>,
-      default: () => ({}),
-    }
-  },
-
-  setup(props) {
-    const { t } = useI18n()
-    const route = useRoute()
-    const router = useRouter()
-    const store = useStore()
-    const hasError = ref(false)
-    const imgLoaded = ref(false)
-    const fileName = props.data.name.toLowerCase()
-    const fileType = props.data.type
-    const filePath = props.data.path
-    const CDN1 = getCdn(CDN.Jsdelivr, filePath, false)
-    const isImg = isImage(fileName)
-    const fileUrl = getFileUrl(props.data)
-
-    const handleUpdateFile = async function(e: any) {
-      const files = e.target.files
-      if (files.length <= 0) return
-
-      const file = files[0] as File
-      const base64 = await getBase64(file)
-
-      updateFileContent(props.data, {
-        content: base64,
-        isEncode: false
-      }).then(res => {
-        if (isSuccess(res.status)) {
-          store.dispatch('getDir', route.query.path)
-          ElMessage({
-            type: 'success',
-            message: '更新成功, 由于缓存策略需要次日更新'
-          })
-        }
-      })
-
-      e.target.value = ''
-    }
-
-    function goDir() {
-      if (fileType === 'dir') {
-        router.replace({
-          path: '/',
-          query: {
-            path: `/${filePath}`
-          }
-        })
-      }
-    }
-
-    return {
-      t,
-      fileUrl,
-      isImg,
-      isFile: fileType !== 'dir',
-      hasError,
-      imgLoaded,
-      cdn1: CDN1,
-      cdn2: getCdn(CDN.Github, filePath, false),
-      markdown: `![](${CDN1})`,
-      html: `<a href="${CDN1}" target="_blank"><img src="${CDN1}" alt="" /></a>`,
-      editUrl: getEditFileUrl(filePath),
-
-      handleUpdateFile,
-      goDir,
-    }
+const props = defineProps({
+  data: {
+    type: Object as PropType<IFile>,
+    default: () => ({}),
   }
 })
+
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
+const hasError = ref(false)
+const imgLoaded = ref(false)
+const fileName = props.data.name.toLowerCase()
+const fileType = props.data.type
+const filePath = props.data.path
+const cdn1 = getCdn(CDN.Jsdelivr, filePath, false)
+const cdn2 = getCdn(CDN.Github, filePath, false)
+const isImg = isImage(fileName)
+const fileUrl = getFileUrl(props.data)
+const markdown = `![](${cdn1})`
+const html = `<a href="${cdn1}" target="_blank"><img src="${cdn1}" alt="" /></a>`
+const editUrl = getEditFileUrl(filePath)
+const isFile = fileType !== 'dir'
+
+const handleUpdateFile = async function(e: any) {
+  const files = e.target.files
+  if (files.length <= 0) return
+
+  const file = files[0] as File
+  const base64 = await getBase64(file)
+
+  updateFileContent(props.data, {
+    content: base64,
+    isEncode: false
+  }).then(res => {
+    if (isSuccess(res.status)) {
+      store.dispatch('getDir', route.query.path)
+      ElMessage({
+        type: 'success',
+        message: '更新成功, 由于缓存策略需要次日更新'
+      })
+    }
+  })
+
+  e.target.value = ''
+}
+
+function goDir() {
+  if (fileType === 'dir') {
+    router.replace({
+      path: '/',
+      query: {
+        path: `/${filePath}`
+      }
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -220,6 +195,19 @@ export default defineComponent({
   border-radius: 5px;
   margin: 0 10px 15px 10px;
   cursor: pointer;
+  @keyframes actived {
+    0% {
+      border-color: red;
+      border-width: 3px;
+    }
+    100% {
+      border-color: #eee;
+      border-width: 3px;
+    }
+  }
+  &.actived .file-icon {
+    animation: actived 10s linear;
+  }
 
   &:hover {
     background: #f4f4f4;
@@ -255,7 +243,7 @@ export default defineComponent({
       left: 0;
       right: 0;
       bottom: 0;
-      background: #fff url("~@/assets/loading.svg") no-repeat;
+      background: #fff url("@/assets/loading.svg") no-repeat;
       background-size: 80px;
       background-position: center;
     }

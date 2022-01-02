@@ -61,7 +61,7 @@ export default defineComponent({
     }
 
     return {
-      baseUrl: process.env.BASE_URL,
+      baseUrl: import.meta.env.BASE_URL,
       t,
       isLogin,
       handleAbout,

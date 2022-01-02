@@ -4,6 +4,7 @@ import { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
 import i18n from '@/i18n'
 import config from '@/config'
+import { ElMessage } from 'element-plus'
 
 let clipboard: Clipboard|null
 
@@ -34,11 +35,10 @@ export function initClipboard() {
   clipboard = new Clipboard(document.querySelectorAll('.copy'))
 
   clipboard.on('success', function(e) {
-    e.trigger.classList.add('el-icon-check')
-
-    setTimeout(() => {
-      e.trigger.classList.remove('el-icon-check')
-    }, 1000)
+    ElMessage({
+      type: 'success',
+      message: i18n.global.t('copyed') + '!'
+    })
   });
 }
 
@@ -97,13 +97,13 @@ export function isImage(fileName: string): boolean {
   return false
 }
 
-const fileCodeImg = require('@/assets/file-code.svg')
-const fileFolderImg = require('@/assets/file-folder.svg')
-const filePdfImg = require('@/assets/file-pdf.svg')
-const fileZipImg = require('@/assets/file-zip.svg')
-const fileTxtImg = require('@/assets/file-txt.svg')
-const fileDocImg = require('@/assets/file-doc.svg')
-const fileOtherImg = require('@/assets/file-other.svg')
+import fileCodeImg from '@/assets/file-code.svg'
+import filePdfImg from '@/assets/file-pdf.svg'
+import fileFolderImg from '@/assets/file-folder.svg'
+import fileZipImg from '@/assets/file-zip.svg'
+import fileTxtImg from '@/assets/file-txt.svg'
+import fileDocImg from '@/assets/file-doc.svg'
+import fileOtherImg from '@/assets/file-other.svg'
 
 export function getFileUrl(file: IFile): string {
   const { type, name, path } = file

@@ -1,45 +1,37 @@
 {
-  "name": "boomb",
+  "name": "boomb2",
   "version": "1.6.2",
-  "private": true,
   "author": "xiejiahe",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "start": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
+    "sass": "^1.45.2",
+    "vue": "^3.2.25",
     "@types/bytes": "^3.1.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/nprogress": "^0.2.0",
-    "@types/uuid": "^8.3.1",
-    "axios": "^0.21.1",
-    "bytes": "^3.1.0",
+    "@types/uuid": "^8.3.3",
+    "axios": "^0.24.0",
+    "bytes": "^3.1.1",
     "clipboard": "^2.0.8",
-    "core-js": "^3.15.2",
-    "element-plus": "^1.0.2-beta.55",
-    "js-base64": "^3.6.1",
+    "element-plus": "^1.3.0-beta.1",
+    "js-base64": "^3.7.2",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "uuid": "^8.3.2",
-    "viewerjs": "^1.10.0",
-    "vue": "^3.0.11",
+    "viewerjs": "^1.10.2",
     "vue-i18n": "^9.1.6",
-    "vue-router": "^4.0.8",
-    "vuex": "^4.0.1"
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.13",
-    "@vue/cli-plugin-router": "~4.5.13",
-    "@vue/cli-plugin-typescript": "~4.5.13",
-    "@vue/cli-plugin-vuex": "~4.5.13",
-    "@vue/cli-service": "~4.5.13",
-    "@vue/compiler-sfc": "^3.1.4",
-    "babel-plugin-component": "^1.1.1",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.2",
-    "typescript": "~4.2.3"
+    "@vitejs/plugin-vue": "^2.0.1",
+    "typescript": "^4.5.4",
+    "vite": "^2.7.10",
+    "vue-tsc": "^0.30.1"
   }
 }

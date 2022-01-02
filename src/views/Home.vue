@@ -36,7 +36,7 @@
             type="danger"
             class="del-btn"
             :disabled="checkList.length === 0"
-            size="mini"
+            size="small"
           >
             {{ t('bulkDel') }}
           </el-button>

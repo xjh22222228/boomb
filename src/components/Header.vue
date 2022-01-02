@@ -6,10 +6,9 @@
 
     <div class="left">
       <el-button
-        icon="el-icon-upload2"
+        :icon="Upload"
         class="mr10"
         type="primary"
-        size="small"
       >
         {{ t('uploadFile' )}}
         <input
@@ -22,10 +21,9 @@
       </el-button>
 
       <el-button
-        icon="el-icon-plus"
+        :icon="Plus"
         @click="toggleCreateDirModal"
         id="mkdir-btn"
-        size="small"
       >
         {{ t('createDir' )}}
       </el-button>
@@ -39,7 +37,7 @@
         <template #dropdown>
           <el-dropdown-menu trigger="click">
             <el-dropdown-item class="dropdown-username">
-              <div>Signed in as</div>
+              <div>Signed in as&nbsp;</div>
               <a class="ch" :href="user.html_url" target="_blank">
                 <b>{{ user.login || user.name }}</b>
               </a>
@@ -69,58 +67,42 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+<script lang="ts" setup>
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { logout } from '@/utils'
 import { useI18n } from 'vue-i18n'
+import { Upload, Plus } from '@element-plus/icons-vue'
 
-export default defineComponent({
-  name: 'Header',
+const { t } = useI18n()
+const store = useStore()
+const route = useRoute()
+const showCreateDirModal = ref(false)
+const showFileRuleModal = ref(false)
+const user = computed(() => store.state.user)
 
-  setup() {
-    const { t } = useI18n()
-    const store = useStore()
-    const route = useRoute()
-    const showCreateDirModal = ref(false)
-    const showFileRuleModal = ref(false)
+function toggleCreateDirModal() {
+  showCreateDirModal.value = !showCreateDirModal.value
+}
 
-    function toggleCreateDirModal() {
-      showCreateDirModal.value = !showCreateDirModal.value
-    }
+function toggleFileRuleModal() {
+  showFileRuleModal.value = !showFileRuleModal.value
+}
 
-    function toggleFileRuleModal() {
-      showFileRuleModal.value = !showFileRuleModal.value
-    }
+// 上传文件
+async function handleUploadFile(e: any) {
+  const files = e.target.files
 
-    // 上传文件
-    async function handleUploadFile(e: any) {
-      const files = e.target.files
-
-      for (let file of files) {
-        store.dispatch('createFile', {
-          file,
-          route
-        })
-      }
-
-      e.target.value = ''
-    }
-
-    return {
-      t,
-      showCreateDirModal,
-      showFileRuleModal,
-      user: computed(() => store.state.user),
-
-      toggleCreateDirModal,
-      toggleFileRuleModal,
-      handleUploadFile,
-      logout
-    }
+  for (let file of files) {
+    store.dispatch('createFile', {
+      file,
+      route
+    })
   }
-})
+
+  e.target.value = ''
+}
 </script>
 
 <style lang="scss" scoped>

@@ -62,7 +62,7 @@ import { isSuccess } from '@/utils/http'
 
 // https://docs.github.com/cn/github/authenticating-to-github/authorizing-oauth-apps
 // https://docs.github.com/en/developers/apps/scopes-for-oauth-apps
-const clientId = process.env.NODE_ENV === 'development'
+const clientId = import.meta.env.DEV
   ? '6c3876cacce17b985c85'
   : '1bab8338449584e95414'
 const callback = `${window.location.origin}/oauth/redirect`
@@ -144,7 +144,7 @@ export default defineComponent({
     })
 
     return {
-      baseUrl: process.env.BASE_URL,
+      baseUrl: import.meta.env.BASE_URL,
       goAuth,
       authLoad,
       t,

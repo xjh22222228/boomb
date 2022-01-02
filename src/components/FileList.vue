@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :id="'file-' + fileName">
     <div class="left">
       <img
         :src="fileUrl"

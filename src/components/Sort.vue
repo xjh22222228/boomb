@@ -8,7 +8,7 @@
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
-          icon="el-icon-check"
+          :icon="Check"
           class="item"
           :class="{active: isUp}"
           @click="isUp = true"
@@ -16,7 +16,7 @@
           {{ t('asc' )}}
         </el-dropdown-item>
         <el-dropdown-item
-          icon="el-icon-check"
+          :icon="Check"
           class="item"
           :class="{active: !isUp}"
           @click="isUp = false"
@@ -26,7 +26,7 @@
 
         <el-dropdown-item
           divided
-          icon="el-icon-check"
+          :icon="Check"
           class="item"
           @click="sortType = SortType.FileSize"
           :class="{active: sortType === SortType.FileSize}"
@@ -34,7 +34,7 @@
           {{ t('fileSize' )}}
         </el-dropdown-item>
         <el-dropdown-item
-          icon="el-icon-check"
+          :icon="Check"
           class="item"
           @click="sortType = SortType.FileName"
           :class="{active: sortType === SortType.FileName}"
@@ -53,6 +53,7 @@ import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { getCharCode } from '@/utils'
+import { Check } from '@element-plus/icons-vue'
 
 enum SortType {
   FileSize = 1, // 文件大小
@@ -101,6 +102,7 @@ export default defineComponent({
 
     return {
       t,
+      Check,
       isUp,
       sortType,
       SortType

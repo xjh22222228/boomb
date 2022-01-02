@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.png" />
     <meta name="author" content="https://github.com/xjh22222228">
-    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boomb</title>
     <style>
       .auth-loading {
@@ -15,7 +16,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: #fff url("<%= BASE_URL %>auth-load.gif") no-repeat;
+        background: #fff url("/auth-load.gif") no-repeat;
         background-position: center;
         background-size: 300px;
       }
@@ -25,8 +26,9 @@
     <div id="xiejiahe-app">
       <div class="auth-loading"></div>
     </div>
-    <script>
-      var isDev = "<%= process.env.NODE_ENV %>" === 'development';
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+      var isDev = import.meta.env.DEV;
       var _hmt = _hmt || [];
       (function() {
         if (isDev) {

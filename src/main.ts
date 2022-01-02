@@ -1,6 +1,6 @@
 // Copyright 2021 the xiejiahe. All rights reserved. MIT license.
 
-import 'element-plus/lib/theme-chalk/index.css'
+import 'element-plus/dist/index.css'
 import 'normalize.css'
 import './global.scss'
 
@@ -35,7 +35,8 @@ import {
   ElOption,
   ElRadio,
   ElRadioGroup,
-  ElDrawer
+  ElDrawer,
+  ElIcon
 } from 'element-plus'
 
 import FileCard from '@/components/FileCard.vue'
@@ -79,19 +80,20 @@ app.component(ElOption.name, ElOption)
 app.component(ElRadio.name, ElRadio)
 app.component(ElRadioGroup.name, ElRadioGroup)
 app.component(ElDrawer.name, ElDrawer)
+app.component(ElIcon.name, ElIcon)
 
-app.component(FileCard.name, FileCard)
-app.component(FileList.name, FileList)
-app.component(Header.name, Header)
-app.component(Footer.name, Footer)
-app.component(Loading.name, Loading)
-app.component(Action.name, Action)
-app.component(ActionApp.name, ActionApp)
-app.component(Sort.name, Sort)
-app.component(ContextMenu.name, ContextMenu)
-app.component(Language.name, Language)
-app.component(FileEncodeRuleDialog.name, FileEncodeRuleDialog)
-app.component(CreateDirDialog.name, CreateDirDialog)
+app.component('FileCard', FileCard)
+app.component('FileList', FileList)
+app.component('Header', Header)
+app.component('Footer', Footer)
+app.component('Loading', Loading)
+app.component('Action', Action)
+app.component('ActionApp', ActionApp)
+app.component('Sort', Sort)
+app.component('ContextMenu', ContextMenu)
+app.component('Language', Language)
+app.component('FileEncodeRuleDialog', FileEncodeRuleDialog)
+app.component('CreateDirDialog', CreateDirDialog)
 
 app
   .use(store)
