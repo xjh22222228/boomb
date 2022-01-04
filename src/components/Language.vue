@@ -23,28 +23,15 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import i18n from '../i18n'
-import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'Language',
-
-  setup() {
-    const { locale } = useI18n()
-
-    const setLocale = function(locale: string) {
-      i18n.global.locale = locale
-      window.localStorage.setItem('locale', locale)
-    }
-
-    return {
-      setLocale,
-      locale
-    }
-  }
-})
+const { locale } = useI18n()
+const setLocale = function(locale: string) {
+  i18n.global.locale = locale
+  window.localStorage.setItem('locale', locale)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -50,9 +50,9 @@
   </section>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import config from '@/config'
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { verifyToken, getAccessToken } from '@/services'
@@ -67,97 +67,77 @@ const clientId = import.meta.env.DEV
   : '1bab8338449584e95414'
 const callback = `${window.location.origin}/oauth/redirect`
 const authUrl = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=${callback}&client_id=${clientId}&scope=repo%20repo_deployment%20read:user`
+const baseUrl = import.meta.env.BASE_URL
 
-export default defineComponent({
-  name: 'Login',
+const { t } = useI18n()
+const route = useRoute()
+const store = useStore()
+const id = ref(config.id)
+const branch = ref(config.branch)
+const token = ref(config.token)
+const loading = ref(false)
+const authLoad = ref(false)
+const valid = computed<boolean>(() => {
+  const vid = id.value.split('/').length === 2
+  return Boolean(vid && branch.value)
+})
+const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 
-  setup() {
-    const { t } = useI18n()
-    const route = useRoute()
-    const store = useStore()
-    const id = ref(config.id)
-    const branch = ref(config.branch)
-    const token = ref(config.token)
-    const loading = ref(false)
-    const authLoad = ref(false)
-    const valid = computed<boolean>(() => {
-      const vid = id.value.split('/').length === 2
-      return Boolean(vid && branch.value)
+const goAuth = function() {
+  loading.value = true
+  window.localStorage.setItem('id', id.value)
+  window.localStorage.setItem('branch', branch.value)
+  window.location.href = authUrl
+}
+
+const handleLogin = function() {
+  if (!token.value) return
+
+  loading.value = true
+  verifyToken(id.value.split('/')[0], token.value).then((res) => {
+    if (res.status !== 200) return
+    
+    window.localStorage.setItem('token', token.value)
+    window.localStorage.setItem('isLogin', 'true')
+    window.location.reload()
+  }).finally(() => {
+    loading.value = false
+    authLoad.value = false
+  })
+}
+
+function handleIdBlur() {
+  const splitId = id.value.split('/')
+  if (splitId.length === 2 && splitId[0] && splitId[1]) {
+    loading.value = true
+    store.dispatch('getBranchAll', id.value).finally(() => {
+      loading.value = false
     })
-    const branchAll = computed<IBranch[]>(() => store.state.branchAll)
-
-    const goAuth = function() {
-      loading.value = true
-      window.localStorage.setItem('id', id.value)
-      window.localStorage.setItem('branch', branch.value)
-      window.location.href = authUrl
-    }
-
-    const handleLogin = function() {
-      if (!token.value) return
-
-      loading.value = true
-      verifyToken(id.value.split('/')[0], token.value).then((res) => {
-        if (res.status !== 200) return
-        
-        window.localStorage.setItem('token', token.value)
-        window.localStorage.setItem('isLogin', 'true')
-        window.location.reload()
-      }).finally(() => {
-        loading.value = false
-        authLoad.value = false
-      })
-    }
-
-    function handleIdBlur() {
-      const splitId = id.value.split('/')
-      if (splitId.length === 2 && splitId[0] && splitId[1]) {
-        loading.value = true
-        store.dispatch('getBranchAll', id.value).finally(() => {
-          loading.value = false
-        })
-      }
-    }
-
-    // Default branch
-    watch(branchAll, () => {
-      if (branchAll.value.length > 0) {
-        branch.value = branchAll.value[0].name
-      }
-    })
-
-    onMounted(() => {
-      const { query } = route
-      const code = query.code as string
-      if (code) {
-        authLoad.value = true
-        getAccessToken(code).then(res => {
-          if (isSuccess(res.status)) {
-            const { accessToken } = res.data.data
-            token.value = accessToken
-            handleLogin()
-          }
-        }).catch(() => authLoad.value = false)
-      }
-
-      handleLogin()
-    })
-
-    return {
-      baseUrl: import.meta.env.BASE_URL,
-      goAuth,
-      authLoad,
-      t,
-      branchAll,
-      id,
-      branch,
-      token,
-      valid,
-      loading,
-      handleIdBlur,
-      handleLogin
-    }
   }
+}
+
+// Default branch
+watch(branchAll, () => {
+  if (branchAll.value.length > 0) {
+    branch.value = branchAll.value[0].name
+  }
+})
+
+onMounted(() => {
+  const { query } = route
+  const code = query.code as string
+  if (code) {
+    authLoad.value = true
+    getAccessToken(code).then(res => {
+      if (isSuccess(res.status)) {
+        const { accessToken } = res.data.data
+        token.value = accessToken
+        handleLogin()
+      }
+    }).catch(() => authLoad.value = false)
+  }
+
+  handleLogin()
 })
 </script>
 

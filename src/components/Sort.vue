@@ -46,8 +46,8 @@
   </el-dropdown>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { IFile } from '@/store'
@@ -60,54 +60,40 @@ enum SortType {
   FileName // 文件名
 }
 
-export default defineComponent({
-  name: 'Sort',
+const { t } = useI18n()
+const store = useStore()
+const route = useRoute()
+const isUp = ref(true)
+const dir = computed<IFile[]>(() => store.getters.getDir(route))
 
-  setup() {
-    const { t } = useI18n()
-    const store = useStore()
-    const route = useRoute()
-    const isUp = ref(true)
-    const dir = computed<IFile[]>(() => store.getters.getDir(route))
+const sortType = ref(SortType.FileSize)
 
-    const sortType = ref(SortType.FileSize)
+watch([sortType, isUp], () => {
+  let sortDir: IFile[] = []
 
-    watch([sortType, isUp], () => {
-      let sortDir: IFile[] = []
+  switch (sortType.value) {
+    case SortType.FileSize:
+      sortDir = dir.value.sort((a: IFile, b: IFile) => a.size - b.size)
+      break
 
-      switch (sortType.value) {
-        case SortType.FileSize:
-          sortDir = dir.value.sort((a: IFile, b: IFile) => a.size - b.size)
-          break
-
-        case SortType.FileName:
-          sortDir = dir.value.sort((a: IFile, b: IFile) => {
-            const aCode = getCharCode(a.name)
-            const bCode = getCharCode(b.name)
-            return aCode - bCode
-          })
-          break
-      }
-
-      // Down sort
-      if (!isUp.value) {
-        sortDir = sortDir.reverse()
-      }
-
-      store.commit('saveDir', {
-        data: sortDir,
-        path: route.query.path
+    case SortType.FileName:
+      sortDir = dir.value.sort((a: IFile, b: IFile) => {
+        const aCode = getCharCode(a.name)
+        const bCode = getCharCode(b.name)
+        return aCode - bCode
       })
-    })
-
-    return {
-      t,
-      Check,
-      isUp,
-      sortType,
-      SortType
-    }
+      break
   }
+
+  // Down sort
+  if (!isUp.value) {
+    sortDir = sortDir.reverse()
+  }
+
+  store.commit('saveDir', {
+    data: sortDir,
+    path: route.query.path
+  })
 })
 </script>
 

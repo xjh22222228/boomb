@@ -22,53 +22,41 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import config from '@/config'
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'Action',
+const { t } = useI18n()
+const store = useStore()
+const isLogin = computed(() => store.state.isLogin)
 
-  setup() {
-    const { t } = useI18n()
-    const store = useStore()
-    const isLogin = computed(() => store.state.isLogin)
+const handleAbout = function() {
+  ElMessageBox.confirm('', {
+    title: t('what'),
+    dangerouslyUseHTMLString: true,
+    message: t('description'),
+    cancelButtonText: t('cancel'),
+    confirmButtonText: t('ok'),
+  }).catch(() => {})
+}
 
-    const handleAbout = function() {
-      ElMessageBox.confirm('', {
-        title: t('what'),
-        dangerouslyUseHTMLString: true,
-        message: t('description'),
-        cancelButtonText: t('cancel'),
-        confirmButtonText: t('ok'),
-      }).catch(() => {})
-    }
+const handleInfo = function() {
+  ElMessageBox.confirm('', {
+    cancelButtonText: t('cancel'),
+    confirmButtonText: t('ok'),
+    title: t('info'),
+    dangerouslyUseHTMLString: true,
+    message: `
+      <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
+      <p class="mb10">Branch: ${config.branch}</p>
+    `,
+  }).catch(() => {})
+}
 
-    const handleInfo = function() {
-      ElMessageBox.confirm('', {
-        cancelButtonText: t('cancel'),
-        confirmButtonText: t('ok'),
-        title: t('info'),
-        dangerouslyUseHTMLString: true,
-        message: `
-          <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
-          <p class="mb10">Branch: ${config.branch}</p>
-        `,
-      }).catch(() => {})
-    }
-
-    return {
-      baseUrl: import.meta.env.BASE_URL,
-      t,
-      isLogin,
-      handleAbout,
-      handleInfo
-    }
-  }
-})
+const baseUrl = import.meta.env.BASE_URL;
 </script>
 
 <style lang="scss" scoped>

@@ -7,84 +7,70 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from 'vue'
+<script lang="ts" setup>
+import { onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'ContextMenu',
+const { t } = useI18n()
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
+let menuEl: HTMLElement
 
-  setup() {
-    const { t } = useI18n()
-    const store = useStore()
-    const route = useRoute()
-    const router = useRouter()
-    let menuEl: HTMLElement
-    
-    const handleContext = function(e: MouseEvent) {
-      e.stopPropagation()
-      e.preventDefault()
+const handleContext = function(e: MouseEvent) {
+  e.stopPropagation()
+  e.preventDefault()
 
-      const x = e.clientX
-      const y = e.clientY
-      menuEl.style.display = 'block'
-      menuEl.style.top = `${y}px`
-      menuEl.style.left = `${x}px`
-    }
+  const x = e.clientX
+  const y = e.clientY
+  menuEl.style.display = 'block'
+  menuEl.style.top = `${y}px`
+  menuEl.style.left = `${x}px`
+}
 
-    const handleDocClick = function() {
-      menuEl.style.display = 'none'
-    }
+const handleDocClick = function() {
+  menuEl.style.display = 'none'
+}
 
-    onMounted(() => {
-      const el = document.getElementById('home')
-      menuEl = document.getElementById('context-menu') as HTMLElement
-      if (el) {
-        el.addEventListener('contextmenu', handleContext)
-        document.addEventListener('click', handleDocClick)
-      }
-    })
-
-    onUnmounted(() =>{ 
-      const el = document.getElementById('home')
-      if (el) {
-        el.removeEventListener('contextmenu', handleContext)
-        document.removeEventListener('click', handleDocClick)
-      }
-    })
-
-    const handleRefresh = function() {
-      store.dispatch('getDir', route.query.path)
-    }
-
-    const handleUploadFile = function() {
-      document.getElementById('input-file')?.click()
-    }
-
-    const handleMkdir = function() {
-      document.getElementById('mkdir-btn')?.click()
-    }
-
-    const handleNewFile = function() {
-      router.push({
-        path: '/file/new',
-        query: {
-          path: route.query.path || '/'
-        }
-      })
-    }
-
-    return {
-      t,
-      handleRefresh,
-      handleUploadFile,
-      handleNewFile,
-      handleMkdir
-    }
+onMounted(() => {
+  const el = document.getElementById('home')
+  menuEl = document.getElementById('context-menu') as HTMLElement
+  if (el) {
+    el.addEventListener('contextmenu', handleContext)
+    document.addEventListener('click', handleDocClick)
   }
 })
+
+onUnmounted(() =>{ 
+  const el = document.getElementById('home')
+  if (el) {
+    el.removeEventListener('contextmenu', handleContext)
+    document.removeEventListener('click', handleDocClick)
+  }
+})
+
+const handleRefresh = function() {
+  store.dispatch('getDir', route.query.path)
+}
+
+const handleUploadFile = function() {
+  document.getElementById('input-file')?.click()
+}
+
+const handleMkdir = function() {
+  document.getElementById('mkdir-btn')?.click()
+}
+
+const handleNewFile = function() {
+  router.push({
+    path: '/file/new',
+    query: {
+      path: route.query.path || '/'
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

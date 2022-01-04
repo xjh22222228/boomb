@@ -59,115 +59,99 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import Viewer from 'viewerjs';
-import { ref, computed, defineComponent, nextTick, watch, onMounted } from 'vue'
+import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
 import { initClipboard, generateBreadcrumb } from '@/utils';
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'Mobile',
+const { t } = useI18n()
+const route = useRoute()
+const store = useStore()
+const checkList = ref<number[]>([])
+const isCheckAll = ref(false)
+const dirList = computed<IFile[]>(() => store.getters.getDir(route))
 
-  setup() {
-    const { t } = useI18n()
-    const route = useRoute()
-    const store = useStore()
-    const checkList = ref<number[]>([])
-    const isCheckAll = ref(false)
-    const dirList = computed<IFile[]>(() => store.getters.getDir(route))
+let viewer: Viewer|null
 
-    let viewer: Viewer|null
+// 销毁图片预览
+function destroyViewer() {
+  if (viewer) {
+    (viewer.destroy && viewer.destroy())
+    viewer = null
+  }
+}
 
-    // 销毁图片预览
-    function destroyViewer() {
-      if (viewer) {
-        (viewer.destroy && viewer.destroy())
-        viewer = null
-      }
-    }
-
-    // 初始化图片预览
-    function initViewer() {
-      destroyViewer()
-      const el = document.getElementById('file-wrapper')
-      if (el) {
-        viewer = new Viewer(el, {
-          filter(image: Element) {
-            return image.classList.contains('image')
-          }
-        })
-      }
-    }
-
-    async function handleDel() {
-      // 只能一个一个删，并行会删除失败
-      for (let idx of checkList.value) {
-        const item = dirList.value[idx]
-        if (item.type === 'file') {
-          await store.dispatch('deleteFile', item)
-        }
-
-        if (item.type === 'dir') {
-          await store.dispatch('deleteDir', item.path)
-        }
-      }
-
-      getDir()
-    }
-
-    function getDir() {
-      store.dispatch('getDir', route.query.path)
-      checkList.value = []
-      isCheckAll.value = false
-    }
-
-    // 监听路由变化获取目录列表
-    watch([() => route.query.path], () => {
-      if (route.name === 'Mobile') {
-        getDir()
+// 初始化图片预览
+function initViewer() {
+  destroyViewer()
+  const el = document.getElementById('file-wrapper')
+  if (el) {
+    viewer = new Viewer(el, {
+      filter(image: Element) {
+        return image.classList.contains('image')
       }
     })
+  }
+}
 
-    // 目录变化初始化图片预览
-    watch(dirList, () => {
-      nextTick(() => {
-        initViewer()
-        initClipboard()
-      })
-    })
+async function handleDel() {
+  // 只能一个一个删，并行会删除失败
+  for (let idx of checkList.value) {
+    const item = dirList.value[idx]
+    if (item.type === 'file') {
+      await store.dispatch('deleteFile', item)
+    }
 
-    // 全选
-    watch(isCheckAll, () => {
-      if (isCheckAll.value) {
-        checkList.value = dirList.value.map((_, idx) => idx)
-      } else {
-        checkList.value = []
-      }
-    })
-
-    onMounted(() => {
-      getDir()
-    })
-
-    // 生成面包屑路径
-    const paths = computed(() => 
-      generateBreadcrumb(route.query.path as string)
-    )
-
-    return {
-      t,
-      checkList,
-      isCheckAll,
-      dirList,
-      paths,
-
-      handleDel,
+    if (item.type === 'dir') {
+      await store.dispatch('deleteDir', item.path)
     }
   }
+
+  getDir()
+}
+
+function getDir() {
+  store.dispatch('getDir', route.query.path)
+  checkList.value = []
+  isCheckAll.value = false
+}
+
+// 监听路由变化获取目录列表
+watch([() => route.query.path], () => {
+  if (route.name === 'Mobile') {
+    getDir()
+  }
 })
+
+// 目录变化初始化图片预览
+watch(dirList, () => {
+  nextTick(() => {
+    initViewer()
+    initClipboard()
+  })
+})
+
+// 全选
+watch(isCheckAll, () => {
+  if (isCheckAll.value) {
+    checkList.value = dirList.value.map((_, idx) => idx)
+  } else {
+    checkList.value = []
+  }
+})
+
+onMounted(() => {
+  getDir()
+})
+
+// 生成面包屑路径
+const paths = computed(() => 
+  generateBreadcrumb(route.query.path as string)
+)
 </script>
 
 <style lang="scss" scoped>

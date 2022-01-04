@@ -67,172 +67,153 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import Viewer from 'viewerjs';
-import { Events, ref, computed, defineComponent, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { Events, ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IFile } from '@/store'
 import { initClipboard, generateBreadcrumb } from '@/utils';
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'HomePage',
+const { t } = useI18n()
+const route = useRoute()
+const store = useStore()
+const checkList = ref<number[]>([])
+const isCheckAll = ref(false)
+const dragState = ref('')
+const dirList = computed<IFile[]>(() => store.getters.getDir(route))
 
-  setup() {
-    const { t } = useI18n()
-    const route = useRoute()
-    const store = useStore()
-    const checkList = ref<number[]>([])
-    const isCheckAll = ref(false)
-    const dragState = ref('')
-    const dirList = computed<IFile[]>(() => store.getters.getDir(route))
+let viewer: Viewer|null
 
-    let viewer: Viewer|null
+// 销毁图片预览
+function destroyViewer() {
+  if (viewer) {
+    (viewer.destroy && viewer.destroy())
+    viewer = null
+  }
+}
 
-    // 销毁图片预览
-    function destroyViewer() {
-      if (viewer) {
-        (viewer.destroy && viewer.destroy())
-        viewer = null
+// 初始化图片预览
+function initViewer() {
+  destroyViewer()
+  const el = document.getElementById('file-wrapper')
+  if (el) {
+    viewer = new Viewer(el, {
+      filter(image: Element) {
+        return image.classList.contains('image')
+      }
+    })
+  }
+}
+
+// 复制粘贴上传图片
+async function copyUpload(event: Events['onCopy']) {
+  const items = event.clipboardData?.items
+  if (!items) return
+  let files: File[] = []
+
+  if (items.length) {
+    for (let i = 0; i < items.length; i++) {
+      const file = items[i].getAsFile()
+      if (file instanceof File) {
+        files.push(file)
       }
     }
+  }
 
-    // 初始化图片预览
-    function initViewer() {
-      destroyViewer()
-      const el = document.getElementById('file-wrapper')
-      if (el) {
-        viewer = new Viewer(el, {
-          filter(image: Element) {
-            return image.classList.contains('image')
-          }
-        })
-      }
-    }
+  for (let file of files) {
+    store.dispatch('createFile', {
+      file,
+      route
+    })
+  }
+}
 
-    // 复制粘贴上传图片
-    async function copyUpload(event: Events['onCopy']) {
-      const items = event.clipboardData?.items
-      if (!items) return
-      let files: File[] = []
+function handleDrop(e: Events['onDrop']) {
+  e.stopPropagation()
+  e.preventDefault()
+  dragState.value = e.type
 
-      if (items.length) {
-        for (let i = 0; i < items.length; i++) {
-          const file = items[i].getAsFile()
-          if (file instanceof File) {
-            files.push(file)
-          }
-        }
-      }
-
-      for (let file of files) {
+  const files = e.dataTransfer!.files as any
+  if (files) {
+    files.forEach((file: Record<string, any>) => {
+      // 目录 type 为空
+      if (file.type) {
         store.dispatch('createFile', {
           file,
           route
         })
       }
+    })
+  }
+}
+
+function handleFileDrag(e: Events['onDragover']) {
+  e.stopPropagation()
+  e.preventDefault()
+  dragState.value = e.type
+}
+
+async function handleDel() {
+  // 只能一个一个删，并行会删除失败
+  for (let idx of checkList.value) {
+    const item = dirList.value[idx]
+    if (item.type === 'file') {
+      await store.dispatch('deleteFile', item)
     }
 
-    function handleDrop(e: Events['onDrop']) {
-      e.stopPropagation()
-      e.preventDefault()
-      dragState.value = e.type
-
-      const files = e.dataTransfer!.files as any
-      if (files) {
-        files.forEach((file: Record<string, any>) => {
-          // 目录 type 为空
-          if (file.type) {
-            store.dispatch('createFile', {
-              file,
-              route
-            })
-          }
-        })
-      }
-    }
-
-    function handleFileDrag(e: Events['onDragover']) {
-      e.stopPropagation()
-      e.preventDefault()
-      dragState.value = e.type
-    }
-
-    async function handleDel() {
-      // 只能一个一个删，并行会删除失败
-      for (let idx of checkList.value) {
-        const item = dirList.value[idx]
-        if (item.type === 'file') {
-          await store.dispatch('deleteFile', item)
-        }
-
-        if (item.type === 'dir') {
-          await store.dispatch('deleteDir', item.path)
-        }
-      }
-
-      getDir()
-    }
-
-    function getDir() {
-      store.dispatch('getDir', route.query.path)
-      checkList.value = []
-      isCheckAll.value = false
-    }
-
-    // 监听路由变化获取目录列表
-    watch([() => route.query.path], () => {
-      if (route.name === 'Home') {
-        getDir()
-      }
-    })
-
-    // 目录变化初始化图片预览
-    watch(dirList, () => {
-      nextTick(() => {
-        initViewer()
-        initClipboard()
-      })
-    })
-
-    // 全选
-    watch(isCheckAll, () => {
-      if (isCheckAll.value) {
-        checkList.value = dirList.value.map((_, idx) => idx)
-      } else {
-        checkList.value = []
-      }
-    })
-
-    onMounted(() => {
-      getDir()
-      document.addEventListener('paste', copyUpload)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('paste', copyUpload)
-    })
-
-    // 生成面包屑路径
-    const paths = computed(() => 
-      generateBreadcrumb(route.query.path as string)
-    )
-
-    return {
-      t,
-      checkList,
-      isCheckAll,
-      dirList,
-      paths,
-      dragState,
-
-      handleDel,
-      handleDrop,
-      handleFileDrag,
+    if (item.type === 'dir') {
+      await store.dispatch('deleteDir', item.path)
     }
   }
+
+  getDir()
+}
+
+function getDir() {
+  store.dispatch('getDir', route.query.path)
+  checkList.value = []
+  isCheckAll.value = false
+}
+
+// 监听路由变化获取目录列表
+watch([() => route.query.path], () => {
+  if (route.name === 'Home') {
+    getDir()
+  }
 })
+
+// 目录变化初始化图片预览
+watch(dirList, () => {
+  nextTick(() => {
+    initViewer()
+    initClipboard()
+  })
+})
+
+// 全选
+watch(isCheckAll, () => {
+  if (isCheckAll.value) {
+    checkList.value = dirList.value.map((_, idx) => idx)
+  } else {
+    checkList.value = []
+  }
+})
+
+onMounted(() => {
+  getDir()
+  document.addEventListener('paste', copyUpload)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('paste', copyUpload)
+})
+
+// 生成面包屑路径
+const paths = computed(() => 
+  generateBreadcrumb(route.query.path as string)
+)
 </script>
 
 <style lang="scss" scoped>

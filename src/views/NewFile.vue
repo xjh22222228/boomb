@@ -41,68 +41,52 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { isSuccess } from '@/utils/http'
 
-export default defineComponent({
-  name: 'NewFile',
+const fileName = ref('')
+const content = ref('')
+const isTemp = ref(false)
+const loading = ref(false)
+const { t } = useI18n()
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
-  setup() {
-    const fileName = ref('')
-    const content = ref('')
-    const isTemp = ref(false)
-    const loading = ref(false)
-    const { t } = useI18n()
-    const store = useStore()
-    const route = useRoute()
-    const router = useRouter()
+const handlePublish = async function() {
+  loading.value = true
+  const path = route.query.path
+  const res = await store.dispatch('newFile', {
+    fileName: fileName.value,
+    content: content.value,
+    isTemp: isTemp.value,
+    path
+  })
 
-    const handlePublish = async function() {
-      loading.value = true
-      const path = route.query.path
-      const res = await store.dispatch('newFile', {
-        fileName: fileName.value,
-        content: content.value,
-        isTemp: isTemp.value,
-        path
-      })
+  loading.value = false
 
-      loading.value = false
-
-      if (isSuccess(res?.status)) {
-        router.replace({
-          name: 'Home',
-          query: {
-            path: isTemp.value ? '/.temp' : route.query.path
-          }
-        })
+  if (isSuccess(res?.status)) {
+    router.replace({
+      name: 'Home',
+      query: {
+        path: isTemp.value ? '/.temp' : route.query.path
       }
-    }
-
-    const handleCancel = function() {
-      router.replace({
-        path: '/',
-        query: {
-          path: route.query.path
-        }
-      })
-    }
-
-    return {
-      t,
-      fileName,
-      content,
-      isTemp,
-      loading,
-      handlePublish,
-      handleCancel
-    }
+    })
   }
-})
+}
+
+const handleCancel = function() {
+  router.replace({
+    path: '/',
+    query: {
+      path: route.query.path
+    }
+  })
+}
 </script>
 
 <style lang="scss">

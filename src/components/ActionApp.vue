@@ -42,70 +42,53 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'ActionApp',
+const { t } = useI18n()
+const showDrawer = ref(false)
+const showCreateDirModal = ref(false)
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
 
-  setup() {
-    const { t } = useI18n()
-    const showDrawer = ref(false)
-    const showCreateDirModal = ref(false)
-    const route = useRoute()
-    const router = useRouter()
-    const store = useStore()
+function toggleCreateDirModal() {
+  showCreateDirModal.value = !showCreateDirModal.value
+}
 
-    function toggleCreateDirModal() {
-      showCreateDirModal.value = !showCreateDirModal.value
-    }
+function handleClose() {
+  showDrawer.value = false
+}
 
-    function handleClose() {
-      showDrawer.value = false
-    }
+function handleCreateDir() {
+  toggleCreateDirModal()
+  showDrawer.value = false
+}
 
-    function handleCreateDir() {
-      toggleCreateDirModal()
-      showDrawer.value = false
-    }
+function handleUploadFile(e: any) {
+  const files = e.target.files
 
-    function handleUploadFile(e: any) {
-      const files = e.target.files
-
-      for (let file of files) {
-        store.dispatch('createFile', {
-          file,
-          route
-        })
-      }
-
-      e.target.value = ''
-    }
-
-    const handleNewFile = function() {
-      router.push({
-        path: '/file/new',
-        query: {
-          path: route.query.path || '/'
-        }
-      })
-    }
-
-    return {
-      t,
-      showDrawer,
-      showCreateDirModal,
-      handleClose,
-      handleUploadFile,
-      handleCreateDir,
-      handleNewFile,
-      toggleCreateDirModal
-    }
+  for (let file of files) {
+    store.dispatch('createFile', {
+      file,
+      route
+    })
   }
-})
+
+  e.target.value = ''
+}
+
+const handleNewFile = function() {
+  router.push({
+    path: '/file/new',
+    query: {
+      path: route.query.path || '/'
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

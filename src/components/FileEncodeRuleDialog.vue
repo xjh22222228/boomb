@@ -31,37 +31,24 @@
   </el-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { FileEncode } from '@/types'
 import { getFileEncode } from '@/utils'
 
-export default defineComponent({
-  name: 'FileEncodeRuleDialog',
-
-  props: {
-    visible: Boolean,
-    beforeClose: {
-      type: Function,
-      required: true
-    }
-  },
-
-  setup(props) {
-    const value = ref(getFileEncode())
-
-    const handleOk = function() {
-      props.beforeClose()
-
-      window.localStorage.setItem('fileEncode', String(value.value))
-    }
-
-    return {
-      value,
-      FileEncode,
-      handleOk,
-    }
+const props = defineProps({
+  visible: Boolean,
+  beforeClose: {
+    type: Function,
+    required: true
   }
 })
+
+const value = ref(getFileEncode())
+
+const handleOk = function() {
+  props.beforeClose()
+  window.localStorage.setItem('fileEncode', String(value.value))
+}
 </script>
 
