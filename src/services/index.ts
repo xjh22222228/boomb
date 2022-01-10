@@ -179,7 +179,7 @@ export function getBranchAll(owner: string) {
 export function getAccessToken(code: string) {
   return get('/api/oauth', {
     baseURL: import.meta.env.DEV
-      ? 'http://localhost:7001'
+      ? 'http://localhost:7006'
       : 'https://github-oauth-opal.vercel.app',
     params: {
       code

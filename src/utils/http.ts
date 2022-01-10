@@ -30,7 +30,7 @@ function stopLoad() {
   }
 }
 
-const headers: any = {}
+const headers: Record<string, string> = {}
 
 if (token) {
   headers.Authorization = `token ${token}`
