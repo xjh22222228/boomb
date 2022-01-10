@@ -130,9 +130,8 @@ onMounted(() => {
     authLoad.value = true
     getAccessToken(code).then(res => {
       if (isSuccess(res.status)) {
-        const { accessToken, user } = res.data.data
+        const { accessToken } = res.data.data
         token.value = accessToken
-        id.value = user?.login || ''
         handleLogin()
       }
     }).catch(() => authLoad.value = false)
