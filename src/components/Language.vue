@@ -1,18 +1,18 @@
 <template>
   <div class="context">
-    <el-dropdown>
+    <el-dropdown @command="onCommand" popper-class="nowrap-popper">
       <img src="@/assets/locale.svg" class="locale" alt="locale" />
 
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item
-            @click="setLocale('zh-CN')"
+            command="zh-CN"
             :class="{'locale-active': locale === 'zh-CN'}"
           >
             🇨🇳 简体中文
           </el-dropdown-item>
           <el-dropdown-item
-            @click="setLocale('en')"
+            command="en"
             :class="{'locale-active': locale === 'en'}"
           >
             🇬🇧 English
@@ -31,6 +31,14 @@ const { locale } = useI18n()
 const setLocale = function(locale: string) {
   i18n.global.locale = locale
   window.localStorage.setItem('locale', locale)
+}
+
+function onCommand(command: string) {
+  if (command === 'zh-CN') {
+    setLocale('zh-CN')
+  } else if (command === 'en') {
+    setLocale('en')
+  }
 }
 </script>
 

@@ -30,7 +30,7 @@
     </div>
 
     <div class="right">
-      <el-dropdown>
+      <el-dropdown @command="onCommand" popper-class="nowrap-popper">
         <el-avatar class="middle cp" :src="user.avatar_url"></el-avatar>
         <i class="middle el-icon-caret-bottom"></i>
 
@@ -43,11 +43,11 @@
               </a>
             </el-dropdown-item>
 
-            <el-dropdown-item divided @click="toggleFileRuleModal">
+            <el-dropdown-item command="upload" divided>
               {{ t('uploadFileEncode') }}
             </el-dropdown-item>
 
-            <el-dropdown-item divided @click="logout">
+            <el-dropdown-item command="logout" divided>
               {{ t('logout') }}
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -102,6 +102,14 @@ async function handleUploadFile(e: any) {
   }
 
   e.target.value = ''
+}
+
+function onCommand(command: string) {
+  if (command === 'upload') {
+    toggleFileRuleModal()
+  } else if (command === 'logout') {
+    logout()
+  }
 }
 </script>
 

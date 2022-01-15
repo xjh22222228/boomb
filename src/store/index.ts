@@ -5,7 +5,7 @@ import bytes from 'bytes'
 import config from '@/config'
 import router from '@/router'
 import { createStore } from 'vuex'
-import { createFile, getUser, readDir, deleteFile, getBranchAll, deleteDir } from '@/services'
+import { createFile, getUser, readDir, deleteFile, getBranchAll, deleteDir, getRepos } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
@@ -40,6 +40,11 @@ export type IBranch = {
   protected: boolean
 }
 
+export interface IRepo {
+  id: number
+  name: string
+}
+
 type State = {
   user: User
   token: string|null
@@ -48,6 +53,7 @@ type State = {
     [path: string]: IFile[]
   },
   branchAll: IBranch[],
+  repos: IRepo[],
   loading: boolean
 }
 
@@ -69,6 +75,7 @@ export default createStore<State>({
       // 缓存目录列表
       cacheDir: {},
       branchAll: [],
+      repos: [],
 
       loading: true, // 读取缓存不加载Loading
     }
@@ -98,6 +105,10 @@ export default createStore<State>({
     saveLoading(state, loading: boolean) {
       state.loading = loading
     },
+
+    saveRepos(state, repos: IRepo[]) {
+      state.repos = repos
+    },
   },
 
   actions: {
@@ -107,6 +118,13 @@ export default createStore<State>({
       const res = await getUser()
       if (isSuccess(res.status)) {
         commit('saveUser', res.data)
+      }
+    },
+
+    async getRepos({ commit }) {
+      const res = await getRepos()
+      if (isSuccess(res.status)) {
+        commit('saveRepos', res.data)
       }
     },
 

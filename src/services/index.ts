@@ -9,8 +9,8 @@ import { encode } from 'js-base64'
 import { IFile } from '@/store'
 import { ElMessage } from 'element-plus'
 
-const id = config.id
-const [author] = id.split('/')
+const id = config.id + '/' + config.repo
+const author = config.id
 
 // 获取目录列表
 export function readDir(name: string) {
@@ -30,6 +30,11 @@ export function readDir(name: string) {
 // 获取用户信息
 export function getUser() {
   return get(`/users/${author}`)
+}
+
+// 获取用户下所有仓库
+export function getRepos() {
+  return get(`/users/${author}/repos?page=1&per_page=999999`)
 }
 
 // 验证Token

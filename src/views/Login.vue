@@ -6,45 +6,64 @@
 
   <section class="login">
     <div class="wrapper">
-      <h2 class="title">
+      <h2 class="title" v-if="token">
         <img :src="`${baseUrl}logo.png`" alt="boomb" draggable="false">
       </h2>
 
-      <div class="form">
+      <div class="form" v-if="token">
         <el-input
           v-model="id"
-          placeholder="xjh22222228/boomb"
+          placeholder="ID"
           class="mb20"
-          @blur="handleIdBlur"
-          :disabled="loading"
-        >
-          <template #prepend>&nbsp;&nbsp;&nbsp;&nbsp;I&nbsp; D&nbsp;&nbsp;</template>
-          <template #prefix>
-            <i class="el-input__icon el-icon-user"></i>
-          </template>
-        </el-input>
+          disabled
+        />
 
-        <el-input
-          v-model="branch"
-          placeholder="main"
-          class="mb20"
+        <el-select
+          v-model="repo"
+          class="w100 mb20"
+          placeholder="Select repo"
+          @change="getBranch"
           :disabled="loading"
+          filterable
         >
-          <template #prepend>Branch</template>
-          <template #prefix>
-            <i class="el-input__icon el-icon-attract"></i>
-          </template>
-        </el-input>
+          <el-option
+            v-for="item in repos"
+            :key="item.id"
+            :label="item.name"
+            :value="item.name"
+          >
+          </el-option>
+        </el-select>
+
+        <el-select
+          v-model="branch"
+          class="w100 mb20"
+          placeholder="Select branch"
+          :disabled="loading"
+          filterable
+        >
+          <el-option
+            v-for="item in branchAll"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
+          >
+          </el-option>
+        </el-select>
 
         <el-button
           type="primary"
-          @click="goAuth"
+          @click="handleLogin"
           :loading="loading"
           class="w100 mt10"
           :disabled="!valid"
         >
           {{ t('login') }}
         </el-button>
+      </div>
+
+      <div v-else>
+        <img src="@/assets/ready.png" class="ready" @click="goAuth" draggable="false">
       </div>
     </div>
   </section>
@@ -56,7 +75,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { verifyToken, getAccessToken } from '@/services'
-import { IBranch } from '@/store'
+import { IBranch, IRepo } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { isSuccess } from '@/utils/http'
 
@@ -73,31 +92,31 @@ const { t } = useI18n()
 const route = useRoute()
 const store = useStore()
 const id = ref(config.id)
+const repo = ref(config.repo)
 const branch = ref(config.branch)
 const token = ref(config.token)
 const loading = ref(false)
 const authLoad = ref(false)
 const valid = computed<boolean>(() => {
-  const vid = id.value.split('/').length === 2
-  return Boolean(vid && branch.value)
+  return Boolean(id.value && repo.value && branch.value)
 })
 const branchAll = computed<IBranch[]>(() => store.state.branchAll)
+const repos = computed<IRepo[]>(() => store.state.repos)
 
 const goAuth = function() {
+  if (loading.value) return
   loading.value = true
-  window.localStorage.setItem('id', id.value)
-  window.localStorage.setItem('branch', branch.value)
   window.location.href = authUrl
 }
 
 const handleLogin = function() {
-  if (!token.value) return
+  if (!token.value || !valid.value) return
 
   loading.value = true
-  verifyToken(id.value.split('/')[0], token.value).then((res) => {
+  verifyToken(id.value, token.value).then((res) => {
     if (res.status !== 200) return
-    
-    window.localStorage.setItem('token', token.value)
+    window.localStorage.setItem('branch', branch.value)
+    window.localStorage.setItem('repo', repo.value)
     window.localStorage.setItem('isLogin', 'true')
     window.location.reload()
   }).finally(() => {
@@ -106,21 +125,34 @@ const handleLogin = function() {
   })
 }
 
-function handleIdBlur() {
-  const splitId = id.value.split('/')
-  if (splitId.length === 2 && splitId[0] && splitId[1]) {
+function getBranch() {
+  const userRepo = `${id.value}/${repo.value}`
+  if (id.value && repo.value) {
     loading.value = true
-    store.dispatch('getBranchAll', id.value).finally(() => {
+    store.dispatch('getBranchAll', userRepo).finally(() => {
       loading.value = false
     })
   }
+}
+
+function getRepos() {
+  if (!id.value || !token.value) {
+    return
+  }
+  store.dispatch('getRepos').then(() => {
+    getBranch()
+  })
 }
 
 // Default branch
 watch(branchAll, () => {
   if (branchAll.value.length > 0) {
     branch.value = branchAll.value[0].name
+  } else {
+    branch.value = ''
   }
+}, {
+  immediate: true
 })
 
 onMounted(() => {
@@ -128,15 +160,22 @@ onMounted(() => {
   const code = query.code as string
   if (code) {
     authLoad.value = true
-    getAccessToken(code).then(res => {
-      if (isSuccess(res.status)) {
-        const { accessToken } = res.data.data
-        token.value = accessToken
-        handleLogin()
-      }
-    }).catch(() => authLoad.value = false)
+    getAccessToken(code)
+      .then(res => {
+        if (isSuccess(res.status)) {
+          const { accessToken, user } = res.data.data
+          id.value = user.login
+          token.value = accessToken
+          store.commit('saveUser', user)
+          window.localStorage.setItem('token', accessToken)
+          window.localStorage.setItem('id', user.login)
+          window.location.replace('/login')
+        }
+      })
+      .finally(() => authLoad.value = false)
   }
 
+  getRepos()
   handleLogin()
 })
 </script>
@@ -160,17 +199,18 @@ onMounted(() => {
 .wrapper {
   z-index: 3;
   margin-top: 100px;
-
   .title {
     text-align: center;
-
     img {
       width: 250px;
       height: 75px;
       pointer-events: none;
     }
   }
-
+  .ready {
+    width: 450px;
+    cursor: pointer;
+  }
   .form {
     margin-top: 50px;
     padding: 50px 20px;

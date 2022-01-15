@@ -3,7 +3,7 @@
     <el-popover
       placement="bottom"
       trigger="hover"
-      :width="400"
+      :width="420"
       :disabled="!isFile"
     >
       <div>

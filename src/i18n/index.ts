@@ -15,6 +15,7 @@ export default createI18n({
 
   messages: {
     en: {
+      auth: 'Authorization',
       what: 'What is Boomb?',
       getToken: 'Apply for Token',
       about: 'About Boomb',
@@ -54,6 +55,7 @@ export default createI18n({
     },
 
     'zh-CN': {
+      auth: '授 权',
       what: 'Boomb是什么?',
       getToken: '去申请Token',
       about: '关于 Boomb',
