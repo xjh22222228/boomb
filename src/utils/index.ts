@@ -43,13 +43,8 @@ export function initClipboard() {
 }
 
 export function logout() {
-  const removeKeys = ['token', 'isLogin']
-
-  for (let i = 0; i < removeKeys.length; i++) {
-    const key = removeKeys[i]
-    window.localStorage.removeItem(key)
-  }
-
+  window.localStorage.clear()
+  window.sessionStorage.clear()
   window.location.reload()
 }
 

@@ -62,9 +62,7 @@
         </el-button>
 
         <div class="mt10 align-center">
-          <a :href="authUrl">
-            <img src="@/assets/github.svg" class="github">
-          </a>
+          <img src="@/assets/github.svg" class="github" @click="goAuth">
         </div>
       </div>
 
@@ -110,8 +108,10 @@ const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 const repos = computed<IRepo[]>(() => store.state.repos)
 
 const goAuth = function() {
-  if (loading.value) return
-  loading.value = true
+  if (authLoad.value) return
+  window.localStorage.clear()
+  window.sessionStorage.clear()
+  authLoad.value = true
   window.location.href = authUrl
 }
 
@@ -148,7 +148,7 @@ function getRepos() {
   loading.value = true
   store.dispatch('getRepos').then(() => {
     getBranch()
-  }).catch(() => {
+  }).finally(() => {
     loading.value = false
   })
 }
@@ -182,7 +182,9 @@ onMounted(() => {
           window.location.replace('/login')
         }
       })
-      .finally(() => authLoad.value = false)
+      .finally(() => {
+        authLoad.value = false
+      })
   }
 
   getRepos()
@@ -222,6 +224,7 @@ onMounted(() => {
   }
   .github {
     width: 30px;
+    cursor: pointer;
   }
   .form {
     margin-top: 50px;
