@@ -15,7 +15,7 @@
 </p>
 
 
-Because often need to update the README picture, it is necessary to manually type commands to process each time. If the warehouse is very large, it will take some time to pull down, so this project is used to solve this problem.
+It is used to manage store the gallery. If you use it reasonably, it can be used as a picture bed and file sharing. Isn't it good!
 
 If you use it reasonably, you can use it as a picture bed or file sharing, not bad!
 
