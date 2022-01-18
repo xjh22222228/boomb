@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { IFile } from '@/store'
+import type { IFile } from '@/store'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 

@@ -1,6 +1,6 @@
 import Clipboard from 'clipboard'
 import { FileEncode } from '@/types'
-import { IFile } from '@/store'
+import type { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
 import i18n from '@/i18n'
 import config from '@/config'

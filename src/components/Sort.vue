@@ -50,7 +50,7 @@
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { IFile } from '@/store'
+import type { IFile } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { getCharCode } from '@/utils'
 import { Check } from '@element-plus/icons-vue'

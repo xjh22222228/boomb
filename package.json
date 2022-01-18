@@ -1,7 +1,11 @@
 {
-  "name": "boomb2",
+  "name": "boomb",
   "version": "1.8.0",
   "author": "xiejiahe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xjh22222228/boomb.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -14,7 +18,7 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/nprogress": "^0.2.0",
     "@types/uuid": "^8.3.4",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "bytes": "^3.1.1",
     "clipboard": "^2.0.8",
     "element-plus": "^1.3.0-beta.5",
@@ -32,6 +36,6 @@
     "@vitejs/plugin-vue": "^2.0.1",
     "typescript": "^4.5.4",
     "vite": "^2.7.12",
-    "vue-tsc": "^0.30.4"
+    "vue-tsc": "^0.30.5"
   }
 }

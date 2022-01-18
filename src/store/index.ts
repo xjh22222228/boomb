@@ -5,7 +5,15 @@ import bytes from 'bytes'
 import config from '@/config'
 import router from '@/router'
 import { createStore } from 'vuex'
-import { createFile, getUser, readDir, deleteFile, getBranchAll, deleteDir, getRepos } from '@/services'
+import {
+  createFile,
+  getUser,
+  readDir,
+  deleteFile,
+  getBranchAll,
+  deleteDir,
+  getRepos
+} from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
@@ -16,14 +24,11 @@ import { v4 as uuidv4 } from 'uuid'
 // Timestamp conflict
 let n = 0;
 
-type User = {
+type IUser = {
   login: string,
   id: number
   name: string
-  email: string
   avatar_url: string
-  bio: string
-  html_url: string
 }
 
 export type IFile = {
@@ -46,7 +51,7 @@ export interface IRepo {
 }
 
 type State = {
-  user: User
+  user: IUser
   token: string|null
   isLogin: boolean
   cacheDir: {
@@ -62,12 +67,9 @@ export default createStore<State>({
     return {
       user: {
         name: '',
-        email: '',
         avatar_url: '',
         login: '',
         id: 0,
-        bio: '',
-        html_url: ''
       },
       token: config.token,
       isLogin: config.isLogin,
@@ -90,7 +92,7 @@ export default createStore<State>({
   },
 
   mutations: {
-    saveUser(state, user: User) {
+    saveUser(state, user: IUser) {
       state.user = user
     },
 

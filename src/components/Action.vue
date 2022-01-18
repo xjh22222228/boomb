@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <el-dropdown placement="top">
-      <img :src="`${baseUrl}favicon.png`" alt="" class="img">
+    <el-dropdown placement="top" popper-class="nowrap-popper">
+      <img :src="`${baseUrl}favicon.png`" class="img" />
 
       <template #dropdown>
         <el-dropdown-menu>
@@ -30,6 +30,7 @@ import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const baseUrl = import.meta.env.BASE_URL
 const store = useStore()
 const isLogin = computed(() => store.state.isLogin)
 
@@ -55,8 +56,6 @@ const handleInfo = function() {
     `,
   }).catch(() => {})
 }
-
-const baseUrl = import.meta.env.BASE_URL;
 </script>
 
 <style lang="scss" scoped>

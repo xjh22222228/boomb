@@ -6,7 +6,7 @@
 import config from '@/config'
 import { get, put, del, isSuccess } from '@/utils/http'
 import { encode } from 'js-base64'
-import { IFile } from '@/store'
+import type { IFile } from '@/store'
 import { ElMessage } from 'element-plus'
 
 const id = config.id + '/' + config.repo

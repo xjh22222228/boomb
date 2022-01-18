@@ -55,11 +55,17 @@
           type="primary"
           @click="handleLogin"
           :loading="loading"
-          class="w100 mt10"
+          class="w100 mt10 mb10"
           :disabled="!valid"
         >
           {{ t('login') }}
         </el-button>
+
+        <div class="mt10 align-center">
+          <a :href="authUrl">
+            <img src="@/assets/github.svg" class="github">
+          </a>
+        </div>
       </div>
 
       <div v-else>
@@ -75,7 +81,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { verifyToken, getAccessToken } from '@/services'
-import { IBranch, IRepo } from '@/store'
+import type { IBranch, IRepo } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { isSuccess } from '@/utils/http'
 
@@ -139,8 +145,11 @@ function getRepos() {
   if (!id.value || !token.value) {
     return
   }
+  loading.value = true
   store.dispatch('getRepos').then(() => {
     getBranch()
+  }).catch(() => {
+    loading.value = false
   })
 }
 
@@ -168,6 +177,7 @@ onMounted(() => {
           token.value = accessToken
           store.commit('saveUser', user)
           window.localStorage.setItem('token', accessToken)
+          window.localStorage.setItem('user', JSON.stringify(user))
           window.localStorage.setItem('id', user.login)
           window.location.replace('/login')
         }
@@ -176,7 +186,6 @@ onMounted(() => {
   }
 
   getRepos()
-  handleLogin()
 })
 </script>
 
@@ -211,9 +220,12 @@ onMounted(() => {
     width: 450px;
     cursor: pointer;
   }
+  .github {
+    width: 30px;
+  }
   .form {
     margin-top: 50px;
-    padding: 50px 20px;
+    padding: 50px 20px 20px 20px;
     background: #fff;
     width: 500px;
     border-radius: 5px;

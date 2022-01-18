@@ -72,7 +72,7 @@ import Viewer from 'viewerjs';
 import { Events, ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { IFile } from '@/store'
+import type { IFile } from '@/store'
 import { initClipboard, generateBreadcrumb } from '@/utils';
 import { useI18n } from 'vue-i18n'
 
