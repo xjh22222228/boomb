@@ -197,20 +197,24 @@ function goDir() {
   cursor: pointer;
   @keyframes actived {
     0% {
-      border-color: red;
-      border-width: 3px;
+      opacity: 1;
+    }
+    99% {
+      opacity: 1;
     }
     100% {
-      border-color: #eee;
-      border-width: 3px;
+      opacity: 0;
     }
   }
-  &.actived .file-icon {
+  &.actived .filename::after {
     animation: actived 10s linear;
   }
 
   &:hover {
-    background: #f4f4f4;
+    background: rgba($color: #000000, $alpha: .02);
+    .filename::after {
+      top: 0;
+    }
   }
 
   .file-icon {
@@ -219,22 +223,18 @@ function goDir() {
     height: 80px;
     border: 1px solid #eee;
     cursor: pointer;
-
     &.no-load:after {
       display: none;
     }
-
     &.error:after {
       background: #fff url("~@/assets/error.svg") no-repeat 100% 100%;
       background-position: center;
     }
-
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-
     &:after {
       content: "";
       z-index: 9;
@@ -248,8 +248,8 @@ function goDir() {
       background-position: center;
     }
   }
-
   .filename {
+    position: relative;
     line-height: 1.5;
     color: #000;
     overflow: hidden;
@@ -257,6 +257,18 @@ function goDir() {
     white-space: nowrap;
     font-size: 14px;
     margin-top: 8px;
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      top: 60%;
+      left: -0.1em;
+      right: -0.1em;
+      bottom: 0;
+      transition: top 200ms cubic-bezier(0, 0.8, 0.13, 1);
+      background-color: rgba(79, 192, 141, 0.5);
+      opacity: 0;
+    }
   }
 }
 

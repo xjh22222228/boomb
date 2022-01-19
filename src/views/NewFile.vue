@@ -22,14 +22,12 @@
 
     <div class="toolbar">
       <el-button
-        size="small"
         @click="handleCancel"
       >
         {{ t('cancel' )}}
       </el-button>
 
       <el-button
-        size="small"
         type="primary"
         @click="handlePublish"
         :loading="loading"
@@ -96,7 +94,7 @@ const handleCancel = function() {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 45px;
+  bottom: 0;
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -105,7 +103,6 @@ const handleCancel = function() {
     border-bottom: 1px solid #eee;
     display: flex;
     padding: 5px 10px;
-
     .input {
       margin-right: 10px;
     }
@@ -113,26 +110,21 @@ const handleCancel = function() {
 
   .textarea {
     flex: 1;
-
     textarea {
       height: 100% !important;
       font-size: 18px;
     }
   }
 
-  .check {
-    margin-top: 10px;
-  }
-
   .toolbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    height: 40px;
     padding: 7px 15px;
     text-align: right;
     border-top: 1px solid #eee;
     background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 </style>

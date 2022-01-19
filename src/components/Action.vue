@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top" popper-class="nowrap-popper">
-      <img :src="`${baseUrl}favicon.png`" class="img" />
+      <div class="img" :style="{'background-image': `url(${baseUrl}favicon.png)`}"></div>
 
       <template #dropdown>
         <el-dropdown-menu>
@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts" setup>
-import config from '@/config'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { getLocalId, getLocalBranch } from '@/utils/storage'
 
 const { t } = useI18n()
 const baseUrl = import.meta.env.BASE_URL
@@ -51,8 +51,8 @@ const handleInfo = function() {
     title: t('info'),
     dangerouslyUseHTMLString: true,
     message: `
-      <p class="mb10">ID: <a href="https://github.com/${config.id}/tree/${config.branch}" target="_blank">${config.id}</a></p>
-      <p class="mb10">Branch: ${config.branch}</p>
+      <p class="mb10">ID: <a href="https://github.com/${getLocalId()}/tree/${getLocalBranch()}" target="_blank">${getLocalId()}</a></p>
+      <p class="mb10">Branch: ${getLocalBranch()}</p>
     `,
   }).catch(() => {})
 }
@@ -60,6 +60,7 @@ const handleInfo = function() {
 
 <style lang="scss" scoped>
 .wrapper {
+  z-index: 9;
   position: fixed;
   bottom: 150px;
   right: 30px;
@@ -75,8 +76,9 @@ const handleInfo = function() {
               0 6px 16px 0 rgba(0, 0, 0, 0.08),
               0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
-
 .img {
   width: 30px;
+  height: 30px;
+  background-size: 100%;
 }
 </style>

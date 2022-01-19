@@ -68,11 +68,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { Events } from 'vue'
+import type { IFile } from '@/store'
 import Viewer from 'viewerjs';
-import { Events, ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import type { IFile } from '@/store'
 import { initClipboard, generateBreadcrumb } from '@/utils';
 import { useI18n } from 'vue-i18n'
 
@@ -111,7 +112,7 @@ function initViewer() {
 async function copyUpload(event: Events['onCopy']) {
   const items = event.clipboardData?.items
   if (!items) return
-  let files: File[] = []
+  const files: File[] = []
 
   if (items.length) {
     for (let i = 0; i < items.length; i++) {
@@ -122,12 +123,12 @@ async function copyUpload(event: Events['onCopy']) {
     }
   }
 
-  for (let file of files) {
+  files.forEach(file => {
     store.dispatch('createFile', {
       file,
       route
     })
-  }
+  })
 }
 
 function handleDrop(e: Events['onDrop']) {
@@ -137,7 +138,7 @@ function handleDrop(e: Events['onDrop']) {
 
   const files = e.dataTransfer!.files as any
   if (files) {
-    files.forEach((file: Record<string, any>) => {
+    files.forEach?.((file: Record<string, any>) => {
       // 目录 type 为空
       if (file.type) {
         store.dispatch('createFile', {
@@ -219,7 +220,6 @@ const paths = computed(() =>
 <style lang="scss" scoped>
 .home {
   flex: 1;
-
   &.active {
     border: 3px dashed #1890ff;
   }
@@ -227,7 +227,6 @@ const paths = computed(() =>
   .mod-wrapper {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     margin-top: 50px;
 
     ::v-deep(.el-checkbox) {

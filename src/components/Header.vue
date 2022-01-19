@@ -120,11 +120,13 @@ function onCommand(command: string) {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #dbdbdb;
-
   .right {
     margin-right: 20px;
     display: flex;
     align-items: center;
+    .el-avatar {
+      border: 1px solid #f2f2f2;
+    }
   }
 
   .file {

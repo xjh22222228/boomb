@@ -1,3 +1,5 @@
+<!-- App -->
+
 <template>
   <div class="wrapper" :id="'file-' + fileName">
     <div class="left">
@@ -26,15 +28,14 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from 'vue'
+import type { PropType } from 'vue'
+import type { IFile } from '@/store'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import { getCdn, CDN, updateFileContent } from '@/services'
-import type { IFile } from '@/store'
-import { getBase64, getFileUrl, isImage } from '@/utils'
+import { updateFileContent } from '@/services'
+import { getBase64, getFileUrl } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
-import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   data: {
@@ -42,20 +43,12 @@ const props = defineProps({
     default: () => ({}),
   }
 })
-const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
-const hasError = ref(false)
-const imgLoad = ref(true)
 const fileName = props.data.name.toLowerCase()
 const fileType = props.data.type
 const filePath = props.data.path
-const cdn1 = getCdn(CDN.Jsdelivr, filePath, false)
-const cdn2 = getCdn(CDN.Github, filePath, false)
-const markdown = `![](${cdn1})`
-const html = `<a href="${cdn1}" target="_blank"><img src="${cdn1}" alt="" /></a>`
-const isImg = isImage(fileName)
 const isFile = fileType !== 'dir'
 const fileUrl = getFileUrl(props.data)
 
@@ -102,7 +95,6 @@ function goDir() {
   &:active {
     background-color: #f2f2f2;
   }
-
   .image {
     width: 50px;
     height: 50px;
@@ -116,20 +108,16 @@ function goDir() {
     margin-left: 7px;
     padding-top: 5px;
     margin-right: 20px;
-
     .dir {
       margin-top: 5px;
       font-size: 16px;
     }
-
     .size {
       color: #666;
     }
-
     div {
       font-size: 14px;
     }
-
     .file-input {
       position: absolute;
       top: 0;

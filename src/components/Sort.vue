@@ -2,43 +2,37 @@
   <el-dropdown placement="bottom-end" :hide-on-click="false">
     <span class="sorter">
       {{ sortType === SortType.FileSize ? t('fileSize') : t('fileName') }}
-      <i :class="isUp ? 'el-icon-top' : 'el-icon-bottom'"></i>
+
+      <el-icon v-if="isUp"><top /></el-icon>
+      <el-icon v-else><bottom /></el-icon>
     </span>
 
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
-          :icon="Check"
-          class="item"
-          :class="{active: isUp}"
           @click="isUp = true"
         >
+          <el-icon :class="{transparent: !isUp}"><Check /></el-icon>
           {{ t('asc' )}}
         </el-dropdown-item>
         <el-dropdown-item
-          :icon="Check"
-          class="item"
-          :class="{active: !isUp}"
           @click="isUp = false"
         >
+          <el-icon :class="{transparent: isUp}"><Check /></el-icon>
           {{ t('desc' )}}
         </el-dropdown-item>
 
         <el-dropdown-item
           divided
-          :icon="Check"
-          class="item"
           @click="sortType = SortType.FileSize"
-          :class="{active: sortType === SortType.FileSize}"
         >
+          <el-icon :class="{transparent: sortType !== SortType.FileSize}"><Check /></el-icon>
           {{ t('fileSize' )}}
         </el-dropdown-item>
         <el-dropdown-item
-          :icon="Check"
-          class="item"
           @click="sortType = SortType.FileName"
-          :class="{active: sortType === SortType.FileName}"
         >
+          <el-icon :class="{transparent: sortType !== SortType.FileName}"><Check /></el-icon>
           {{ t('fileName' )}}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -47,13 +41,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { IFile } from '@/store'
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import type { IFile } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { getCharCode } from '@/utils'
-import { Check } from '@element-plus/icons-vue'
+import { Check, Top, Bottom } from '@element-plus/icons-vue'
 
 enum SortType {
   FileSize = 1, // 文件大小
@@ -107,25 +101,8 @@ watch([sortType, isUp], () => {
   transition: all .1s linear;
   color: #000;
   font-weight: bold;
-
   &:hover {
     background: #f2f2f2;
-  }
-}
-
-.item {
-
-  ::deep(.el-icon-check) {
-    opacity: 0 !important;
-  }
-}
-
-.active {
-  color: #2980ff;
-  font-weight: bold;
-
-  ::deep(i.el-icon-check) {
-    opacity: 1 !important;
   }
 }
 </style>

@@ -7,12 +7,12 @@
         class="ch"
       >
         Bo💣mb
-        <img class="icon" src="@/assets/github.svg" alt="">
+        <img class="icon" src="@/assets/github.svg" />
       </a>
       v{{ version }} MIT
     </div>
 
-    Copyright © 2021 - {{ year }} boomb.com
+    Copyright © 2021 - {{ year }} boomb.cn
   </footer>
 </template>
 
@@ -39,6 +39,7 @@ const year = new Date().getFullYear()
     width: 25px;
     height: 25px;
     vertical-align: top;
+    pointer-events: none;
   }
 }
 </style>

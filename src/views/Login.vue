@@ -11,12 +11,22 @@
       </h2>
 
       <div class="form" v-if="token">
-        <el-input
+        <el-select
           v-model="id"
-          placeholder="ID"
-          class="mb20"
-          disabled
-        />
+          class="w100 mb20"
+          placeholder="Select ID"
+          @change="getRepos"
+          :disabled="loading"
+          filterable
+        >
+          <el-option
+            v-for="item in userAll"
+            :key="item.login"
+            :label="`${item.type}: ${item.login}`"
+            :value="item.login"
+          >
+          </el-option>
+        </el-select>
 
         <el-select
           v-model="repo"
@@ -74,12 +84,11 @@
 </template>
 
 <script lang="ts" setup>
-import config from '@/config'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { verifyToken, getAccessToken } from '@/services'
-import type { IBranch, IRepo } from '@/store'
+import type { IBranch, IRepo, IUser } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { isSuccess } from '@/utils/http'
 
@@ -94,16 +103,19 @@ const baseUrl = import.meta.env.BASE_URL
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const store = useStore()
-const id = ref(config.id)
-const repo = ref(config.repo)
-const branch = ref(config.branch)
-const token = ref(config.token)
+const id = ref('')
+const repo = ref('')
+const branch = ref('')
+const token = ref('')
 const loading = ref(false)
 const authLoad = ref(false)
 const valid = computed<boolean>(() => {
   return Boolean(id.value && repo.value && branch.value)
 })
+
+const userAll = computed<IUser[]>(() => store.state.userAll)
 const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 const repos = computed<IRepo[]>(() => store.state.repos)
 
@@ -124,6 +136,9 @@ const handleLogin = function() {
     window.localStorage.setItem('branch', branch.value)
     window.localStorage.setItem('repo', repo.value)
     window.localStorage.setItem('isLogin', 'true')
+    window.localStorage.setItem('user', JSON.stringify(store.state.user))
+    window.localStorage.setItem('id', id.value)
+    window.localStorage.setItem('token', token.value)
     window.location.reload()
   }).finally(() => {
     loading.value = false
@@ -134,6 +149,7 @@ const handleLogin = function() {
 function getBranch() {
   const userRepo = `${id.value}/${repo.value}`
   if (id.value && repo.value) {
+    branch.value = ''
     loading.value = true
     store.dispatch('getBranchAll', userRepo).finally(() => {
       loading.value = false
@@ -145,12 +161,19 @@ function getRepos() {
   if (!id.value || !token.value) {
     return
   }
-  loading.value = true
-  store.dispatch('getRepos').then(() => {
-    getBranch()
-  }).finally(() => {
-    loading.value = false
-  })
+  const user = userAll.value.find((u: IUser) => u.login === id.value)
+  if (user) {
+    repo.value = ''
+    branch.value = ''
+    window.localStorage.setItem('id', id.value)
+    store.commit('saveUser', user)
+    loading.value = true
+    store.dispatch('getRepos').then(() => {
+      getBranch()
+    }).finally(() => {
+      loading.value = false
+    })
+  }
 }
 
 // Default branch
@@ -176,18 +199,19 @@ onMounted(() => {
           id.value = user.login
           token.value = accessToken
           store.commit('saveUser', user)
-          window.localStorage.setItem('token', accessToken)
-          window.localStorage.setItem('user', JSON.stringify(user))
+          store.commit('saveUserAll', [user])
           window.localStorage.setItem('id', user.login)
-          window.location.replace('/login')
+          window.localStorage.setItem('token', accessToken)
+
+          store.dispatch('getOrgs')
+          getRepos()
+          router.replace('/login')
         }
       })
       .finally(() => {
         authLoad.value = false
       })
   }
-
-  getRepos()
 })
 </script>
 

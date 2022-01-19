@@ -1,12 +1,12 @@
-// Copyright 2021 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import NewFile from '@/views/NewFile.vue'
 import Mobile from '@/views/Mobile.vue'
-import config from '@/config'
 import { isMobile } from '@/utils'
+import { getLocalIsLogin } from '@/utils/storage'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -42,9 +42,8 @@ const router = createRouter({
   routes
 })
 
-const { isLogin } = config
-
 router.beforeEach((to) => {
+  const isLogin = getLocalIsLogin()
   if (to.name === 'Login' && isLogin) {
     router.replace('/')
   } else {

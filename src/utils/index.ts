@@ -1,10 +1,10 @@
 import Clipboard from 'clipboard'
+import i18n from '@/i18n'
 import { FileEncode } from '@/types'
 import type { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
-import i18n from '@/i18n'
-import config from '@/config'
 import { ElMessage } from 'element-plus'
+import { getLocalId, getLocalBranch } from '@/utils/storage'
 
 let clipboard: Clipboard|null
 
@@ -164,6 +164,5 @@ export function generateBreadcrumb(path: string = ''): {
 
 export function getEditFileUrl(path: string): string {
   path = path[0] === '/' ? path.slice(1) : path
-  const { id, branch } = config
-  return `https://github.com/${id}/edit/${branch}/${path}`
+  return `https://github.com/${getLocalId()}/edit/${getLocalBranch()}/${path}`
 }

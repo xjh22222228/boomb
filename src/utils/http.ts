@@ -1,12 +1,12 @@
-// Copyright 2021 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
 
 import axios from 'axios'
 import NProgress from 'nprogress'
-import config from '@/config'
 import store from '@/store'
 import { ElNotification } from 'element-plus'
+import { getLocalToken } from '@/utils/storage'
 
-const token = config.token
+const getToken = () => getLocalToken()
 const defaultTitle = document.title
 
 function startLoad() {
@@ -30,16 +30,9 @@ function stopLoad() {
   }
 }
 
-const headers: Record<string, string> = {}
-
-if (token) {
-  headers.Authorization = `token ${token}`
-}
-
 const instance = axios.create({
   baseURL: 'https://api.github.com',
   timeout: 600000 * 3, // 30 minute
-  headers
 })
 
 interface ResponseData {
@@ -50,6 +43,14 @@ interface ResponseData {
 
 instance.interceptors.request.use(config => {
   startLoad()
+
+  const token = getToken()
+  if (token) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `token ${token}`
+    }
+  }
 
   // 不缓存
   if (config.method === 'get') {

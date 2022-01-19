@@ -1,8 +1,7 @@
-// Copyright 2021 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
 
 import { nextTick } from 'vue'
 import bytes from 'bytes'
-import config from '@/config'
 import router from '@/router'
 import { createStore } from 'vuex'
 import {
@@ -12,7 +11,8 @@ import {
   deleteFile,
   getBranchAll,
   deleteDir,
-  getRepos
+  getRepos,
+  getOrgs
 } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname } from '@/utils'
@@ -20,15 +20,21 @@ import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { FileEncode } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
+import { getLocalToken, getLocalIsLogin } from '@/utils/storage'
 
 // Timestamp conflict
 let n = 0;
 
-type IUser = {
+// user or org
+export type IUser = {
   login: string,
   id: number
-  name: string
   avatar_url: string
+  repos_url: string
+  organizations_url: string
+  name?: string
+  type?: 'User'|'Organization'
+  [key: string]: any
 }
 
 export type IFile = {
@@ -51,28 +57,26 @@ export interface IRepo {
 }
 
 type State = {
+  userAll: IUser[],
   user: IUser
   token: string|null
   isLogin: boolean
-  cacheDir: {
-    [path: string]: IFile[]
-  },
+  cacheDir: Record<string, IFile[]>
   branchAll: IBranch[],
   repos: IRepo[],
   loading: boolean
 }
 
+const localUser = window.localStorage.getItem('user')
+const defUser = localUser ? JSON.parse(localUser) : null
+
 export default createStore<State>({
   state() {
     return {
-      user: {
-        name: '',
-        avatar_url: '',
-        login: '',
-        id: 0,
-      },
-      token: config.token,
-      isLogin: config.isLogin,
+      userAll: [],
+      user: defUser || {},
+      token: getLocalToken(),
+      isLogin: getLocalIsLogin(),
 
       // 缓存目录列表
       cacheDir: {},
@@ -94,6 +98,7 @@ export default createStore<State>({
   mutations: {
     saveUser(state, user: IUser) {
       state.user = user
+      window.localStorage.setItem('user', JSON.stringify(user))
     },
 
     saveDir(state, { data, path }) {
@@ -111,6 +116,15 @@ export default createStore<State>({
     saveRepos(state, repos: IRepo[]) {
       state.repos = repos
     },
+
+    saveUserAll(state, users: IUser[]) {
+      users.forEach((user: IUser) => {
+        state.userAll.push({
+          type: 'Organization',
+          ...user
+        })
+      })
+    },
   },
 
   actions: {
@@ -127,6 +141,13 @@ export default createStore<State>({
       const res = await getRepos()
       if (isSuccess(res.status)) {
         commit('saveRepos', res.data)
+      }
+    },
+
+    async getOrgs({ commit }) {
+      const res = await getOrgs()
+      if (isSuccess(res.status)) {
+        commit('saveUserAll', res.data)
       }
     },
 
@@ -152,6 +173,7 @@ export default createStore<State>({
               return item
             })
             .sort((a: IFile, b: IFile) => a.size - b.size)
+            .filter((item: IFile) => !(item.type === 'file' && item.name === '.gitkeep'))
 
           commit('saveDir', {
             data,
