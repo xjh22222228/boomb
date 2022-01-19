@@ -7,13 +7,11 @@
         <el-dropdown-menu>
           <el-dropdown-item
             command="zh-CN"
-            :class="{'locale-active': locale === 'zh-CN'}"
           >
             🇨🇳 简体中文
           </el-dropdown-item>
           <el-dropdown-item
             command="en"
-            :class="{'locale-active': locale === 'en'}"
           >
             🇬🇧 English
           </el-dropdown-item>
@@ -25,9 +23,7 @@
 
 <script lang="ts" setup>
 import i18n from '../i18n'
-import { useI18n } from 'vue-i18n'
 
-const { locale } = useI18n()
 const setLocale = function(locale: string) {
   i18n.global.locale = locale
   window.localStorage.setItem('locale', locale)
@@ -48,7 +44,6 @@ function onCommand(command: string) {
   position: absolute;
   top: 15px;
   right: 20px;
-  
   .locale {
     cursor: pointer;
     width: 20px;
