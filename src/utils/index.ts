@@ -101,10 +101,16 @@ import fileDocImg from '@/assets/file-doc.svg'
 import fileOtherImg from '@/assets/file-other.svg'
 
 export function getFileUrl(file: IFile): string {
-  const { type, name, path } = file
+  const { type, name, path, size } = file
+
+  // Jsdelivr: File size exceeded the configured limit of 20 MB.
+  const MAX_FILE_SIZE = 20 * 1024 * 1024
 
   if (type === 'file') {
     if (isImage(name)) {
+      if (typeof size === 'number' && size >= MAX_FILE_SIZE) {
+        return getCdn(CDN.Github, path)  
+      }
       return getCdn(CDN.Jsdelivr, path)
     }
 

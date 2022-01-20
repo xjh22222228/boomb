@@ -10,14 +10,16 @@
         <div class="file-wrapper">
           <div>
             <el-button
-              :icon="Upload"
               v-if="isFile"
+              :icon="Upload"
               class="mr10"
             >
               {{ t('changeFile') }}
+              <label :for="`f${data.name}`" class="file-label"></label>
               <input
                 type="file"
-                class="file-input"
+                :id="`f${data.name}`"
+                class="none"
                 @change="handleUpdateFile"
               />
             </el-button>
@@ -36,28 +38,28 @@
               </a>
             </div>
             <div>
-              <a :href="cdn1" target="_blank">{{ data.name }}</a>
+              <a :href="jsdelivrCDN" target="_blank">{{ data.name }}</a>
             </div>
           </div>
         </div>
 
-        <el-input v-model="cdn1" class="mb10 mt10">
+        <el-input v-model="jsdelivrCDN" class="mb10 mt10">
           <template #prepend>
-            <a :href="cdn1" target="_blank">CDN1</a>
+            <a :href="jsdelivrCDN" target="_blank">Jsdelivr</a>
           </template>
           <template #append>
-            <span class="copy" :data-clipboard-text="cdn1">
+            <span class="copy" :data-clipboard-text="jsdelivrCDN">
               <el-icon><document-copy /></el-icon>
             </span>
           </template>
         </el-input>
 
-        <el-input v-model="cdn2" class="mb10">
+        <el-input v-model="githubCDN" class="mb10">
           <template #prepend>
-            <a :href="cdn2" target="_blank">CDN2</a>
+            <a :href="githubCDN" target="_blank">Github</a>
           </template>
           <template #append>
-            <span class="copy" :data-clipboard-text="cdn2">
+            <span class="copy" :data-clipboard-text="githubCDN">
               <el-icon><document-copy /></el-icon>
             </span>
           </template>
@@ -76,7 +78,7 @@
 
         <el-input v-model="markdown">
           <template #prepend>
-            <a :href="cdn1" target="_blank">Markdown</a>
+            <a :href="jsdelivrCDN" target="_blank">Markdown</a>
           </template>
           <template #append>
             <span class="copy" :data-clipboard-text="markdown">
@@ -142,12 +144,12 @@ const imgLoaded = ref(false)
 const fileName = props.data.name.toLowerCase()
 const fileType = props.data.type
 const filePath = props.data.path
-const cdn1 = getCdn(CDN.Jsdelivr, filePath, false)
-const cdn2 = getCdn(CDN.Github, filePath, false)
+const jsdelivrCDN = getCdn(CDN.Jsdelivr, filePath, false)
+const githubCDN = getCdn(CDN.Github, filePath, false)
 const isImg = isImage(fileName)
 const fileUrl = getFileUrl(props.data)
-const markdown = `![](${cdn1})`
-const html = `<a href="${cdn1}" target="_blank"><img src="${cdn1}" alt="" /></a>`
+const markdown = `![](${jsdelivrCDN})`
+const html = `<a href="${jsdelivrCDN}" target="_blank"><img src="${jsdelivrCDN}" alt="" /></a>`
 const editUrl = getEditFileUrl(filePath)
 const isFile = fileType !== 'dir'
 
@@ -196,15 +198,9 @@ function goDir() {
   margin: 0 10px 15px 10px;
   cursor: pointer;
   @keyframes actived {
-    0% {
-      opacity: 1;
-    }
-    99% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+    0% { opacity: 1; }
+    99% { opacity: 1; }
+    100% { opacity: 0; }
   }
   &.actived .filename::after {
     background-color: #f56c6c;
@@ -277,14 +273,14 @@ function goDir() {
 .copy {
   cursor: pointer;
 }
-
-.file-input {
+.file-label {
+  z-index: 2;
   position: absolute;
-  top: 22px;
-  left: 52px;
-  width: 108px;
-  height: 42px;
-  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 </style>
 
@@ -292,5 +288,8 @@ function goDir() {
 .file-wrapper {
   display: flex;
   align-items: center;
+  .mr10 {
+    position: relative;
+  }
 }
 </style>
