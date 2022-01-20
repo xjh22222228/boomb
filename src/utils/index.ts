@@ -4,7 +4,7 @@ import { FileEncode } from '@/types'
 import type { IFile } from '@/store'
 import { getCdn, CDN } from '@/services'
 import { ElMessage } from 'element-plus'
-import { getLocalId, getLocalBranch } from '@/utils/storage'
+import { getLocalId, getLocalBranch, getLocalRepo } from '@/utils/storage'
 
 let clipboard: Clipboard|null
 
@@ -164,5 +164,5 @@ export function generateBreadcrumb(path: string = ''): {
 
 export function getEditFileUrl(path: string): string {
   path = path[0] === '/' ? path.slice(1) : path
-  return `https://github.com/${getLocalId()}/edit/${getLocalBranch()}/${path}`
+  return `https://github.com/${getLocalId()}/${getLocalRepo()}/edit/${getLocalBranch()}/${path}`
 }

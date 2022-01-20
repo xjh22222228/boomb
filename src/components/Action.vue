@@ -27,7 +27,7 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { getLocalId, getLocalBranch } from '@/utils/storage'
+import { getLocalId, getLocalBranch, getLocalRepo } from '@/utils/storage'
 
 const { t } = useI18n()
 const baseUrl = import.meta.env.BASE_URL
@@ -52,6 +52,7 @@ const handleInfo = function() {
     dangerouslyUseHTMLString: true,
     message: `
       <p class="mb10">ID: <a href="https://github.com/${getLocalId()}/tree/${getLocalBranch()}" target="_blank">${getLocalId()}</a></p>
+      <p class="mb10">Repository: ${getLocalRepo()}</p>
       <p class="mb10">Branch: ${getLocalBranch()}</p>
     `,
   }).catch(() => {})

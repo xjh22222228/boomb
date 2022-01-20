@@ -207,13 +207,15 @@ function goDir() {
     }
   }
   &.actived .filename::after {
+    background-color: #f56c6c;
     animation: actived 10s linear;
   }
 
   &:hover {
-    background: rgba($color: #000000, $alpha: .02);
+    background: rgba($color: #000000, $alpha: .01);
     .filename::after {
-      top: 0;
+      opacity: 1 !important;
+      top: 0 !important;
     }
   }
 

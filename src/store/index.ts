@@ -65,6 +65,7 @@ type State = {
   branchAll: IBranch[],
   repos: IRepo[],
   loading: boolean
+  showFileEncode: boolean
 }
 
 const localUser = window.localStorage.getItem('user')
@@ -77,12 +78,12 @@ export default createStore<State>({
       user: defUser || {},
       token: getLocalToken(),
       isLogin: getLocalIsLogin(),
+      branchAll: [],
+      repos: [],
+      showFileEncode: false,
 
       // 缓存目录列表
       cacheDir: {},
-      branchAll: [],
-      repos: [],
-
       loading: true, // 读取缓存不加载Loading
     }
   },
@@ -96,6 +97,10 @@ export default createStore<State>({
   },
 
   mutations: {
+    saveFileEncode(state, show: boolean) {
+      state.showFileEncode = show
+    },
+
     saveUser(state, user: IUser) {
       state.user = user
       window.localStorage.setItem('user', JSON.stringify(user))

@@ -31,7 +31,7 @@
 
     <div class="right">
       <el-dropdown @command="onCommand" popper-class="nowrap-popper">
-        <el-avatar class="middle cp" :src="user.avatar_url"></el-avatar>
+        <el-avatar class="middle cp" :src="user.avatar_url" :size="50"></el-avatar>
         <i class="middle el-icon-caret-bottom"></i>
 
         <template #dropdown>
@@ -59,11 +59,6 @@
       :visible="showCreateDirModal"
       :before-close="toggleCreateDirModal"
     />
-
-    <file-encode-rule-dialog
-      :visible="showFileRuleModal"
-      :before-close="toggleFileRuleModal"
-    />
   </header>
 </template>
 
@@ -79,15 +74,10 @@ const { t } = useI18n()
 const store = useStore()
 const route = useRoute()
 const showCreateDirModal = ref(false)
-const showFileRuleModal = ref(false)
 const user = computed(() => store.state.user)
 
 function toggleCreateDirModal() {
   showCreateDirModal.value = !showCreateDirModal.value
-}
-
-function toggleFileRuleModal() {
-  showFileRuleModal.value = !showFileRuleModal.value
 }
 
 // 上传文件
@@ -106,7 +96,7 @@ async function handleUploadFile(e: any) {
 
 function onCommand(command: string) {
   if (command === 'upload') {
-    toggleFileRuleModal()
+    store.commit('saveFileEncode', true)
   } else if (command === 'logout') {
     logout()
   }

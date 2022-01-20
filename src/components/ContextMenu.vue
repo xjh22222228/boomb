@@ -4,6 +4,7 @@
     <div class="item" @click="handleUploadFile">{{ t('uploadFile') }}</div>
     <div class="item" @click="handleNewFile">{{ t('newFile') }}</div>
     <div class="item" @click="handleMkdir">{{ t('createDir') }}</div>
+    <div class="item" @click="showFileEncode">{{ t('uploadFileEncode') }}</div>
   </div>
 </template>
 
@@ -70,6 +71,10 @@ const handleNewFile = function() {
       path: route.query.path || '/'
     }
   })
+}
+
+const showFileEncode = function() {
+  store.commit('saveFileEncode', true)
 }
 </script>
 

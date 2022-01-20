@@ -17,7 +17,7 @@
           <el-radio :label="FileEncode.UUID">UUID => 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.jpg</el-radio>
         </div>
         <div class="mb20">
-          <el-radio :label="FileEncode.Timestamp">时间戳 (秒) => 1613333896.jpg</el-radio>
+          <el-radio :label="FileEncode.Timestamp">时间戳 (批量上传不会重复) => 1613333896.jpg</el-radio>
         </div>
       </el-radio-group>
     </div>
@@ -32,22 +32,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { FileEncode } from '@/types'
 import { getFileEncode } from '@/utils'
 
-const props = defineProps({
-  visible: Boolean,
-  beforeClose: {
-    type: Function,
-    required: true
-  }
-})
+const store = useStore()
+const visible = computed(() => store.state.showFileEncode)
 
 const value = ref(getFileEncode())
 
+const beforeClose = () => {
+  store.commit('saveFileEncode', false)
+}
+
 const handleOk = function() {
-  props.beforeClose()
+  beforeClose()
   window.localStorage.setItem('fileEncode', String(value.value))
 }
 </script>

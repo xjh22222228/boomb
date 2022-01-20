@@ -3,6 +3,7 @@
   <Action />
   <ContextMenu />
   <Language />
+  <file-encode-rule-dialog />
 
   <div
     class="home"
@@ -223,12 +224,10 @@ const paths = computed(() =>
   &.active {
     border: 3px dashed #1890ff;
   }
-
   .mod-wrapper {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 50px;
-
+    margin-top: 30px;
     ::v-deep(.el-checkbox) {
       margin-left: 15px;
     }
@@ -239,15 +238,12 @@ const paths = computed(() =>
 
   .toolbar {
     position: relative;
-
     .check-all {
       margin-left: 30px;
     }
-
     .del-btn {
       margin: 20px 0 0 50px;
     }
-
     ::v-deep(.el-checkbox__label) {
       color: #666 !important;
     }

@@ -60,12 +60,12 @@
 </template>
 
 <script lang="ts" setup>
-import Viewer from 'viewerjs';
+import type { IFile } from '@/store'
+import Viewer from 'viewerjs'
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import type { IFile } from '@/store'
-import { initClipboard, generateBreadcrumb } from '@/utils';
+import { initClipboard, generateBreadcrumb } from '@/utils'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -157,10 +157,8 @@ const paths = computed(() =>
 <style lang="scss" scoped>
 .mobile-page {
   flex: 1;
-
   .mod-wrapper {
     margin-top: 10px;
-
     ::v-deep(.el-checkbox__label) {
       display: none !important;
     }
@@ -168,15 +166,12 @@ const paths = computed(() =>
 
   .toolbar {
     position: relative;
-
     .check-all {
       margin-left: 30px;
     }
-
     .del-btn {
       margin: 20px 0 0 15px;
     }
-
     ::v-deep(.el-checkbox__label) {
       color: #666 !important;
     }
