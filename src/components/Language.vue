@@ -26,7 +26,7 @@ import i18n from '../i18n'
 
 const setLocale = function(locale: string) {
   i18n.global.locale = locale
-  window.localStorage.setItem('locale', locale)
+  localStorage.setItem('locale', locale)
 }
 
 function onCommand(command: string) {

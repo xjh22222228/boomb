@@ -24,6 +24,7 @@ Share in the spirit of open source, if it helps you, Star will support it!
 
 
 ## Features
+- Github / Gitee support
 - No need to deploy, start in 2 steps
 - Ready to use out of the box, leave after use
 - Support drag and drop, paste upload

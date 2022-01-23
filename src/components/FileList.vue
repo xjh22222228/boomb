@@ -67,7 +67,7 @@ const handleUpdateFile = async function(e: any) {
       store.dispatch('getDir', route.query.path)
       ElMessage({
         type: 'success',
-        message: '更新成功, 由于缓存策略需要次日更新'
+        message: '更新成功, 可能由于缓存未能及时更新'
       })
     }
   })

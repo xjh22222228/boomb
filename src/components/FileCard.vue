@@ -38,34 +38,49 @@
               </a>
             </div>
             <div>
-              <a :href="jsdelivrCDN" target="_blank">{{ data.name }}</a>
+              <a :href="defCDN" target="_blank">{{ data.name }}</a>
             </div>
           </div>
         </div>
 
-        <el-input v-model="jsdelivrCDN" class="mb10 mt10">
-          <template #prepend>
-            <a :href="jsdelivrCDN" target="_blank">Jsdelivr</a>
-          </template>
-          <template #append>
-            <span class="copy" :data-clipboard-text="jsdelivrCDN">
-              <el-icon><document-copy /></el-icon>
-            </span>
-          </template>
-        </el-input>
+        <template v-if="isGitee">
+          <el-input v-model="giteeCDN" readonly class="mb10 mt10">
+            <template #prepend>
+              <a :href="giteeCDN" target="_blank">Gitee</a>
+            </template>
+            <template #append>
+              <span class="copy" :data-clipboard-text="giteeCDN">
+                <el-icon><document-copy /></el-icon>
+              </span>
+            </template>
+          </el-input>
+        </template>
 
-        <el-input v-model="githubCDN" class="mb10">
-          <template #prepend>
-            <a :href="githubCDN" target="_blank">Github</a>
-          </template>
-          <template #append>
-            <span class="copy" :data-clipboard-text="githubCDN">
-              <el-icon><document-copy /></el-icon>
-            </span>
-          </template>
-        </el-input>
+        <template v-else>
+          <el-input v-model="jsdelivrCDN" readonly class="mb10 mt10">
+            <template #prepend>
+              <a :href="jsdelivrCDN" target="_blank">Jsdelivr</a>
+            </template>
+            <template #append>
+              <span class="copy" :data-clipboard-text="jsdelivrCDN">
+                <el-icon><document-copy /></el-icon>
+              </span>
+            </template>
+          </el-input>
 
-        <el-input v-model="html" class="mb10">
+          <el-input v-model="githubCDN" readonly class="mb10">
+            <template #prepend>
+              <a :href="githubCDN" target="_blank">Github</a>
+            </template>
+            <template #append>
+              <span class="copy" :data-clipboard-text="githubCDN">
+                <el-icon><document-copy /></el-icon>
+              </span>
+            </template>
+          </el-input>
+        </template>
+
+        <el-input v-model="html" readonly class="mb10">
           <template #prepend>
             <a :href="html" target="_blank">HTML</a>
           </template>
@@ -76,7 +91,7 @@
           </template>
         </el-input>
 
-        <el-input v-model="markdown">
+        <el-input v-model="markdown" readonly>
           <template #prepend>
             <a :href="jsdelivrCDN" target="_blank">Markdown</a>
           </template>
@@ -117,16 +132,20 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from 'vue'
+import type { PropType } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import { getCdn, CDN, updateFileContent } from '@/services'
+import { getCdn, updateFileContent } from '@/services'
 import type { IFile } from '@/store'
 import { getBase64, getFileUrl, isImage, getEditFileUrl } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
 import { useI18n } from 'vue-i18n'
 import { Upload, DocumentCopy } from '@element-plus/icons-vue'
+import { NetworkCDN } from '@/types'
+import { isGiteeProvider } from '@/utils/storage'
+
 
 const props = defineProps({
   data: {
@@ -135,6 +154,7 @@ const props = defineProps({
   }
 })
 
+const isGitee = isGiteeProvider()
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -144,12 +164,14 @@ const imgLoaded = ref(false)
 const fileName = props.data.name.toLowerCase()
 const fileType = props.data.type
 const filePath = props.data.path
-const jsdelivrCDN = getCdn(CDN.Jsdelivr, filePath, false)
-const githubCDN = getCdn(CDN.Github, filePath, false)
+const jsdelivrCDN = getCdn(NetworkCDN.Jsdelivr, filePath)
+const githubCDN = getCdn(NetworkCDN.Github, filePath)
+const giteeCDN = getCdn(NetworkCDN.Gitee, filePath)
 const isImg = isImage(fileName)
 const fileUrl = getFileUrl(props.data)
-const markdown = `![](${jsdelivrCDN})`
-const html = `<a href="${jsdelivrCDN}" target="_blank"><img src="${jsdelivrCDN}" alt="" /></a>`
+const defCDN = isGitee ? giteeCDN : jsdelivrCDN
+const markdown = `![](${defCDN})`
+const html = `<a href="${defCDN}" target="_blank"><img src="${defCDN}" /></a>`
 const editUrl = getEditFileUrl(filePath)
 const isFile = fileType !== 'dir'
 
@@ -168,7 +190,7 @@ const handleUpdateFile = async function(e: any) {
       store.dispatch('getDir', route.query.path)
       ElMessage({
         type: 'success',
-        message: '更新成功, 由于缓存策略需要次日更新'
+        message: '更新成功, 可能由于缓存未能及时更新'
       })
     }
   })
@@ -197,16 +219,10 @@ function goDir() {
   border-radius: 5px;
   margin: 0 10px 15px 10px;
   cursor: pointer;
-  @keyframes actived {
-    0% { opacity: 1; }
-    99% { opacity: 1; }
-    100% { opacity: 0; }
-  }
   &.actived .filename::after {
     background-color: #f56c6c;
-    animation: actived 10s linear;
+    opacity: 1;
   }
-
   &:hover {
     background: rgba($color: #000000, $alpha: .01);
     .filename::after {
@@ -225,7 +241,8 @@ function goDir() {
       display: none;
     }
     &.error:after {
-      background: #fff url("~@/assets/error.svg") no-repeat 100% 100%;
+      background: #fff url("@/assets/error-img.svg") no-repeat;
+      background-size: 50px;
       background-position: center;
     }
     img {

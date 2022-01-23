@@ -1,18 +1,19 @@
 // Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
-
-import { nextTick } from 'vue'
 import bytes from 'bytes'
 import router from '@/router'
+import { nextTick } from 'vue'
 import { createStore } from 'vuex'
 import {
   createFile,
-  getUser,
+  getGithubUser,
+  getGiteeUser,
   readDir,
   deleteFile,
   getBranchAll,
   deleteDir,
   getRepos,
-  getOrgs
+  getOrgs,
+  buildGiteePages
 } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname } from '@/utils'
@@ -21,6 +22,8 @@ import { ElMessage } from 'element-plus'
 import { FileEncode } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
 import { getLocalToken, getLocalIsLogin } from '@/utils/storage'
+import { isGiteeProvider } from '@/utils/storage'
+import type { AxiosResponse } from 'axios'
 
 // Timestamp conflict
 let n = 0;
@@ -42,8 +45,9 @@ export type IFile = {
   type: 'dir' | 'file'
   path: string
   sizeLabel: string
-  size: number
+  size: number|null // Gitee 有可能返回 null
   sha: string
+  [key: string]: any
 }
 
 export type IBranch = {
@@ -56,6 +60,15 @@ export interface IRepo {
   name: string
 }
 
+export interface IGiteeToken {
+  access_token: string
+  token_type: string
+  expires_in: number
+  refresh_token: string
+  scope: string
+  created_at: number
+}
+
 type State = {
   userAll: IUser[],
   user: IUser
@@ -66,10 +79,14 @@ type State = {
   repos: IRepo[],
   loading: boolean
   showFileEncode: boolean
+  giteeTokenData: IGiteeToken|null
 }
 
-const localUser = window.localStorage.getItem('user')
+const localUser = localStorage.getItem('user')
 const defUser = localUser ? JSON.parse(localUser) : null
+
+const localGiteeTokenData = localStorage.getItem('giteeTokenData')
+const defGiteeTokenData = localGiteeTokenData ? JSON.parse(localGiteeTokenData) : null
 
 export default createStore<State>({
   state() {
@@ -81,6 +98,7 @@ export default createStore<State>({
       branchAll: [],
       repos: [],
       showFileEncode: false,
+      giteeTokenData: defGiteeTokenData,
 
       // 缓存目录列表
       cacheDir: {},
@@ -91,7 +109,6 @@ export default createStore<State>({
   getters: {
     getDir: (state: State) => (route: RouteLocationNormalizedLoaded): IFile[] => {
       const path = route.query.path as string
-
       return state.cacheDir[path] || []
     }
   },
@@ -101,9 +118,14 @@ export default createStore<State>({
       state.showFileEncode = show
     },
 
+    saveToken(state, token: string) {
+      state.token = token
+      localStorage.setItem('token', token)
+    },
+
     saveUser(state, user: IUser) {
       state.user = user
-      window.localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('user', JSON.stringify(user))
     },
 
     saveDir(state, { data, path }) {
@@ -130,16 +152,24 @@ export default createStore<State>({
         })
       })
     },
+
+    saveGiteeTokenData(state, tokenInfo: IGiteeToken) {
+      state.giteeTokenData = tokenInfo
+      state.token = tokenInfo.access_token
+      localStorage.setItem('token', tokenInfo.access_token)
+      localStorage.setItem('giteeTokenData', JSON.stringify(tokenInfo))
+    },
   },
 
   actions: {
     async getUser({ commit, state }) {
-      if (!state.isLogin) return
+      if (!state.token) return
 
-      const res = await getUser()
+      const res = await (isGiteeProvider() ? getGiteeUser() : getGithubUser())
       if (isSuccess(res.status)) {
         commit('saveUser', res.data)
       }
+      return res
     },
 
     async getRepos({ commit }) {
@@ -174,10 +204,10 @@ export default createStore<State>({
         if (isSuccess(res.status)) {
           const data = res.data
             .map((item: IFile) => {
-              item.sizeLabel = bytes(item.size)
+              item.sizeLabel = item.size != null ? bytes(item.size) : ''
               return item
             })
-            .sort((a: IFile, b: IFile) => a.size - b.size)
+            .sort((a: IFile, b: IFile) => (a.size ?? 0) - (b.size ?? 0))
             .filter((item: IFile) => !(item.type === 'file' && item.name === '.gitkeep'))
 
           commit('saveDir', {
@@ -192,6 +222,7 @@ export default createStore<State>({
       })
     },
 
+    // 新建文本文件
     async newFile(
       _,
       {
@@ -224,68 +255,102 @@ export default createStore<State>({
       return res
     },
 
+    // 创建文件
     async createFile(
       { dispatch, getters },
-      { file, route }: { file: File, route: RouteLocationNormalizedLoaded }
+      files: { file: File, route: RouteLocationNormalizedLoaded }[]
     ) {
-      const path = route.query.path
-      const base64 = await getBase64(file)
-      const dir: IFile[] = getters.getDir(route)
-      let fileName = file.name
+      const promises: Promise<AxiosResponse>[] = []
+      let path: string = ''
+      for (let i = 0; i < files.length; i++) {
+        const { file, route } = files[i]
+        path = route.query.path as string
+        const base64 = await getBase64(file)
+        const dir: IFile[] = getters.getDir(route)
+        let fileName = file.name
 
-      // Repeat
-      const exists = dir.some(item => item.name === fileName)
-      const extname = getExtname(file)
-      const fileEncode = getFileEncode()
+        // Repeat
+        const exists = dir.some(item => item.name === fileName)
+        const extname = getExtname(file)
+        const fileEncode = getFileEncode()
 
-      switch (fileEncode) {
-        case FileEncode.RawName:
-          if (exists) {
-            ElMessage.error(`文件 ${fileName} 已存在`)
-            return
-          }
-          break
+        switch (fileEncode) {
+          case FileEncode.RawName:
+            if (exists) {
+              ElMessage.error(`文件 ${fileName} 已存在`)
+              return
+            }
+            break
 
-        case FileEncode.NumRawName:
-          if (exists) {
-            const now = `${Date.now()}`.slice(-5)
-            fileName = `${now}-${fileName}`
-          }
-          
-          break
+          case FileEncode.NumRawName:
+            if (exists) {
+              const now = `${Date.now()}`.slice(-5)
+              fileName = `${now}-${fileName}`
+            }
+            
+            break
 
-        case FileEncode.UUID:
-          fileName = `${uuidv4()}${extname}`
-          break
+          case FileEncode.UUID:
+            fileName = `${uuidv4()}${extname}`
+            break
 
-        case FileEncode.Timestamp:
-          n++
-          fileName = `${Date.now() + n}${extname}`
-          break
+          case FileEncode.Timestamp:
+            n++
+            fileName = `${Date.now() + n}${extname}`
+            break
+        }
+
+        promises.push((createFile({
+          content: base64,
+          path: `${path || ''}/${fileName}`,
+          isEncode: false
+        })))
       }
 
-      return await createFile({
-        content: base64,
-        path: `${path || ''}/${fileName}`,
-        isEncode: false
-      }).then(res => {
-        if (isSuccess(res.status)) {
-          dispatch('getDir', path).then(async () => {
-            await nextTick()
-            const el = document.getElementById('file-' + fileName)
-            if (el) {
-              el.classList.add('actived')
-              el.scrollIntoView({
-                behavior: 'smooth'
-              })
+      if (promises.length > 0) {
+        const activedEls = document.querySelectorAll('.file.actived')
+        activedEls.forEach(el => {
+          el.classList.remove('actived')
+        })
+        try {
+          const allRes = await Promise.allSettled(promises)
+          if (isGiteeProvider()) {
+            await buildGiteePages()
+          }
+          await dispatch('getDir', path)
+          await nextTick()
+
+          allRes.forEach(res => {
+            if (res.status === 'fulfilled') {
+              const { data, status } = res.value
+              if (isSuccess(status)) {
+                const { content } = data
+                const el = document.getElementById('file-' + content.name)
+                if (el) {
+                  el.classList.add('actived')
+                  el.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }
+
+                ElMessage({
+                  type: 'success',
+                  message: `${content.path} Successed！`
+                })
+              } else {
+                ElMessage.error('Failed')  
+              }
+            } else {
+              ElMessage.error(res.reason)
             }
           })
-          ElMessage({
-            type: 'success',
-            message: '上传成功！'
-          })
+
+
+          return allRes
+        } catch (error) {
+          console.error(error)
         }
-      })
+      }
     },
 
     async mkdir(_, path: string) {

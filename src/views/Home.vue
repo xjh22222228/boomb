@@ -123,13 +123,8 @@ async function copyUpload(event: Events['onCopy']) {
       }
     }
   }
-
-  files.forEach(file => {
-    store.dispatch('createFile', {
-      file,
-      route
-    })
-  })
+  const allFile = files.map(file => ({ file, route }))
+  store.dispatch('createFile', allFile)
 }
 
 function handleDrop(e: Events['onDrop']) {
@@ -139,15 +134,17 @@ function handleDrop(e: Events['onDrop']) {
 
   const files = e.dataTransfer!.files as any
   if (files) {
-    files.forEach?.((file: Record<string, any>) => {
+    const allFile: any[] = []
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
       // 目录 type 为空
       if (file.type) {
-        store.dispatch('createFile', {
-          file,
-          route
-        })
+        allFile.push({ file, route })
       }
-    })
+    }
+    if (allFile.length > 0) {
+      store.dispatch('createFile', allFile)
+    }
   }
 }
 

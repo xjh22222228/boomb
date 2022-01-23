@@ -10,9 +10,14 @@
 
 <script lang="ts" setup>
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const store = useStore()
-store.dispatch('getUser')
+
+if (route.name !== 'Login') {
+  store.dispatch('getUser')
+}
 </script>
 
 <style lang="scss" scoped>

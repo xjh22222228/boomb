@@ -82,15 +82,12 @@ function toggleCreateDirModal() {
 
 // 上传文件
 async function handleUploadFile(e: any) {
-  const files = e.target.files
-
-  for (let file of files) {
-    store.dispatch('createFile', {
-      file,
-      route
-    })
+  const files = e.target.files as File[]
+  const allFile = []
+  for (const file of files) {
+    allFile.push({ file, route })
   }
-
+  store.dispatch('createFile', allFile)
   e.target.value = ''
 }
 

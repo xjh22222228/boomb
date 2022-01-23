@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
 
-let locale = window.localStorage.getItem('locale')
+let locale = localStorage.getItem('locale')
 
 if (!locale) {
   if (window.navigator.language === 'zh-CN') {

@@ -3,15 +3,19 @@
 // https://docs.github.com/en/rest/reference
 // https://docs.github.com/en/rest/reference/permissions-required-for-github-apps
 
-import { get, put, del, isSuccess } from '@/utils/http'
-import { encode } from 'js-base64'
-import type { IFile } from '@/store'
-import { ElMessage } from 'element-plus'
-import { getLocalId, getLocalRepo, getLocalBranch } from '@/utils/storage'
 import store from '@/store'
+import type { IFile } from '@/store'
+import { get, put, post, del, isSuccess } from '@/utils/http'
+import { encode } from 'js-base64'
+import { ElMessage } from 'element-plus'
+import { getLocalId, getLocalRepo, getLocalBranch, isGiteeProvider } from '@/utils/storage'
+import { GITEE_CLIENT_ID, GITEE_CLIENT_SECRET, REDIRECT_URI } from '@/constants'
+import { NetworkCDN } from '@/types'
+import axios from 'axios'
+
 
 const id = () => `${getLocalId()}/${getLocalRepo()}`
-const author = () => getLocalId()
+const owner = () => getLocalId()
 
 // 获取目录列表
 export function readDir(name: string) {
@@ -28,9 +32,9 @@ export function readDir(name: string) {
   })
 }
 
-// 获取用户信息
-export function getUser() {
-  return get(`/users/${author()}`)
+// Github 获取用户信息
+export function getGithubUser() {
+  return get(`/users/${owner()}`)
 }
 
 // 获取用户下所有仓库
@@ -41,27 +45,6 @@ export function getRepos() {
 // 获取用户下所有组织
 export function getOrgs() {
   return get(`${store.state.user.organizations_url}?page=1&per_page=999999`)
-}
-
-// 验证Token
-export function verifyToken(author: string, token: string) {
-  return get(`/users/${author}`, {
-    headers: {
-      Authorization: `token ${token}`
-    }
-  })
-}
-
-// 获取文件信息
-export function getFileContent(
-  path: string,
-  branch: string = getLocalBranch()
-) {
-  return get(`/repos/${id()}/contents/${path}`, {
-    params: {
-      ref: branch
-    }
-  })
 }
 
 // 更新文件内容
@@ -99,8 +82,8 @@ export async function createFile(
   if (path) {
     path = path.replace(/^\/*/g, '')
   }
-
-  return put(`/repos/${id()}/contents/${path}`, {
+  const method = isGiteeProvider() ? post : put
+  return method(`/repos/${id()}/contents/${path}`, {
     message: `boomb(create): ${path}`,
     branch,
     content: isEncode ? encode(content) : content,
@@ -126,7 +109,7 @@ export async function deleteDir(dirPath: string) {
   }
   await getAllFilePath(dirPath)
 
-  for (let file of files) {
+  for (const file of files) {
     await deleteFile(file)
   }
 }
@@ -142,19 +125,14 @@ export async function deleteFile(file: IFile) {
   })
 
   if (isSuccess(res.status)) {
-    ElMessage.success(`${file.path} 已被删除!`)
+    ElMessage.success(`${file.path} Deleted!`)
   }
 
   return res
 }
 
-export enum CDN {
-  Github = 1,
-  Jsdelivr
-}
-
 // 获取文件CDN
-export function getCdn(cdnType: CDN, path: string, isCache: boolean = true) {
+export function getCdn(cdnType: NetworkCDN, path: string, isCache: boolean = true) {
   if (path === '/' || !path) {
     path = ''
   }
@@ -165,12 +143,16 @@ export function getCdn(cdnType: CDN, path: string, isCache: boolean = true) {
   let url = ''
 
   switch (cdnType) {
-    case CDN.Github:
+    case NetworkCDN.Github:
       url = `https://raw.githubusercontent.com/${id()}/${getLocalBranch()}/${path}`
       break
 
-    case CDN.Jsdelivr:
+    case NetworkCDN.Jsdelivr:
       url = `https://cdn.jsdelivr.net/gh/${id()}@${getLocalBranch()}/${path}`
+      break
+
+    case NetworkCDN.Gitee:
+      url = `https://${owner()}.gitee.io/${getLocalRepo()}/${path}`
       break
   }
 
@@ -186,8 +168,8 @@ export function getBranchAll(owner: string) {
   return get(`/repos/${owner}/branches`)
 }
 
-// 授权
-export function getAccessToken(code: string) {
+// Github 获取token
+export function getGithubToken(code: string) {
   return get('/api/oauth', {
     baseURL: import.meta.env.DEV
       ? 'http://localhost:7006'
@@ -196,4 +178,32 @@ export function getAccessToken(code: string) {
       code
     }
   })
+}
+
+// Gitee 获取token
+export function getGiteeToken(code: string) {
+  return post(`https://gitee.com/oauth/token?grant_type=authorization_code&code=${code}&client_id=${GITEE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`, {
+    client_secret: GITEE_CLIENT_SECRET
+  })
+}
+
+// Gitee 刷新token
+export function giteeRefreshToken(refreshToken: string) {
+  // 不走拦截器
+  return axios.post(`https://gitee.com/oauth/token?grant_type=refresh_token&refresh_token=${refreshToken}`)
+}
+
+// Gitee 获取用户信息
+export function getGiteeUser() {
+  return get('/user')
+}
+
+// Gitee 验证是否开通 pages 服务
+export async function validGiteePages() {
+  return get(`/repos/${owner()}/${getLocalRepo()}/pages`)
+}
+
+// Gitee 建立Pages
+export function buildGiteePages() {
+  return post(`/repos/${owner()}/${getLocalRepo()}/pages/builds`)
 }

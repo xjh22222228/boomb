@@ -6,11 +6,11 @@
 
   <section class="login">
     <div class="wrapper">
-      <h2 class="title" v-if="token">
+      <h2 class="title">
         <img :src="`${baseUrl}logo.png`" alt="boomb" draggable="false">
       </h2>
 
-      <div class="form" v-if="token">
+      <div class="form">
         <el-select
           v-model="id"
           class="w100 mb20"
@@ -72,12 +72,29 @@
         </el-button>
 
         <div class="mt10 align-center">
-          <img src="@/assets/github.svg" class="github" @click="goAuth">
-        </div>
-      </div>
+          <img
+            src="@/assets/github2.svg"
+            class="github mr10"
+            @click="goAuth(Provider.Github)" 
+            draggable="false"
+          >
 
-      <div v-else>
-        <img src="@/assets/ready.png" class="ready" @click="goAuth" draggable="false">
+          <el-tooltip
+            class="box-item"
+            placement="bottom-start"
+          >
+            <template #content>
+              <p>仓库必须开通 Gitee Pages 服务</p>
+              <p>非付费 Pages 用户需手动更新</p>
+            </template>
+            <img
+              src="@/assets/gitee.svg"
+              class="github ml10"
+              @click="goAuth(Provider.Gitee)"
+              draggable="false"
+            >
+          </el-tooltip>
+        </div>
       </div>
     </div>
   </section>
@@ -87,18 +104,15 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import { verifyToken, getAccessToken } from '@/services'
-import type { IBranch, IRepo, IUser } from '@/store'
+import { getGithubToken, getGiteeToken, validGiteePages, buildGiteePages } from '@/services'
+import type { IBranch, IRepo, IUser, IGiteeToken } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { isSuccess } from '@/utils/http'
+import { GITHUB_AUTH_URL, GITEE_AUTH_URL } from '@/constants'
+import { Provider } from '@/types'
+import { isGiteeProvider } from '@/utils/storage'
+import { ElMessage } from 'element-plus'
 
-// https://docs.github.com/cn/github/authenticating-to-github/authorizing-oauth-apps
-// https://docs.github.com/en/developers/apps/scopes-for-oauth-apps
-const clientId = import.meta.env.DEV
-  ? '6c3876cacce17b985c85'
-  : '1bab8338449584e95414'
-const callback = `${window.location.origin}/oauth/redirect`
-const authUrl = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=${callback}&client_id=${clientId}&scope=repo%20repo_deployment%20read:user`
 const baseUrl = import.meta.env.BASE_URL
 
 const { t } = useI18n()
@@ -119,31 +133,43 @@ const userAll = computed<IUser[]>(() => store.state.userAll)
 const branchAll = computed<IBranch[]>(() => store.state.branchAll)
 const repos = computed<IRepo[]>(() => store.state.repos)
 
-const goAuth = function() {
+const goAuth = function(p: Provider) {
   if (authLoad.value) return
-  window.localStorage.clear()
-  window.sessionStorage.clear()
+  localStorage.clear()
+  sessionStorage.clear()
   authLoad.value = true
-  window.location.href = authUrl
+  if (p === Provider.Github) {
+    location.href = GITHUB_AUTH_URL
+  } else {
+    localStorage.setItem('provider', String(p))
+    location.href = GITEE_AUTH_URL
+  }
 }
 
-const handleLogin = function() {
+const handleLogin = async function() {
   if (!token.value || !valid.value) return
-
+  
+  localStorage.setItem('repo', repo.value)
+  localStorage.setItem('branch', branch.value)
   loading.value = true
-  verifyToken(id.value, token.value).then((res) => {
-    if (res.status !== 200) return
-    window.localStorage.setItem('branch', branch.value)
-    window.localStorage.setItem('repo', repo.value)
-    window.localStorage.setItem('isLogin', 'true')
-    window.localStorage.setItem('user', JSON.stringify(store.state.user))
-    window.localStorage.setItem('id', id.value)
-    window.localStorage.setItem('token', token.value)
-    window.location.reload()
-  }).finally(() => {
+  try {
+    await validGiteePages()
+    await buildGiteePages()
+  } catch (error) {
+    ElMessage.error({
+      message: '该仓库未开通 Gitee Pages 服务',
+      duration: 5000
+    })
+    return    
+  } finally {
     loading.value = false
-    authLoad.value = false
-  })
+  }
+  
+  localStorage.setItem('isLogin', 'true')
+  localStorage.setItem('user', JSON.stringify(store.state.user))
+  localStorage.setItem('id', id.value)
+  localStorage.setItem('token', token.value)
+  location.reload()
 }
 
 function getBranch() {
@@ -191,26 +217,49 @@ onMounted(() => {
   const { query } = route
   const code = query.code as string
   if (code) {
+    router.replace('/login')
     authLoad.value = true
-    getAccessToken(code)
-      .then(res => {
-        if (isSuccess(res.status)) {
-          const { accessToken, user } = res.data.data
-          id.value = user.login
-          token.value = accessToken
-          store.commit('saveUser', user)
-          store.commit('saveUserAll', [user])
-          window.localStorage.setItem('id', user.login)
-          window.localStorage.setItem('token', accessToken)
 
-          store.dispatch('getOrgs')
-          getRepos()
-          router.replace('/login')
-        }
-      })
-      .finally(() => {
-        authLoad.value = false
-      })
+    if (isGiteeProvider()) {
+      getGiteeToken(code)
+        .then(res => {
+          if (isSuccess(res.status)) {
+            const data = res.data as IGiteeToken
+            store.commit('saveGiteeTokenData', data)
+            store.dispatch('getUser').then(res => {
+              if (!res) return
+              const user = res.data as IUser
+              id.value = user.login
+              token.value = data.access_token
+              store.commit('saveUserAll', [user])
+              localStorage.setItem('id', user.login)
+              store.dispatch('getOrgs')
+              getRepos()
+            })
+          }
+        })
+        .finally(() => {
+          authLoad.value = false
+        })
+    } else {
+      getGithubToken(code)
+        .then(res => {
+          if (isSuccess(res.status)) {
+            const { accessToken, user } = res.data.data
+            id.value = user.login
+            token.value = accessToken
+            store.commit('saveUser', user)
+            store.commit('saveUserAll', [user])
+            localStorage.setItem('id', user.login)
+            localStorage.setItem('token', accessToken)
+            store.dispatch('getOrgs')
+            getRepos()
+          }
+        })
+        .finally(() => {
+          authLoad.value = false
+        })
+    }
   }
 })
 </script>
@@ -241,10 +290,6 @@ onMounted(() => {
       height: 75px;
       pointer-events: none;
     }
-  }
-  .ready {
-    width: 450px;
-    cursor: pointer;
   }
   .github {
     width: 30px;

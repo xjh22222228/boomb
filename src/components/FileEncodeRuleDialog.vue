@@ -48,7 +48,7 @@ const beforeClose = () => {
 
 const handleOk = function() {
   beforeClose()
-  window.localStorage.setItem('fileEncode', String(value.value))
+  localStorage.setItem('fileEncode', String(value.value))
 }
 </script>
 

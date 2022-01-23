@@ -1,11 +1,26 @@
 import Clipboard from 'clipboard'
 import i18n from '@/i18n'
-import { FileEncode } from '@/types'
+import { FileEncode, NetworkCDN } from '@/types'
 import type { IFile } from '@/store'
-import { getCdn, CDN } from '@/services'
+import { getCdn } from '@/services'
 import { ElMessage } from 'element-plus'
-import { getLocalId, getLocalBranch, getLocalRepo } from '@/utils/storage'
+import {
+  getLocalId,
+  getLocalBranch,
+  getLocalRepo,
+  isGiteeProvider
+} from '@/utils/storage'
 
+// images
+import fileCodeImg from '@/assets/file-code.svg'
+import filePdfImg from '@/assets/file-pdf.svg'
+import fileFolderImg from '@/assets/file-folder.svg'
+import fileZipImg from '@/assets/file-zip.svg'
+import fileTxtImg from '@/assets/file-txt.svg'
+import fileDocImg from '@/assets/file-doc.svg'
+import fileOtherImg from '@/assets/file-other.svg'
+
+const isGitee = isGiteeProvider()
 let clipboard: Clipboard|null
 
 export async function getBase64(file: File): Promise<string> {
@@ -43,13 +58,13 @@ export function initClipboard() {
 }
 
 export function logout() {
-  window.localStorage.clear()
-  window.sessionStorage.clear()
-  window.location.reload()
+  localStorage.clear()
+  sessionStorage.clear()
+  location.reload()
 }
 
 export function getFileEncode(): FileEncode {
-  const l = window.localStorage.getItem('fileEncode')
+  const l = localStorage.getItem('fileEncode')
 
   if (l) {
     return Number(l) as FileEncode
@@ -92,14 +107,6 @@ export function isImage(fileName: string): boolean {
   return false
 }
 
-import fileCodeImg from '@/assets/file-code.svg'
-import filePdfImg from '@/assets/file-pdf.svg'
-import fileFolderImg from '@/assets/file-folder.svg'
-import fileZipImg from '@/assets/file-zip.svg'
-import fileTxtImg from '@/assets/file-txt.svg'
-import fileDocImg from '@/assets/file-doc.svg'
-import fileOtherImg from '@/assets/file-other.svg'
-
 export function getFileUrl(file: IFile): string {
   const { type, name, path, size } = file
 
@@ -108,10 +115,14 @@ export function getFileUrl(file: IFile): string {
 
   if (type === 'file') {
     if (isImage(name)) {
-      if (typeof size === 'number' && size >= MAX_FILE_SIZE) {
-        return getCdn(CDN.Github, path)  
+      if (isGitee) {
+        return getCdn(NetworkCDN.Gitee, path)
       }
-      return getCdn(CDN.Jsdelivr, path)
+
+      if (typeof size === 'number' && size >= MAX_FILE_SIZE) {
+        return getCdn(NetworkCDN.Github, path)
+      }
+      return getCdn(NetworkCDN.Jsdelivr, path)
     }
 
     if (!path.includes('.')) {
@@ -170,5 +181,6 @@ export function generateBreadcrumb(path: string = ''): {
 
 export function getEditFileUrl(path: string): string {
   path = path[0] === '/' ? path.slice(1) : path
-  return `https://github.com/${getLocalId()}/${getLocalRepo()}/edit/${getLocalBranch()}/${path}`
+  const base = isGitee ? 'https://gitee.com/' : 'https://github.com/'
+  return `${base}${getLocalId()}/${getLocalRepo()}/edit/${getLocalBranch()}/${path}`
 }

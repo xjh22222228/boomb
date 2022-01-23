@@ -4,7 +4,8 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import store from '@/store'
 import { ElNotification } from 'element-plus'
-import { getLocalToken } from '@/utils/storage'
+import { getLocalToken, isGiteeProvider } from '@/utils/storage'
+import { logout } from '@/utils'
 
 const getToken = () => getLocalToken()
 const defaultTitle = document.title
@@ -31,7 +32,9 @@ function stopLoad() {
 }
 
 const instance = axios.create({
-  baseURL: 'https://api.github.com',
+  baseURL: isGiteeProvider()
+    ? 'https://gitee.com/api/v5'
+    : 'https://api.github.com',
   timeout: 600000 * 3, // 30 minute
 })
 
@@ -41,19 +44,47 @@ interface ResponseData {
   data?: any
 }
 
-instance.interceptors.request.use(config => {
+instance.interceptors.request.use(async config => {
   startLoad()
 
+  // Gitee token 有时间限制
+  if (isGiteeProvider()) {
+    const tokenData = store.state.giteeTokenData
+    if (tokenData) {
+      const { expires_in, created_at } = tokenData
+      const now = Date.now() / 1000
+      if (created_at + expires_in <= now) {
+        logout()
+      }
+    }
+  }
+
   const token = getToken()
+  const method = config.method?.toLowerCase()
   if (token) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `token ${token}`
+    if (isGiteeProvider()) {
+      if (method === 'get' || method === 'delete') {
+        config.params = {
+          access_token: token,
+          ...config.params
+        }
+      }
+      if (method === 'post' || method === 'put') {
+        config.data = {
+          access_token: token,
+          ...config.data
+        }
+      }
+    } else {
+      config.headers = {
+        ...config.headers,
+        Authorization: `token ${token}`
+      }
     }
   }
 
   // 不缓存
-  if (config.method === 'get') {
+  if (method === 'get') {
     config.params = {
       t: Date.now(),
       ...config.params
@@ -63,7 +94,6 @@ instance.interceptors.request.use(config => {
   return config
 }, error => {
   NProgress.done()
-  console.error(error)
   return error
 })
 
@@ -77,17 +107,20 @@ instance.interceptors.response.use(resp => {
     ElNotification({
       type: 'error',
       title: `${status}`,
-      message: `${data.message || resp.statusText || '未知错误'}`
+      message: `${data.message || resp.statusText || 'Unknown error'}`,
     })
   }
   
   return resp
 }, error => {
-  console.error('Response', error)
+  const status = error.response?.status
+  if (status === 401) {
+    logout()
+  }
   ElNotification({
     type: 'error',
-    title: `${error.response?.status ?? 1001}`,
-    message: error.response?.data?.message || '未知错误'
+    title: `${status ?? 1001}`,
+    message: error.response?.data?.message || error.message || 'Unknown error'
   })
   stopLoad()
   return Promise.reject(error)
