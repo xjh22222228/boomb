@@ -138,10 +138,10 @@ const goAuth = function(p: Provider) {
   localStorage.clear()
   sessionStorage.clear()
   authLoad.value = true
+  localStorage.setItem('provider', String(p))
   if (p === Provider.Github) {
     location.href = GITHUB_AUTH_URL
   } else {
-    localStorage.setItem('provider', String(p))
     location.href = GITEE_AUTH_URL
   }
 }
@@ -152,19 +152,20 @@ const handleLogin = async function() {
   localStorage.setItem('repo', repo.value)
   localStorage.setItem('branch', branch.value)
   loading.value = true
-  try {
-    await validGiteePages()
-    await buildGiteePages()
-  } catch (error) {
-    ElMessage.error({
-      message: '该仓库未开通 Gitee Pages 服务',
-      duration: 5000
-    })
-    return    
-  } finally {
-    loading.value = false
+  if (isGiteeProvider()) {
+    try {
+      await validGiteePages()
+      await buildGiteePages()
+    } catch (error) {
+      ElMessage.error({
+        message: '该仓库未开通 Gitee Pages 服务',
+        duration: 5000
+      })
+      return    
+    } finally {
+      loading.value = false
+    }
   }
-  
   localStorage.setItem('isLogin', 'true')
   localStorage.setItem('user', JSON.stringify(store.state.user))
   localStorage.setItem('id', id.value)
