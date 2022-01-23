@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="文件上传方案"
+    :title="t('uploadFileEncode')"
     width="500px"
     :model-value="visible"
     :before-close="beforeClose"
@@ -24,8 +24,8 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="beforeClose">取 消</el-button>
-        <el-button type="primary" @click="handleOk">确 定</el-button>
+        <el-button @click="beforeClose">{{ t('cancel') }}</el-button>
+        <el-button type="primary" @click="handleOk">{{ t('ok') }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -36,7 +36,9 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { FileEncode } from '@/types'
 import { getFileEncode } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = useStore()
 const visible = computed(() => store.state.showFileEncode)
 

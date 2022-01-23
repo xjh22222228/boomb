@@ -313,6 +313,7 @@ export default createStore<State>({
           el.classList.remove('actived')
         })
         try {
+          // Github: Promise.all 不能并行创建/否则会出现409 (暂不处理)
           const allRes = await Promise.allSettled(promises)
           if (isGiteeProvider()) {
             await buildGiteePages()
@@ -340,11 +341,8 @@ export default createStore<State>({
               } else {
                 ElMessage.error('Failed')  
               }
-            } else {
-              ElMessage.error(res.reason)
             }
           })
-
 
           return allRes
         } catch (error) {
