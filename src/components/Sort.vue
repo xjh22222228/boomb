@@ -48,11 +48,8 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCharCode } from '@/utils'
 import { Check, Top, Bottom } from '@element-plus/icons-vue'
+import { SortType } from '@/types'
 
-enum SortType {
-  FileSize = 1, // 文件大小
-  FileName // 文件名
-}
 
 const { t } = useI18n()
 const store = useStore()
@@ -67,7 +64,7 @@ watch([sortType, isUp], () => {
 
   switch (sortType.value) {
     case SortType.FileSize:
-      sortDir = dir.value.sort((a: IFile, b: IFile) => a.size - b.size)
+      sortDir = dir.value.sort((a: IFile, b: IFile) => (a.size ?? 0) - (b.size ?? 0))
       break
 
     case SortType.FileName:

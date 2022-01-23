@@ -16,3 +16,8 @@ export enum NetworkCDN {
   Jsdelivr,
   Gitee
 }
+
+export enum SortType {
+  FileSize = 1, // 文件大小
+  FileName // 文件名
+}
