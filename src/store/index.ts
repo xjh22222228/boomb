@@ -69,6 +69,12 @@ export interface IGiteeToken {
   created_at: number
 }
 
+export interface IUploadQueue {
+  progress: number
+  name: string
+  status: number
+}
+
 type State = {
   userAll: IUser[],
   user: IUser
@@ -80,6 +86,7 @@ type State = {
   loading: boolean
   showFileEncode: boolean
   giteeTokenData: IGiteeToken|null
+  uploadQueue: IUploadQueue[]
 }
 
 const localUser = localStorage.getItem('user')
@@ -99,6 +106,7 @@ export default createStore<State>({
       repos: [],
       showFileEncode: false,
       giteeTokenData: defGiteeTokenData,
+      uploadQueue: [],
 
       // 缓存目录列表
       cacheDir: {},

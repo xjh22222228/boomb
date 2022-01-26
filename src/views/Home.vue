@@ -3,7 +3,8 @@
   <Action />
   <ContextMenu />
   <Language />
-  <file-encode-rule-dialog />
+  <fileEncodeRuleDialog />
+  <UploadQueue />
 
   <div
     class="home"
@@ -71,6 +72,7 @@
 <script lang="ts" setup>
 import type { Events } from 'vue'
 import type { IFile } from '@/store'
+import UploadQueue from '@/components/UploadQueue.vue'
 import Viewer from 'viewerjs';
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -235,11 +237,14 @@ const paths = computed(() =>
 
   .toolbar {
     position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
     .check-all {
       margin-left: 30px;
     }
     .del-btn {
-      margin: 20px 0 0 50px;
+      margin-left: 50px;
     }
     ::v-deep(.el-checkbox__label) {
       color: #666 !important;
