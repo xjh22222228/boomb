@@ -19,6 +19,6 @@ export const GITEE_CLIENT_SECRET = isDev
 
 export const REDIRECT_URI = `${window.location.origin}/oauth/redirect`
 
-export const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=${REDIRECT_URI}&client_id=${GITHUB_CLIENT_ID}&scope=repo%20repo_deployment%20read:user`
+export const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=${REDIRECT_URI}&client_id=${GITHUB_CLIENT_ID}&scope=public_repo%20read:user`
 
 export const GITEE_AUTH_URL = `https://gitee.com/oauth/authorize?client_id=${GITEE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
