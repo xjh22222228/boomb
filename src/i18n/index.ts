@@ -1,3 +1,4 @@
+// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
 import { createI18n } from 'vue-i18n'
 
 let locale = localStorage.getItem('locale')
@@ -47,6 +48,7 @@ export default createI18n({
       temp: 'Temp File',
       editFile: 'Edit This File',
       copyed: 'Copy successfully',
+      uploadQueue: 'Upload queue',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> is used to easily manage your Github storage gallery.</p>
         <p class="mb10">If you use it reasonably, it can be used as a picture bed and file sharing. Isn't it good!</p>
@@ -87,6 +89,7 @@ export default createI18n({
       temp: '临时文件',
       editFile: '编辑此文件',
       copyed: '复制成功',
+      uploadQueue: '上传队列',
       description: `
         <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> 用于轻松管理您的 Github 存储图库。</p>
         <p class="mb10">如果您合理的使用，可以当做图床、文件分享，不错吧！</p>

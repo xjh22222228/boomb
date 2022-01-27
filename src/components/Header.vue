@@ -7,14 +7,15 @@
     <div class="left">
       <el-button
         :icon="Upload"
-        class="mr10"
+        class="mr10 relative"
         type="primary"
       >
         {{ t('uploadFile' )}}
+        <label for="input-file"></label>
         <input
           multiple
           type="file"
-          class="file"
+          class="none"
           id="input-file"
           @change="handleUploadFile"
         />
@@ -107,6 +108,17 @@ function onCommand(command: string) {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #dbdbdb;
+  .left {
+    label {
+      z-index: 3;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
   .right {
     margin-right: 20px;
     display: flex;
@@ -114,16 +126,6 @@ function onCommand(command: string) {
     .el-avatar {
       border: 1px solid #f2f2f2;
     }
-  }
-
-  .file {
-    position: absolute;
-    top: 22px;
-    left: 52px;
-    width: 108px;
-    height: 42px;
-    opacity: 0;
-    cursor: pointer;
   }
 }
 

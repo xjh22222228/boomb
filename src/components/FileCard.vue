@@ -180,7 +180,7 @@ const handleUpdateFile = async function(e: any) {
   if (files.length <= 0) return
 
   const file = files[0] as File
-  const base64 = await getBase64(file)
+  const { url: base64 } = await getBase64(file)
 
   updateFileContent(props.data, {
     content: base64,

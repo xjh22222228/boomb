@@ -1,3 +1,4 @@
+// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
 import Clipboard from 'clipboard'
 import i18n from '@/i18n'
 import { FileEncode, NetworkCDN } from '@/types'
@@ -23,14 +24,21 @@ import fileOtherImg from '@/assets/file-other.svg'
 const isGitee = isGiteeProvider()
 let clipboard: Clipboard|null
 
-export async function getBase64(file: File): Promise<string> {
+export async function getBase64(file: File): Promise<{
+  url: string,
+  rawUrl: string
+}> {
   const fr = new FileReader()
   fr.readAsDataURL(file)
 
   return new Promise(resolve => {
     fr.onload = function() {
-      const url = (fr.result as string).split(',')[1]
-      resolve(url)
+      const result = fr.result as string
+      const url = result.split(',')[1]
+      resolve({
+        url,
+        rawUrl: result
+      })
     }
   })
 }

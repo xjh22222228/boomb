@@ -53,6 +53,7 @@ type Iupdate = {
   path?: string
   branch?: string
   isEncode?: boolean
+  onUploadProgress?: (progressEvent: any) => void
 }
 export async function updateFileContent(
   file: IFile,
@@ -76,17 +77,22 @@ export async function createFile(
     content,
     path,
     branch = getLocalBranch(),
-    isEncode = true
+    isEncode = true,
+    onUploadProgress
   }: Iupdate,
 ) {
+  let p = path
   if (path) {
-    path = path.replace(/^\/*/g, '')
+    p = path.replace(/^\/*/g, '')
   }
   const method = isGiteeProvider() ? post : put
-  return method(`/repos/${id()}/contents/${path}`, {
-    message: `boomb(create): ${path}`,
+  return method(`/repos/${id()}/contents/${p}`, {
+    message: `boomb(create): ${p}`,
     branch,
     content: isEncode ? encode(content) : content,
+    path // 服务端不接收此参数, 用于内部
+  }, {
+    onUploadProgress
   })
 }
 

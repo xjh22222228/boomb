@@ -16,7 +16,7 @@ import {
   buildGiteePages
 } from '@/services'
 import { isSuccess } from '@/utils/http'
-import { getBase64, getFileEncode, getExtname } from '@/utils'
+import { getBase64, getFileEncode, getExtname, getFileUrl } from '@/utils'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { FileEncode } from '@/types'
@@ -69,10 +69,12 @@ export interface IGiteeToken {
   created_at: number
 }
 
-export interface IUploadQueue {
+export interface IUploadQueue extends Pick<IFile, 'size' | 'path' | 'type'> {
   progress: number
   name: string
-  status: number
+  url: string
+  status?: 'uploading' | 'success' | 'error'
+  errorMsg?: string
 }
 
 type State = {
@@ -167,6 +169,10 @@ export default createStore<State>({
       localStorage.setItem('token', tokenInfo.access_token)
       localStorage.setItem('giteeTokenData', JSON.stringify(tokenInfo))
     },
+
+    removeUploadQueueByIdx(state, idx: number) {
+      state.uploadQueue.splice(idx, 1)
+    }
   },
 
   actions: {
@@ -265,7 +271,7 @@ export default createStore<State>({
 
     // 创建文件
     async createFile(
-      { dispatch, getters },
+      { dispatch, getters, state },
       files: { file: File, route: RouteLocationNormalizedLoaded }[]
     ) {
       const promises: Promise<AxiosResponse>[] = []
@@ -273,7 +279,7 @@ export default createStore<State>({
       for (let i = 0; i < files.length; i++) {
         const { file, route } = files[i]
         path = route.query.path as string
-        const base64 = await getBase64(file)
+        const { url: base64 } = await getBase64(file)
         const dir: IFile[] = getters.getDir(route)
         let fileName = file.name
 
@@ -295,7 +301,6 @@ export default createStore<State>({
               const now = `${Date.now()}`.slice(-5)
               fileName = `${now}-${fileName}`
             }
-            
             break
 
           case FileEncode.UUID:
@@ -307,12 +312,29 @@ export default createStore<State>({
             fileName = `${Date.now() + n}${extname}`
             break
         }
-
-        promises.push((createFile({
+        
+        const payload = {
           content: base64,
           path: `${path || ''}/${fileName}`,
-          isEncode: false
-        })))
+          isEncode: false,
+          onUploadProgress(progressEvent: any) {
+            const complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+            const idx = state.uploadQueue.findIndex(item => item.path === payload.path)
+            if (idx !== -1) {
+              state.uploadQueue[idx].progress = complete >= 100 ? 99 : complete
+            }
+          }
+        }
+        state.uploadQueue.unshift({
+          name: fileName,
+          progress: 0,
+          url: '',
+          size: file.size,
+          type: 'file',
+          path: payload.path,
+          status: 'uploading'
+        })
+        promises.push((createFile(payload)))
       }
 
       if (promises.length > 0) {
@@ -322,7 +344,7 @@ export default createStore<State>({
         })
         try {
           // Github: Promise.all 不能并行创建/否则会出现409 (暂不处理)
-          const allRes = await Promise.allSettled(promises)
+          const allRes = await Promise.allSettled<AxiosResponse>(promises)
           if (isGiteeProvider()) {
             await buildGiteePages()
           }
@@ -332,8 +354,10 @@ export default createStore<State>({
           allRes.forEach(res => {
             if (res.status === 'fulfilled') {
               const { data, status } = res.value
+              const { content } = data
+              const idx = state.uploadQueue.findIndex(item => item.path.endsWith(content.path))
+
               if (isSuccess(status)) {
-                const { content } = data
                 const el = document.getElementById('file-' + content.name)
                 if (el) {
                   el.classList.add('actived')
@@ -341,13 +365,31 @@ export default createStore<State>({
                     behavior: 'smooth'
                   })
                 }
+                if (idx !== -1) {
+                  state.uploadQueue[idx].status = 'success'
+                  state.uploadQueue[idx].progress = 100
+                  state.uploadQueue[idx].url = getFileUrl(state.uploadQueue[idx] as any)
+                }
 
                 ElMessage({
                   type: 'success',
                   message: `${content.path} Successed！`
                 })
               } else {
-                ElMessage.error('Failed')  
+                if (idx !== -1) {
+                  state.uploadQueue[idx].status = 'error'
+                  state.uploadQueue[idx].errorMsg = 'Failed'
+                }
+                ElMessage.error('Failed') 
+              }
+            }
+
+            if (res.status === 'rejected'){
+              const { path } = JSON.parse(res.reason.config.data)
+              const idx = state.uploadQueue.findIndex(item => item.name === path)
+              if (idx !== -1) {
+                state.uploadQueue[idx].status = 'error'
+                state.uploadQueue[idx].errorMsg = res.reason.message
               }
             }
           })

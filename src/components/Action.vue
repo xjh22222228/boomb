@@ -61,7 +61,7 @@ const handleInfo = function() {
 
 <style lang="scss" scoped>
 .wrapper {
-  z-index: 9;
+  z-index: 99;
   position: fixed;
   bottom: 150px;
   right: 30px;
