@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-page">
-    <ActionApp />
+    <Header />
+    <action-app />
 
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item
@@ -38,11 +39,11 @@
       </el-checkbox>
     </div>
 
-    <Sort />
+    <sort />
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
       <div class="mod-wrapper" id="file-wrapper">
-        <FileList
+        <file-list
           v-for="(item, idx) of dirList"
           :key="item.path"
           :data="item"
@@ -50,7 +51,7 @@
           <template v-slot:right>
             <el-checkbox :label="idx"></el-checkbox>
           </template>
-        </FileList>
+        </file-list>
       </div>
     </el-checkbox-group>
     <el-empty v-else :description="t('noData')"></el-empty>
@@ -62,6 +63,7 @@
 <script lang="ts" setup>
 import type { IFile } from '@/store'
 import Viewer from 'viewerjs'
+import Header from '@/components/HeaderApp.vue'
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
@@ -92,7 +94,7 @@ function initViewer() {
   if (el) {
     viewer = new Viewer(el, {
       filter(image: Element) {
-        return image.classList.contains('image')
+        return image.classList.contains('picture')
       }
     })
   }
@@ -166,11 +168,12 @@ const paths = computed(() =>
 
   .toolbar {
     position: relative;
+    margin-top: 10px;
     .check-all {
       margin-left: 30px;
     }
     .del-btn {
-      margin: 20px 0 0 15px;
+      margin: 0 0 0 15px;
     }
     ::v-deep(.el-checkbox__label) {
       color: #666 !important;
@@ -178,7 +181,7 @@ const paths = computed(() =>
   }
 
   .breadcrumb {
-    padding: 30px 0 0 15px;
+    padding: 20px 0 0 15px;
     font-size: 18px;
   }
 

@@ -9,7 +9,8 @@
     :before-close="handleClose"
     destroy-on-close
     :show-close="false"
-    :size="180"
+    :with-header="false"
+    :size="130"
   >
     <div class="row">
       <div class="item">
@@ -92,7 +93,7 @@ const handleNewFile = function() {
 .wrapper {
   z-index: 99;
   position: fixed;
-  bottom: 50px;
+  bottom: 150px;
   right: 15px;
   width: 50px;
   height: 50px;
@@ -103,11 +104,9 @@ const handleNewFile = function() {
   justify-content: center;
   align-items: center;
   transition: .05s linear;
-
   &:active {
     transform: scale(0.9);
   }
-
   .icon {
     width: 50%;
     height: 50%;
@@ -118,11 +117,9 @@ const handleNewFile = function() {
   display: flex;
   text-align: center;
   justify-content: space-evenly;
-
   .item {
     position: relative;
   }
-
   .file {
     position: absolute;
     top: 0;
@@ -131,7 +128,6 @@ const handleNewFile = function() {
     height: 75px;
     opacity: 0;
   }
-
   img {
     width: 50px;
     height: 50px;

@@ -1,10 +1,10 @@
 <template>
   <Header />
   <Action />
-  <ContextMenu />
+  <context-menu />
   <Language />
-  <fileEncodeRuleDialog />
-  <UploadQueue />
+  <file-encode-rule-dialog />
+  <upload-queue />
 
   <div
     class="home"
@@ -54,13 +54,13 @@
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
       <div class="mod-wrapper" id="file-wrapper">
-        <FileCard
+        <file-card
           v-for="(item, idx) of dirList"
           :key="item.path"
           :data="item"
         >
           <el-checkbox :label="idx"></el-checkbox>
-        </FileCard>
+        </file-card>
       </div>
     </el-checkbox-group>
     <el-empty v-else :description="t('noData')"></el-empty>

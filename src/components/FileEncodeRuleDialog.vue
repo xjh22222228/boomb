@@ -4,6 +4,7 @@
     width="500px"
     :model-value="visible"
     :before-close="beforeClose"
+    custom-class="encode-dialog"
   >
     <div>
       <el-radio-group v-model="value">
@@ -54,3 +55,12 @@ const handleOk = function() {
 }
 </script>
 
+<style lang="scss">
+.encode-dialog {
+  max-width: calc(100% - 24px);
+  .el-dialog__body {
+    overflow: hidden;
+    overflow-x: auto;
+  }
+}
+</style>

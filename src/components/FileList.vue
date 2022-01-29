@@ -1,16 +1,16 @@
 <!-- App -->
-
 <template>
   <div class="wrapper" :id="'file-' + fileName">
     <div class="left">
       <img
         :src="fileUrl"
         class="image"
+        :class="{picture: isImg}"
       />
     </div>
 
     <div class="middle" @click="goDir">
-      <div :class="{dir: !isFile}">{{ fileName }}</div>
+      <div class="name" :class="{dir: !isFile}">{{ fileName }}</div>
       <div class="size">{{ isFile ? data.sizeLabel : '' }}</div>
 
       <input
@@ -33,7 +33,7 @@ import type { IFile } from '@/store'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { updateFileContent } from '@/services'
-import { getBase64, getFileUrl } from '@/utils'
+import { getBase64, getFileUrl, isImage } from '@/utils'
 import { ElMessage } from 'element-plus'
 import { isSuccess } from '@/utils/http'
 
@@ -50,6 +50,7 @@ const fileName = props.data.name.toLowerCase()
 const fileType = props.data.type
 const filePath = props.data.path
 const isFile = fileType !== 'dir'
+const isImg = isImage(fileName)
 const fileUrl = getFileUrl(props.data)
 
 const handleUpdateFile = async function(e: any) {
@@ -77,7 +78,7 @@ const handleUpdateFile = async function(e: any) {
 
 function goDir() {
   if (fileType === 'dir') {
-    router.replace({
+    router.push({
       path: '/app',
       query: {
         path: `/${filePath}`
@@ -100,14 +101,18 @@ function goDir() {
     height: 50px;
     object-fit: contain;
     border: 1px solid #f2f2f2;
+    border-radius: 5px;
+    overflow: hidden;
   }
-
   .middle {
     position: relative;
     flex: 1;
     margin-left: 7px;
     padding-top: 5px;
     margin-right: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .dir {
       margin-top: 5px;
       font-size: 16px;
