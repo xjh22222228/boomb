@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-present the xiejiahe. All rights reserved. MIT license.
 // https://docs.github.com/cn/github/authenticating-to-github/authorizing-oauth-apps
 // https://docs.github.com/en/developers/apps/scopes-for-oauth-apps
 // https://gitee.com/api/v5/oauth_doc#/

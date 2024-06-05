@@ -1,4 +1,3 @@
-
 <p align="center">
   <a href="https://boomb.cn">
     <img src="public/logo.png" width="300" />
@@ -14,16 +13,12 @@
   </p>
 </p>
 
-
 用于管理存储图库，如果您合理的使用，可以当做图床、文件分享，不错吧！
 
-以开源的精神分享，如果对您有帮助，Star 支持一下！
-
-
-
 ## 特性
+
 - 支持 Github / Gitee
-- 无需部署，2步开始
+- 无需部署，2 步开始
 - 开箱即用，用完即走
 - 支持拖拽、粘贴上传
 - 多个 CDN 加速
@@ -31,47 +26,35 @@
 - 自定义文件上传方案
 - 支持在线新建文本文件
 
-
-
-
 ## 截图
+
 ![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/bed/screenshot.gif)
 
-
-
-
 ## 像数 1, 2, 3 一样容易
+
 1. [创建一个仓库](https://github.com/new) （或者已有仓库）
 2. 打开 [https://boomb.cn](https://boomb.cn)
 
-
-
-
-
 ## 内置
+
 - [Vue3](https://github.com/vuejs/vue-next)
 - [Element Plus](https://github.com/element-plus/element-plus)
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
-
-
 ## 构建
+
 ```bash
 # 安装依赖
-$ yarn
+$ pnpm i
 
 # 启动 localhost:7000
-$ yarn start
+$ npm run start
 
 # 打包
-$ yarn build
+$ npm run build
 ```
-
 
 如果您是部署到自己服务器上，你可能需要 [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
 但作者不建议您自己部署, 开箱即用，用完即走。
-
-
-

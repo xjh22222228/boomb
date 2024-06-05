@@ -15,7 +15,7 @@
 
     <div class="toolbar">
       <el-popconfirm
-        :title="t('confirmDel', {len: checkList.length})"
+        :title="t('confirmDel', { len: checkList.length })"
         :confirmButtonText="t('ok')"
         :cancelButtonText="t('cancel')"
         confirmButtonType="danger"
@@ -29,13 +29,15 @@
             :disabled="checkList.length === 0"
             size="small"
           >
-            {{ t('bulkDel') }}
+            {{ t("bulkDel") }}
           </el-button>
-          </template>
+        </template>
       </el-popconfirm>
 
       <el-checkbox v-model="isCheckAll" class="check-all">
-        {{ checkList.length > 0 ? `已选择 ${checkList.length} 项` : t('allCheck') }}
+        {{
+          checkList.length > 0 ? `已选择 ${checkList.length} 项` : t("allCheck")
+        }}
       </el-checkbox>
     </div>
 
@@ -43,117 +45,111 @@
 
     <el-checkbox-group v-model="checkList" v-if="dirList.length > 0">
       <div class="mod-wrapper" id="file-wrapper">
-        <file-list
-          v-for="(item, idx) of dirList"
-          :key="item.path"
-          :data="item"
-        >
+        <file-list v-for="(item, idx) of dirList" :key="item.path" :data="item">
           <template v-slot:right>
-            <el-checkbox :label="idx"></el-checkbox>
+            <el-checkbox :value="idx"></el-checkbox>
           </template>
         </file-list>
       </div>
     </el-checkbox-group>
     <el-empty v-else :description="t('noData')"></el-empty>
-    
-    <div class="total-num">{{ t('total', {len: dirList.length}) }}</div>
+
+    <div class="total-num">{{ t("total", { len: dirList.length }) }}</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { IFile } from '@/store'
-import Viewer from 'viewerjs'
-import Header from '@/components/HeaderApp.vue'
-import { ref, computed, nextTick, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import { initClipboard, generateBreadcrumb } from '@/utils'
-import { useI18n } from 'vue-i18n'
+import type { IFile } from "@/store";
+import Viewer from "viewerjs";
+import Header from "@/components/HeaderApp.vue";
+import { ref, computed, nextTick, watch, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { initClipboard, generateBreadcrumb } from "@/utils";
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
-const route = useRoute()
-const store = useStore()
-const checkList = ref<number[]>([])
-const isCheckAll = ref(false)
-const dirList = computed<IFile[]>(() => store.getters.getDir(route))
+const { t } = useI18n();
+const route = useRoute();
+const store = useStore();
+const checkList = ref<number[]>([]);
+const isCheckAll = ref(false);
+const dirList = computed<IFile[]>(() => store.getters.getDir(route));
 
-let viewer: Viewer|null
+let viewer: Viewer | null;
 
 // 销毁图片预览
 function destroyViewer() {
   if (viewer) {
-    (viewer.destroy && viewer.destroy())
-    viewer = null
+    viewer.destroy && viewer.destroy();
+    viewer = null;
   }
 }
 
 // 初始化图片预览
 function initViewer() {
-  destroyViewer()
-  const el = document.getElementById('file-wrapper')
+  destroyViewer();
+  const el = document.getElementById("file-wrapper");
   if (el) {
     viewer = new Viewer(el, {
       filter(image: Element) {
-        return image.classList.contains('picture')
-      }
-    })
+        return image.classList.contains("picture");
+      },
+    });
   }
 }
 
 async function handleDel() {
   // 只能一个一个删，并行会删除失败
   for (let idx of checkList.value) {
-    const item = dirList.value[idx]
-    if (item.type === 'file') {
-      await store.dispatch('deleteFile', item)
+    const item = dirList.value[idx];
+    if (item.type === "file") {
+      await store.dispatch("deleteFile", item);
     }
 
-    if (item.type === 'dir') {
-      await store.dispatch('deleteDir', item.path)
+    if (item.type === "dir") {
+      await store.dispatch("deleteDir", item.path);
     }
   }
 
-  getDir()
+  getDir();
 }
 
 function getDir() {
-  store.dispatch('getDir', route.query.path)
-  checkList.value = []
-  isCheckAll.value = false
+  store.dispatch("getDir", route.query.path);
+  checkList.value = [];
+  isCheckAll.value = false;
 }
 
 // 监听路由变化获取目录列表
 watch([() => route.query.path], () => {
-  if (route.name === 'Mobile') {
-    getDir()
+  if (route.name === "Mobile") {
+    getDir();
   }
-})
+});
 
 // 目录变化初始化图片预览
 watch(dirList, () => {
   nextTick(() => {
-    initViewer()
-    initClipboard()
-  })
-})
+    initViewer();
+    initClipboard();
+  });
+});
 
 // 全选
 watch(isCheckAll, () => {
   if (isCheckAll.value) {
-    checkList.value = dirList.value.map((_, idx) => idx)
+    checkList.value = dirList.value.map((_, idx) => idx);
   } else {
-    checkList.value = []
+    checkList.value = [];
   }
-})
+});
 
 onMounted(() => {
-  getDir()
-})
+  getDir();
+});
 
 // 生成面包屑路径
-const paths = computed(() => 
-  generateBreadcrumb(route.query.path as string)
-)
+const paths = computed(() => generateBreadcrumb(route.query.path as string));
 </script>
 
 <style lang="scss" scoped>

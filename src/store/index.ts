@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-present the xiejiahe. All rights reserved. MIT license.
 import bytes from 'bytes'
 import router from '@/router'
 import { nextTick } from 'vue'

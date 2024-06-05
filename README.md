@@ -1,4 +1,3 @@
-
 <p align="center">
   <a href="https://boomb.cn">
     <img src="public/logo.png" width="300" />
@@ -14,16 +13,12 @@
   </p>
 </p>
 
-
 It is used to manage store the gallery. If you use it reasonably, it can be used as a picture bed and file sharing. Isn't it good!
 
 If you use it reasonably, you can use it as a picture bed or file sharing, not bad!
 
-Share in the spirit of open source, if it helps you, Star will support it!
-
-
-
 ## Features
+
 - Github / Gitee support
 - No need to deploy, start in 2 steps
 - Ready to use out of the box, leave after use
@@ -33,46 +28,35 @@ Share in the spirit of open source, if it helps you, Star will support it!
 - Custom file upload scheme
 - Support online new text file
 
-
-
 ## Screenshot
+
 ![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/bed/screenshot.gif)
 
-
-
-
 ## Usage
+
 1. [Create a New Repository](https://github.com/new) (Or an existing repo)
 2. Open [https://boomb.cn](https://boomb.cn)
 
-
-
-
-
 ## Built with
+
 - [Vue3](https://github.com/vuejs/vue-next)
 - [Element Plus](https://github.com/element-plus/element-plus)
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
-
-
 ## Set up
+
 ```bash
 # Install dep
-$ yarn
+$ pnpm i
 
 # Start localhost:7000
-$ yarn start
+$ npm run start
 
 # Build Production
-$ yarn build
+$ npm run build
 ```
-
 
 If you build it yourself, you may need [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
 It is not recommended to build by yourself!
-
-
-

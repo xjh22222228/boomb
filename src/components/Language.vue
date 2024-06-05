@@ -5,16 +5,8 @@
 
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item
-            command="zh-CN"
-          >
-            🇨🇳 简体中文
-          </el-dropdown-item>
-          <el-dropdown-item
-            command="en"
-          >
-            🇬🇧 English
-          </el-dropdown-item>
+          <el-dropdown-item command="zh-CN"> 🇨🇳 简体中文 </el-dropdown-item>
+          <el-dropdown-item command="en"> 🇬🇧 English </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -22,18 +14,18 @@
 </template>
 
 <script lang="ts" setup>
-import i18n from '../i18n'
+import i18n from "../i18n";
 
-const setLocale = function(locale: string) {
-  i18n.global.locale = locale
-  localStorage.setItem('locale', locale)
-}
+const setLocale = function (locale: any) {
+  i18n.global.locale = locale;
+  localStorage.setItem("locale", locale);
+};
 
 function onCommand(command: string) {
-  if (command === 'zh-CN') {
-    setLocale('zh-CN')
-  } else if (command === 'en') {
-    setLocale('en')
+  if (command === "zh-CN") {
+    setLocale("zh-CN");
+  } else if (command === "en") {
+    setLocale("en");
   }
 }
 </script>

@@ -9,14 +9,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
-const store = useStore()
+const route = useRoute();
+const store = useStore();
 
-if (route.name !== 'Login') {
-  store.dispatch('getUser')
+if (route.name !== "Login") {
+  store.dispatch("getUser");
 }
 </script>
 

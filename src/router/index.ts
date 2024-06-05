@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the xiejiahe. All rights reserved. MIT license.
+// Copyright 2021-present the xiejiahe. All rights reserved. MIT license.
 
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'

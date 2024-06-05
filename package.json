@@ -1,41 +1,44 @@
 {
   "name": "boomb",
-  "version": "1.10.1",
+  "version": "2.0.0",
   "author": "xiejiahe",
   "repository": {
     "type": "git",
     "url": "https://github.com/xjh22222228/boomb.git"
   },
+  "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "sass": "^1.49.9",
-    "vue": "^3.2.31",
-    "@types/bytes": "^3.1.1",
-    "@types/lodash.debounce": "^4.0.6",
-    "@types/nprogress": "^0.2.0",
-    "@types/uuid": "^8.3.4",
-    "axios": "^0.26.1",
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.7.2",
     "bytes": "^3.1.2",
-    "clipboard": "^2.0.10",
-    "element-plus": "^2.0.6",
-    "js-base64": "^3.7.2",
+    "clipboard": "^2.0.11",
+    "element-plus": "^2.7.4",
+    "js-base64": "^3.7.7",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
-    "uuid": "^8.3.2",
-    "viewerjs": "^1.10.4",
-    "vue-i18n": "^9.1.9",
-    "vue-router": "^4.0.14",
-    "vuex": "^4.0.2"
+    "sass": "^1.77.4",
+    "uuid": "^9.0.1",
+    "viewerjs": "^1.11.6",
+    "vue": "^3.4.21",
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.3.2",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.2.4",
-    "typescript": "^4.6.2",
-    "vite": "^2.8.6",
-    "vue-tsc": "^0.32.1"
+    "@types/bytes": "^3.1.4",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/nprogress": "^0.2.3",
+    "@types/uuid": "^9.0.8",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vue-tsc": "^2.0.6"
   }
 }
