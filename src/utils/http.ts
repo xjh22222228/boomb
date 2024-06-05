@@ -120,15 +120,17 @@ instance.interceptors.response.use(
   },
   (error) => {
     const status = error.response?.status;
-    if (status === 401) {
-      logout();
-    }
     ElNotification({
       type: "error",
       title: `${status ?? 1001}`,
       message:
         error.response?.data?.message || error.message || "Unknown error",
     });
+    if (status === 401) {
+      setTimeout(() => {
+        logout();
+      }, 3000)
+    }
     stopLoad();
     return Promise.reject(error);
   }

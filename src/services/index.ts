@@ -189,7 +189,7 @@ export function getGithubToken(code: string) {
   return get("/api/oauth", {
     baseURL: import.meta.env.DEV
       ? "http://localhost:7006"
-      : "https://github-oauth2-indol.vercel.app",
+      : "https://github-oauth2-liart.vercel.app",
     params: {
       code,
     },
