@@ -164,7 +164,7 @@ export function getCdn(
       break;
 
     case NetworkCDN.Jsdelivr:
-      url = `https://cdn.jsdelivr.net/gh/${id()}@${getLocalBranch()}/${path}`;
+      url = `https://gcore.jsdelivr.net/gh/${id()}@${getLocalBranch()}/${path}`;
       break;
 
     case NetworkCDN.Gitee:
