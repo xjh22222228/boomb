@@ -2,9 +2,9 @@
   <a href="https://boomb.cn">
     <img src="public/logo.png" width="300" />
   </a>
-  <p align="center">Manage your pictures easily for Github.</p>
+  <p align="center">基于 Github 轻松管理您的存储图库</p>
   <p align="center">
-    <a href="README_zh-CN.md">
+    <a href="README.md">
       <img src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg?longCache=true&style=flat-square">
     </a>
     <img src="https://img.shields.io/github/v/release/xjh22222228/boomb" />
@@ -13,50 +13,48 @@
   </p>
 </p>
 
-It is used to manage store the gallery. If you use it reasonably, it can be used as a picture bed and file sharing. Isn't it good!
+用于管理存储图库，如果您合理的使用，可以当做图床、文件分享，不错吧！
 
-If you use it reasonably, you can use it as a picture bed or file sharing, not bad!
+## 特性
 
-## Features
+- 支持 Github / Gitee
+- 无需部署，2 步开始
+- 开箱即用，用完即走
+- 支持拖拽、粘贴上传
+- 多个 CDN 加速
+- 可以当做文件分享
+- 自定义文件上传方案
+- 支持在线新建文本文件
 
-- Github / Gitee support
-- No need to deploy, start in 2 steps
-- Ready to use out of the box, leave after use
-- Support drag and drop, paste upload
-- Multiple CDN acceleration
-- Can be used as file sharing
-- Custom file upload scheme
-- Support online new text file
-
-## Screenshot
+## 截图
 
 ![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/bed/screenshot.gif)
 
-## Usage
+## 像数 1, 2, 3 一样容易
 
-1. [Create a New Repository](https://github.com/new) (Or an existing repo)
-2. Open [https://boomb.cn](https://boomb.cn)
+1. [创建一个仓库](https://github.com/new) （或者已有仓库）
+2. 打开 [https://boomb.cn](https://boomb.cn)
 
-## Built with
+## 内置
 
 - [Vue3](https://github.com/vuejs/vue-next)
 - [Element Plus](https://github.com/element-plus/element-plus)
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
-## Set up
+## 构建
 
 ```bash
-# Install dep
+# 安装依赖
 $ pnpm i
 
-# Start localhost:7000
+# 启动 localhost:7000
 $ npm run start
 
-# Build Production
+# 打包
 $ npm run build
 ```
 
-If you build it yourself, you may need [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
+如果您是部署到自己服务器上，你可能需要 [Github OAuth2](https://github.com/xjh22222228/github-oauth2)
 
-It is not recommended to build by yourself!
+但作者不建议您自己部署, 开箱即用，用完即走。
