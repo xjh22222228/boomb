@@ -51,11 +51,6 @@ export default createI18n({
       editFile: "Edit This File",
       copyed: "Copy successfully",
       uploadQueue: "Upload queue",
-      description: `
-        <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> is used to easily manage your Github storage gallery.</p>
-        <p class="mb10">If you use it reasonably, it can be used as a picture bed and file sharing. Isn't it good!</p>
-        <p class="mb10">Share in the spirit of open source, if it helps you, <a href="https://github.com/xjh22222228/boomb" target="_blank">Star</a> will support it!</p>
-      `,
     },
 
     "zh-CN": {
@@ -92,11 +87,6 @@ export default createI18n({
       editFile: "编辑此文件",
       copyed: "复制成功",
       uploadQueue: "上传队列",
-      description: `
-        <p class="mb10"><a href="https://github.com/xjh22222228/boomb" target="_blank">Boomb</a> 用于轻松管理您的 Github 存储图库。</p>
-        <p class="mb10">如果您合理的使用，可以当做图床、文件分享，不错吧！</p>
-        <p class="mb10">以开源的精神分享，如果对您有帮助，<a href="https://github.com/xjh22222228/boomb" target="_blank">Star</a> 支持一下！</p>
-      `,
     },
   },
 });

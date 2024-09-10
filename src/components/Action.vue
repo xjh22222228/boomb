@@ -15,7 +15,6 @@
           <el-dropdown-item>
             <a href="https://issue-helper.vercel.app/?repo=xjh22222228/boomb" target="_blank" class="ch">{{ t('report') }}</a>
           </el-dropdown-item>
-          <el-dropdown-item @click="handleAbout">{{ t('about') }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -33,16 +32,6 @@ const { t } = useI18n()
 const baseUrl = import.meta.env.BASE_URL
 const store = useStore()
 const isLogin = computed(() => store.state.isLogin)
-
-const handleAbout = function() {
-  ElMessageBox.confirm('', {
-    title: t('what'),
-    dangerouslyUseHTMLString: true,
-    message: t('description'),
-    cancelButtonText: t('cancel'),
-    confirmButtonText: t('ok'),
-  }).catch(() => {})
-}
 
 const handleInfo = function() {
   ElMessageBox.confirm('', {
