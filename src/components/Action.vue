@@ -70,5 +70,6 @@ const handleInfo = function() {
   width: 30px;
   height: 30px;
   background-size: 100%;
+  outline: none;
 }
 </style>
