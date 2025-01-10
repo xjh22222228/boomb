@@ -104,7 +104,7 @@ export function isMobile() {
 }
 
 export function isImage(fileName: string): boolean {
-  const imageSuffix = [".png", ".jpg", ".jpeg", ".gif", "bmp", ".svg"];
+  const imageSuffix = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", '.webp'];
 
   for (let v of imageSuffix) {
     if (fileName.endsWith(v)) {
