@@ -117,6 +117,7 @@
                 @load="imgLoaded = true"
                 @error="hasError = true"
                 alt=""
+                loading="lazy"
               />
             </div>
             <div class="filename">{{ data.name }}</div>
