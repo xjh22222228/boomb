@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -18,6 +19,12 @@ const store = useStore();
 if (route.name !== "Login") {
   store.dispatch("getUser");
 }
+
+onMounted(() => {
+  if (window.location.hostname === "boomb.cn") {
+    window.location.href = "https://boomb2.netlify.app";
+  }
+});
 </script>
 
 <style lang="scss" scoped>

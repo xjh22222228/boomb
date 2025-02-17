@@ -1,26 +1,22 @@
 <template>
   <footer class="footer">
     <div class="flag">
-      <a
-        href="https://github.com/xjh22222228/boomb"
-        target="_blank"
-        class="ch"
-      >
+      <a href="https://github.com/xjh22222228/boomb" target="_blank" class="ch">
         Bo💣mb
         <img class="icon" src="@/assets/github.svg" />
       </a>
       v{{ version }} MIT
     </div>
 
-    Copyright © 2021 - {{ year }} boomb.cn
+    Copyright © 2021 - {{ year }} xiejiahe
   </footer>
 </template>
 
 <script lang="ts" setup>
-import pkg from '../../package.json'
+import pkg from "../../package.json";
 
-const version = pkg.version
-const year = new Date().getFullYear()
+const version = pkg.version;
+const year = new Date().getFullYear();
 </script>
 
 <style lang="scss" scoped>

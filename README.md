@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://boomb.cn">
+  <a href="https://boomb2.netlify.app">
     <img src="public/logo.png" width="300" />
   </a>
   <p align="center">基于 Github 轻松管理您的存储图库</p>
@@ -12,7 +12,6 @@
     <img src="https://img.shields.io/github/license/xjh22222228/boomb" />
   </p>
 </p>
-
 
 ## 特性
 
@@ -31,7 +30,7 @@
 ## 像数 1, 2, 3 一样容易
 
 1. [创建一个仓库](https://github.com/new) （或者已有仓库）
-2. 打开 [https://boomb.cn](https://boomb.cn)
+2. 打开 [https://boomb2.netlify.app](https://boomb2.netlify.app)
 
 ## 内置
 
