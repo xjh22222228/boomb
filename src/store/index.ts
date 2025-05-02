@@ -13,7 +13,7 @@ import {
   deleteDir,
   getRepos,
   getOrgs,
-  buildGiteePages
+  buildGiteePages,
 } from '@/services'
 import { isSuccess } from '@/utils/http'
 import { getBase64, getFileEncode, getExtname, getFileUrl } from '@/utils'
@@ -26,17 +26,17 @@ import { isGiteeProvider } from '@/utils/storage'
 import type { AxiosResponse } from 'axios'
 
 // Timestamp conflict
-let n = 0;
+let n = 0
 
 // user or org
 export type IUser = {
-  login: string,
+  login: string
   id: number
   avatar_url: string
   repos_url: string
   organizations_url: string
   name?: string
-  type?: 'User'|'Organization'
+  type?: 'User' | 'Organization'
   [key: string]: any
 }
 
@@ -45,7 +45,7 @@ export type IFile = {
   type: 'dir' | 'file'
   path: string
   sizeLabel: string
-  size: number|null // Gitee 有可能返回 null
+  size: number | null // Gitee 有可能返回 null
   sha: string
   [key: string]: any
 }
@@ -78,16 +78,16 @@ export interface IUploadQueue extends Pick<IFile, 'size' | 'path' | 'type'> {
 }
 
 type State = {
-  userAll: IUser[],
+  userAll: IUser[]
   user: IUser
-  token: string|null
+  token: string | null
   isLogin: boolean
   cacheDir: Record<string, IFile[]>
-  branchAll: IBranch[],
-  repos: IRepo[],
+  branchAll: IBranch[]
+  repos: IRepo[]
   loading: boolean
   showFileEncode: boolean
-  giteeTokenData: IGiteeToken|null
+  giteeTokenData: IGiteeToken | null
   uploadQueue: IUploadQueue[]
 }
 
@@ -95,7 +95,9 @@ const localUser = localStorage.getItem('user')
 const defUser = localUser ? JSON.parse(localUser) : null
 
 const localGiteeTokenData = localStorage.getItem('giteeTokenData')
-const defGiteeTokenData = localGiteeTokenData ? JSON.parse(localGiteeTokenData) : null
+const defGiteeTokenData = localGiteeTokenData
+  ? JSON.parse(localGiteeTokenData)
+  : null
 
 export default createStore<State>({
   state() {
@@ -117,10 +119,12 @@ export default createStore<State>({
   },
 
   getters: {
-    getDir: (state: State) => (route: RouteLocationNormalizedLoaded): IFile[] => {
-      const path = route.query.path as string
-      return state.cacheDir[path] || []
-    }
+    getDir:
+      (state: State) =>
+      (route: RouteLocationNormalizedLoaded): IFile[] => {
+        const path = route.query.path as string
+        return state.cacheDir[path] || []
+      },
   },
 
   mutations: {
@@ -158,7 +162,7 @@ export default createStore<State>({
       users.forEach((user: IUser) => {
         state.userAll.push({
           type: 'Organization',
-          ...user
+          ...user,
         })
       })
     },
@@ -172,7 +176,7 @@ export default createStore<State>({
 
     removeUploadQueueByIdx(state, idx: number) {
       state.uploadQueue.splice(idx, 1)
-    }
+    },
   },
 
   actions: {
@@ -210,30 +214,38 @@ export default createStore<State>({
         commit('saveLoading', false)
         commit('saveDir', {
           data: state.cacheDir[path],
-          path
+          path,
         })
       }
 
-      return readDir(path).then(res => {
-        if (isSuccess(res.status)) {
-          const data = res.data
-            .map((item: IFile) => {
-              item.sizeLabel = item.size != null ? bytes(item.size) : ''
-              return item
-            })
-            .sort((a: IFile, b: IFile) => (a.size ?? 0) - (b.size ?? 0))
-            .filter((item: IFile) => !(item.type === 'file' && item.name === '.gitkeep'))
+      return readDir(path)
+        .then((res) => {
+          if (isSuccess(res.status)) {
+            const data = res.data
+              .map((item: IFile) => {
+                item.sizeLabel = (
+                  item.size != null ? bytes(item.size) : ''
+                ) as string
+                return item
+              })
+              .sort((a: IFile, b: IFile) => (a.size ?? 0) - (b.size ?? 0))
+              .filter(
+                (item: IFile) =>
+                  !(item.type === 'file' && item.name === '.gitkeep')
+              )
 
-          commit('saveDir', {
-            data,
-            path
-          })
-        }
-      }).catch(() => {
-        router.replace('/')
-      }).finally(() => {
-        commit('saveLoading', true)
-      })
+            commit('saveDir', {
+              data,
+              path,
+            })
+          }
+        })
+        .catch(() => {
+          router.replace('/')
+        })
+        .finally(() => {
+          commit('saveLoading', true)
+        })
     },
 
     // 新建文本文件
@@ -243,15 +255,14 @@ export default createStore<State>({
         fileName,
         content,
         path,
-        isTemp
-      } : {
-        fileName: string,
-        content: string,
-        path: string,
+        isTemp,
+      }: {
+        fileName: string
+        content: string
+        path: string
         isTemp: boolean
       }
     ) {
-
       fileName ||= uuidv4() + '.txt'
 
       const res = await createFile({
@@ -262,7 +273,7 @@ export default createStore<State>({
       if (isSuccess(res.status)) {
         ElMessage({
           type: 'success',
-          message: 'Success！'
+          message: 'Success！',
         })
       }
 
@@ -272,7 +283,7 @@ export default createStore<State>({
     // 创建文件
     async createFile(
       { dispatch, getters, state },
-      files: { file: File, route: RouteLocationNormalizedLoaded }[]
+      files: { file: File; route: RouteLocationNormalizedLoaded }[]
     ) {
       const promises: Promise<AxiosResponse>[] = []
       let path: string = ''
@@ -284,7 +295,7 @@ export default createStore<State>({
         let fileName = file.name
 
         // Repeat
-        const exists = dir.some(item => item.name === fileName)
+        const exists = dir.some((item) => item.name === fileName)
         const extname = getExtname(file)
         const fileEncode = getFileEncode()
 
@@ -312,18 +323,21 @@ export default createStore<State>({
             fileName = `${Date.now() + n}${extname}`
             break
         }
-        
+
         const payload = {
           content: base64,
           path: `${path || ''}/${fileName}`,
           isEncode: false,
           onUploadProgress(progressEvent: any) {
-            const complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
-            const idx = state.uploadQueue.findIndex(item => item.path === payload.path)
+            const complete =
+              ((progressEvent.loaded / progressEvent.total) * 100) | 0
+            const idx = state.uploadQueue.findIndex(
+              (item) => item.path === payload.path
+            )
             if (idx !== -1) {
               state.uploadQueue[idx].progress = complete >= 100 ? 99 : complete
             }
-          }
+          },
         }
         state.uploadQueue.unshift({
           name: fileName,
@@ -332,14 +346,14 @@ export default createStore<State>({
           size: file.size,
           type: 'file',
           path: payload.path,
-          status: 'uploading'
+          status: 'uploading',
         })
-        promises.push((createFile(payload)))
+        promises.push(createFile(payload))
       }
 
       if (promises.length > 0) {
         const activedEls = document.querySelectorAll('.file.actived')
-        activedEls.forEach(el => {
+        activedEls.forEach((el) => {
           el.classList.remove('actived')
         })
         try {
@@ -351,42 +365,48 @@ export default createStore<State>({
           await dispatch('getDir', path)
           await nextTick()
 
-          allRes.forEach(res => {
+          allRes.forEach((res) => {
             if (res.status === 'fulfilled') {
               const { data, status } = res.value
               const { content } = data
-              const idx = state.uploadQueue.findIndex(item => item.path.endsWith(content.path))
+              const idx = state.uploadQueue.findIndex((item) =>
+                item.path.endsWith(content.path)
+              )
 
               if (isSuccess(status)) {
                 const el = document.getElementById('file-' + content.name)
                 if (el) {
                   el.classList.add('actived')
                   el.scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
                   })
                 }
                 if (idx !== -1) {
                   state.uploadQueue[idx].status = 'success'
                   state.uploadQueue[idx].progress = 100
-                  state.uploadQueue[idx].url = getFileUrl(state.uploadQueue[idx] as any)
+                  state.uploadQueue[idx].url = getFileUrl(
+                    state.uploadQueue[idx] as any
+                  )
                 }
 
                 ElMessage({
                   type: 'success',
-                  message: `${content.path} Successed！`
+                  message: `${content.path} Successed！`,
                 })
               } else {
                 if (idx !== -1) {
                   state.uploadQueue[idx].status = 'error'
                   state.uploadQueue[idx].errorMsg = 'Failed'
                 }
-                ElMessage.error('Failed') 
+                ElMessage.error('Failed')
               }
             }
 
-            if (res.status === 'rejected'){
+            if (res.status === 'rejected') {
               const { path } = JSON.parse(res.reason.config.data)
-              const idx = state.uploadQueue.findIndex(item => item.name === path)
+              const idx = state.uploadQueue.findIndex(
+                (item) => item.name === path
+              )
               if (idx !== -1) {
                 state.uploadQueue[idx].status = 'error'
                 state.uploadQueue[idx].errorMsg = res.reason.message
@@ -407,7 +427,7 @@ export default createStore<State>({
           content: '',
           // .gitkeep 允许空目录
           path: `${path}/.gitkeep`,
-          isEncode: false
+          isEncode: false,
         })
       } catch (error) {
         console.error(error)
@@ -426,9 +446,8 @@ export default createStore<State>({
       const res = await getBranchAll(owner)
       commit('saveBranchAll', res.data || [])
       return res
-    }
+    },
   },
 
-  modules: {
-  }
+  modules: {},
 })

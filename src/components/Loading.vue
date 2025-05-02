@@ -6,28 +6,28 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
-$colors: #F1725D, #38BDAB, #9D30A5, #B779E2, #683893;
+@use 'sass:list';
+$colors: #f1725d, #38bdab, #9d30a5, #b779e2, #683893;
 $left: 25px;
 $count: 40px;
 $timing: 600ms infinite ease-in-out;
 $delay: 75ms;
 
 @mixin jelly($num1, $num2) {
-  stroke: nth($colors, $num1);
+  stroke: list.nth($colors, $num1);
   cx: $left + ($count * $num2);
   stroke-width: 3px;
   animation: jump $timing;
-  opacity: .7;
+  opacity: 0.7;
   animation-delay: $delay * $num2;
 }
 
 @mixin floor($num2) {
   fill: #333333;
-  opacity: .05;
+  opacity: 0.05;
   rx: 0;
   ry: 0;
   cx: $left + ($count * $num2);
@@ -45,49 +45,49 @@ $delay: 75ms;
 
   svg {
     position: absolute;
-    
+
     ellipse {
       transform-origin: center;
     }
-      
+
     &:nth-of-type(1) ellipse {
       @include jelly(1, 0);
     }
-    
+
     &:nth-of-type(2) ellipse {
       @include jelly(2, 1);
     }
-    
+
     &:nth-of-type(3) ellipse {
-      @include jelly(3, 2)
+      @include jelly(3, 2);
     }
-    
+
     &:nth-of-type(4) ellipse {
-      @include jelly(4, 3)
+      @include jelly(4, 3);
     }
-    
+
     &:nth-of-type(5) ellipse {
-      @include jelly(5, 4)
+      @include jelly(5, 4);
     }
-    
+
     &:nth-of-type(6) ellipse {
-      @include floor(0)
+      @include floor(0);
     }
-    
+
     &:nth-of-type(7) ellipse {
-    @include floor(1)
+      @include floor(1);
     }
-    
+
     &:nth-of-type(8) ellipse {
-      @include floor(2)
+      @include floor(2);
     }
-    
+
     &:nth-of-type(9) ellipse {
-      @include floor(3)
+      @include floor(3);
     }
-    
+
     &:nth-of-type(10) ellipse {
-      @include floor(4)
+      @include floor(4);
     }
   }
 }
@@ -98,7 +98,7 @@ $dist: 10px;
 @keyframes jump {
   40% {
     transform: translateY($dist * 2) scale(1.3);
-    opacity: .9;
+    opacity: 0.9;
   }
   40% {
     rx: $dist;
@@ -118,7 +118,7 @@ $dist: 10px;
 
 @keyframes shadow {
   45% {
-    opacity: .15;
+    opacity: 0.15;
     rx: $dist;
     ry: $dist - 7;
     transform: translateY($dist - 10) scale(1.3);
