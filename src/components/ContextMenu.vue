@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -20,7 +20,7 @@ const route = useRoute()
 const router = useRouter()
 let menuEl: HTMLElement
 
-const handleContext = function(e: MouseEvent) {
+const handleContext = function (e: MouseEvent) {
   e.stopPropagation()
   e.preventDefault()
 
@@ -31,7 +31,7 @@ const handleContext = function(e: MouseEvent) {
   menuEl.style.left = `${x}px`
 }
 
-const handleDocClick = function() {
+const handleDocClick = function () {
   menuEl.style.display = 'none'
 }
 
@@ -44,7 +44,7 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() =>{ 
+onUnmounted(() => {
   const el = document.getElementById('home')
   if (el) {
     el.removeEventListener('contextmenu', handleContext)
@@ -52,29 +52,29 @@ onUnmounted(() =>{
   }
 })
 
-const handleRefresh = function() {
-  store.dispatch('getDir', route.query.path)
+const handleRefresh = function () {
+  store.getDir(route.query.path as string)
 }
 
-const handleUploadFile = function() {
+const handleUploadFile = function () {
   document.getElementById('input-file')?.click()
 }
 
-const handleMkdir = function() {
+const handleMkdir = function () {
   document.getElementById('mkdir-btn')?.click()
 }
 
-const handleNewFile = function() {
+const handleNewFile = function () {
   router.push({
     path: '/file/new',
     query: {
-      path: route.query.path || '/'
-    }
+      path: route.query.path || '/',
+    },
   })
 }
 
-const showFileEncode = function() {
-  store.commit('saveFileEncode', true)
+const showFileEncode = function () {
+  store.saveFileEncode(true)
 }
 </script>
 
@@ -93,7 +93,7 @@ const showFileEncode = function() {
   .item {
     padding: 10px 20px;
     cursor: pointer;
-    transition: .1s linear;
+    transition: 0.1s linear;
 
     &:hover {
       background: #f4f4f4;

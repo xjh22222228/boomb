@@ -12,13 +12,19 @@
           <el-radio :label="FileEncode.RawName">原文件名 => boomb.jpg</el-radio>
         </div>
         <div class="mb20">
-          <el-radio :label="FileEncode.NumRawName">随机数前缀+原文件名（如果重复） => 12345-boomb.jpg</el-radio>
+          <el-radio :label="FileEncode.NumRawName"
+            >随机数前缀+原文件名（如果重复） => 12345-boomb.jpg</el-radio
+          >
         </div>
         <div class="mb20">
-          <el-radio :label="FileEncode.UUID">UUID => 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.jpg</el-radio>
+          <el-radio :label="FileEncode.UUID"
+            >UUID => 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.jpg</el-radio
+          >
         </div>
         <div class="mb20">
-          <el-radio :label="FileEncode.Timestamp">时间戳 (批量上传不会重复) => 1613333896.jpg</el-radio>
+          <el-radio :label="FileEncode.Timestamp"
+            >时间戳 (批量上传不会重复) => 1613333896.jpg</el-radio
+          >
         </div>
       </el-radio-group>
     </div>
@@ -34,22 +40,22 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { FileEncode } from '@/types'
 import { getFileEncode } from '@/utils'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const store = useStore()
-const visible = computed(() => store.state.showFileEncode)
+const visible = computed(() => store.$state.showFileEncode)
 
 const value = ref(getFileEncode())
 
 const beforeClose = () => {
-  store.commit('saveFileEncode', false)
+  store.saveFileEncode(false)
 }
 
-const handleOk = function() {
+const handleOk = function () {
   beforeClose()
   localStorage.setItem('fileEncode', String(value.value))
 }

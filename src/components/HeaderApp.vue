@@ -16,8 +16,14 @@
     >
       <div @click="handleClose">
         <div class="info">
-          <el-avatar class="middle cp" :src="user.avatar_url" :size="50"></el-avatar>
-          <div>Signed in as&nbsp; <b>{{ user.login || user.name }}</b></div>
+          <el-avatar
+            class="middle cp"
+            :src="user.avatar_url"
+            :size="50"
+          ></el-avatar>
+          <div>
+            Signed in as&nbsp; <b>{{ user.login || user.name }}</b>
+          </div>
         </div>
 
         <div class="item" @click="clickFileEncode">
@@ -38,13 +44,13 @@ import { ArrowLeftBold, MoreFilled } from '@element-plus/icons-vue'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { logout } from '@/utils'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const store = useStore()
 const showDrawer = ref(false)
-const user = computed(() => store.state.user)
+const user = computed(() => store.$state.user)
 const router = useRouter()
 
 function handleClose() {
@@ -52,7 +58,7 @@ function handleClose() {
 }
 
 function clickFileEncode() {
-  store.commit('saveFileEncode', true)
+  store.saveFileEncode(true)
 }
 
 function goBack() {

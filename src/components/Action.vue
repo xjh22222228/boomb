@@ -1,19 +1,24 @@
 <template>
   <div class="wrapper">
     <el-dropdown placement="top" popper-class="nowrap-popper">
-      <div class="img" :style="{'background-image': `url(${baseUrl}favicon.png)`}"></div>
+      <div
+        class="img"
+        :style="{ 'background-image': `url(${baseUrl}favicon.png)` }"
+      ></div>
 
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item
-            @click="handleInfo"
-            v-if="isLogin"
-          >
+          <el-dropdown-item @click="handleInfo" v-if="isLogin">
             {{ t('info') }}
           </el-dropdown-item>
 
           <el-dropdown-item>
-            <a href="https://issue-helper.vercel.app/?repo=xjh22222228/boomb" target="_blank" class="ch">{{ t('report') }}</a>
+            <a
+              href="https://issue-helper.vercel.app/?repo=xjh22222228/boomb"
+              target="_blank"
+              class="ch"
+              >{{ t('report') }}</a
+            >
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -23,7 +28,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { getLocalId, getLocalBranch, getLocalRepo } from '@/utils/storage'
@@ -31,9 +36,9 @@ import { getLocalId, getLocalBranch, getLocalRepo } from '@/utils/storage'
 const { t } = useI18n()
 const baseUrl = import.meta.env.BASE_URL
 const store = useStore()
-const isLogin = computed(() => store.state.isLogin)
+const isLogin = computed(() => store.$state.isLogin)
 
-const handleInfo = function() {
+const handleInfo = function () {
   ElMessageBox.confirm('', {
     cancelButtonText: t('cancel'),
     confirmButtonText: t('ok'),
@@ -62,9 +67,10 @@ const handleInfo = function() {
   border-radius: 50%;
   background: #fff;
   cursor: pointer;
-  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-              0 6px 16px 0 rgba(0, 0, 0, 0.08),
-              0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 .img {
   width: 30px;

@@ -40,14 +40,14 @@
             :disabled="checkList.length === 0"
             size="small"
           >
-            {{ t("bulkDel") }}
+            {{ t('bulkDel') }}
           </el-button>
         </template>
       </el-popconfirm>
 
       <el-checkbox v-model="isCheckAll" class="check-all">
         {{
-          checkList.length > 0 ? `已选择 ${checkList.length} 项` : t("allCheck")
+          checkList.length > 0 ? `已选择 ${checkList.length} 项` : t('allCheck')
         }}
       </el-checkbox>
 
@@ -63,154 +63,154 @@
     </el-checkbox-group>
     <el-empty v-else :description="t('noData')"></el-empty>
 
-    <div class="total-num">{{ t("total", { len: dirList.length }) }}</div>
+    <div class="total-num">{{ t('total', { len: dirList.length }) }}</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Events } from "vue";
-import type { IFile } from "@/store";
-import UploadQueue from "@/components/UploadQueue.vue";
-import Viewer from "viewerjs";
-import { ref, computed, nextTick, watch, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { initClipboard, generateBreadcrumb } from "@/utils";
-import { useI18n } from "vue-i18n";
+import type { Events } from 'vue'
+import type { IFile } from '@/store'
+import UploadQueue from '@/components/UploadQueue.vue'
+import Viewer from 'viewerjs'
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from '@/store'
+import { initClipboard, generateBreadcrumb } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
-const route = useRoute();
-const store = useStore();
-const checkList = ref<number[]>([]);
-const isCheckAll = ref(false);
-const dragState = ref("");
-const dirList = computed<IFile[]>(() => store.getters.getDir(route));
+const { t } = useI18n()
+const route = useRoute()
+const store = useStore()
+const checkList = ref<number[]>([])
+const isCheckAll = ref(false)
+const dragState = ref('')
+const dirList = computed<IFile[]>(() => store.getCachedDir(route))
 
-let viewer: Viewer | null;
+let viewer: Viewer | null
 
 // 销毁图片预览
 function destroyViewer() {
   if (viewer) {
-    viewer.destroy && viewer.destroy();
-    viewer = null;
+    viewer.destroy && viewer.destroy()
+    viewer = null
   }
 }
 
 // 初始化图片预览
 function initViewer() {
-  destroyViewer();
-  const el = document.getElementById("file-wrapper");
+  destroyViewer()
+  const el = document.getElementById('file-wrapper')
   if (el) {
     viewer = new Viewer(el, {
       filter(image: Element) {
-        return image.classList.contains("image");
+        return image.classList.contains('image')
       },
-    });
+    })
   }
 }
 
 // 复制粘贴上传图片
-async function copyUpload(event: Events["onCopy"]) {
-  const items = event.clipboardData?.items;
-  if (!items) return;
-  const files: File[] = [];
+async function copyUpload(event: Events['onCopy']) {
+  const items = event.clipboardData?.items
+  if (!items) return
+  const files: File[] = []
 
   if (items.length) {
     for (let i = 0; i < items.length; i++) {
-      const file = items[i].getAsFile();
+      const file = items[i].getAsFile()
       if (file instanceof File) {
-        files.push(file);
+        files.push(file)
       }
     }
   }
-  const allFile = files.map((file) => ({ file, route }));
-  store.dispatch("createFile", allFile);
+  const allFile = files.map((file) => ({ file, route }))
+  store.createFile(allFile)
 }
 
-function handleDrop(e: Events["onDrop"]) {
-  e.stopPropagation();
-  e.preventDefault();
-  dragState.value = e.type;
+function handleDrop(e: Events['onDrop']) {
+  e.stopPropagation()
+  e.preventDefault()
+  dragState.value = e.type
 
-  const files = e.dataTransfer!.files as any;
+  const files = e.dataTransfer!.files as any
   if (files) {
-    const allFile: any[] = [];
+    const allFile: any[] = []
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+      const file = files[i]
       // 目录 type 为空
       if (file.type) {
-        allFile.push({ file, route });
+        allFile.push({ file, route })
       }
     }
     if (allFile.length > 0) {
-      store.dispatch("createFile", allFile);
+      store.createFile(allFile)
     }
   }
 }
 
-function handleFileDrag(e: Events["onDragover"]) {
-  e.stopPropagation();
-  e.preventDefault();
-  dragState.value = e.type;
+function handleFileDrag(e: Events['onDragover']) {
+  e.stopPropagation()
+  e.preventDefault()
+  dragState.value = e.type
 }
 
 async function handleDel() {
   // 只能一个一个删，并行会删除失败
   for (let idx of checkList.value) {
-    const item = dirList.value[idx];
-    if (item.type === "file") {
-      await store.dispatch("deleteFile", item);
+    const item = dirList.value[idx]
+    if (item.type === 'file') {
+      await store.deleteFile(item)
     }
 
-    if (item.type === "dir") {
-      await store.dispatch("deleteDir", item.path);
+    if (item.type === 'dir') {
+      await store.deleteDir(item.path)
     }
   }
 
-  getDir();
+  getDir()
 }
 
 function getDir() {
-  store.dispatch("getDir", route.query.path);
-  checkList.value = [];
-  isCheckAll.value = false;
+  store.getDir(route.query.path as string)
+  checkList.value = []
+  isCheckAll.value = false
 }
 
 // 监听路由变化获取目录列表
 watch([() => route.query.path], () => {
-  if (route.name === "Home") {
-    getDir();
+  if (route.name === 'Home') {
+    getDir()
   }
-});
+})
 
 // 目录变化初始化图片预览
 watch(dirList, () => {
   nextTick(() => {
-    initViewer();
-    initClipboard();
-  });
-});
+    initViewer()
+    initClipboard()
+  })
+})
 
 // 全选
 watch(isCheckAll, () => {
   if (isCheckAll.value) {
-    checkList.value = dirList.value.map((_, idx) => idx);
+    checkList.value = dirList.value.map((_, idx) => idx)
   } else {
-    checkList.value = [];
+    checkList.value = []
   }
-});
+})
 
 onMounted(() => {
-  getDir();
-  document.addEventListener("paste", copyUpload);
-});
+  getDir()
+  document.addEventListener('paste', copyUpload)
+})
 
 onUnmounted(() => {
-  document.removeEventListener("paste", copyUpload);
-});
+  document.removeEventListener('paste', copyUpload)
+})
 
 // 生成面包屑路径
-const paths = computed(() => generateBreadcrumb(route.query.path as string));
+const paths = computed(() => generateBreadcrumb(route.query.path as string))
 </script>
 
 <style lang="scss" scoped>

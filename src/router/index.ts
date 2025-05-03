@@ -13,34 +13,34 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: isMobile() ? Mobile : Home
+    component: isMobile() ? Mobile : Home,
   },
   {
     path: '/app',
     name: 'Mobile',
-    component: Mobile
+    component: Mobile,
   },
   {
     path: '/login',
     alias: ['/oauth/redirect'],
     name: 'Login',
-    component: Login
+    component: Login,
   },
   {
     path: '/file/new',
     name: 'NewFile',
-    component: NewFile
+    component: NewFile,
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NoMatch',
-    redirect: '/'
+    redirect: '/',
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
 
 router.beforeEach((to) => {

@@ -5,12 +5,8 @@
     <slot></slot>
 
     <div class="left">
-      <el-button
-        :icon="Upload"
-        class="mr10 relative"
-        type="primary"
-      >
-        {{ t('uploadFile' )}}
+      <el-button :icon="Upload" class="mr10 relative" type="primary">
+        {{ t('uploadFile') }}
         <label for="input-file"></label>
         <input
           multiple
@@ -21,18 +17,18 @@
         />
       </el-button>
 
-      <el-button
-        :icon="Plus"
-        @click="toggleCreateDirModal"
-        id="mkdir-btn"
-      >
-        {{ t('createDir' )}}
+      <el-button :icon="Plus" @click="toggleCreateDirModal" id="mkdir-btn">
+        {{ t('createDir') }}
       </el-button>
     </div>
 
     <div class="right">
       <el-dropdown @command="onCommand" popper-class="nowrap-popper">
-        <el-avatar class="middle cp" :src="user.avatar_url" :size="50"></el-avatar>
+        <el-avatar
+          class="middle cp"
+          :src="user.avatar_url"
+          :size="50"
+        ></el-avatar>
         <i class="middle el-icon-caret-bottom"></i>
 
         <template #dropdown>
@@ -65,7 +61,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute } from 'vue-router'
 import { logout } from '@/utils'
 import { useI18n } from 'vue-i18n'
@@ -75,7 +71,7 @@ const { t } = useI18n()
 const store = useStore()
 const route = useRoute()
 const showCreateDirModal = ref(false)
-const user = computed(() => store.state.user)
+const user = computed(() => store.user)
 
 function toggleCreateDirModal() {
   showCreateDirModal.value = !showCreateDirModal.value
@@ -88,13 +84,13 @@ async function handleUploadFile(e: any) {
   for (const file of files) {
     allFile.push({ file, route })
   }
-  store.dispatch('createFile', allFile)
+  store.createFile(allFile)
   e.target.value = ''
 }
 
 function onCommand(command: string) {
   if (command === 'upload') {
-    store.commit('saveFileEncode', true)
+    store.saveFileEncode(true)
   } else if (command === 'logout') {
     logout()
   }

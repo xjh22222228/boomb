@@ -21,10 +21,8 @@
     </el-input>
 
     <div class="toolbar">
-      <el-button
-        @click="handleCancel"
-      >
-        {{ t('cancel' )}}
+      <el-button @click="handleCancel">
+        {{ t('cancel') }}
       </el-button>
 
       <el-button
@@ -33,7 +31,7 @@
         :loading="loading"
         :disabled="!content"
       >
-        {{ t('publish' )}}
+        {{ t('publish') }}
       </el-button>
     </div>
   </section>
@@ -42,7 +40,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { isSuccess } from '@/utils/http'
 
@@ -55,14 +53,14 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-const handlePublish = async function() {
+const handlePublish = async function () {
   loading.value = true
-  const path = route.query.path
-  const res = await store.dispatch('newFile', {
+  const path = route.query.path as string
+  const res = await store.newFile({
     fileName: fileName.value,
     content: content.value,
     isTemp: isTemp.value,
-    path
+    path,
   })
 
   loading.value = false
@@ -71,18 +69,18 @@ const handlePublish = async function() {
     router.replace({
       name: 'Home',
       query: {
-        path: isTemp.value ? '/.temp' : route.query.path
-      }
+        path: isTemp.value ? '/.temp' : route.query.path,
+      },
     })
   }
 }
 
-const handleCancel = function() {
+const handleCancel = function () {
   router.replace({
     path: '/',
     query: {
-      path: route.query.path
-    }
+      path: route.query.path,
+    },
   })
 }
 </script>

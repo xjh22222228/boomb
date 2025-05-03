@@ -6,10 +6,7 @@
     :before-close="beforeClose"
   >
     <div>
-      <el-input
-        v-model="dirName"
-        placeholder="请输入要新建的目录名"
-      />
+      <el-input v-model="dirName" placeholder="请输入要新建的目录名" />
     </div>
 
     <template #footer>
@@ -32,51 +29,51 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { IFile } from '@/store'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute } from 'vue-router'
 
 const props = defineProps({
   visible: Boolean,
   beforeClose: {
     type: Function,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const loading = ref(false)
 const dirName = ref('')
 const store = useStore()
 const route = useRoute()
-const dirList = computed(() => store.getters.getDir(route))
+const dirList = computed(() => store.getCachedDir(route))
 
-const handleOk = function() {
+const handleOk = function () {
   const v = dirName.value.trim()
   if (!v) return
 
   const dirs: IFile[] = dirList.value
-  const exists = dirs.some(item => item.name === v)
+  const exists = dirs.some((item) => item.name === v)
   if (exists) {
     ElMessage({
       type: 'error',
-      message: `已存在 ${v} 文件夹`
+      message: `已存在 ${v} 文件夹`,
     })
     return
   }
 
   loading.value = true
-  store.dispatch('mkdir', `${route.query.path || ''}/${v}`)
+  store
+    .mkdir(`${route.query.path || ''}/${v}`)
     .then(() => {
       dirName.value = ''
       props.beforeClose()
-      store.dispatch('getDir', route.query.path)
+      store.getDir(route.query.path as string)
       ElMessage({
         type: 'success',
-        message: `创建文件夹 ${v} 成功`
+        message: `创建文件夹 ${v} 成功`,
       })
     })
-    .finally(() => loading.value = false)
+    .finally(() => (loading.value = false))
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

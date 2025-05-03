@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-import pkg from "../../package.json";
+import pkg from '../../package.json'
 
-const version = pkg.version;
-const year = new Date().getFullYear();
+const version = pkg.version
+const year = new Date().getFullYear()
 </script>
 
 <style lang="scss" scoped>

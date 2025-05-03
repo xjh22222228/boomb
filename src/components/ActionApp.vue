@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" @click="showDrawer = true">
-    <img class="icon" src="@/assets/inc.svg" alt="">
+    <img class="icon" src="@/assets/inc.svg" alt="" />
   </div>
 
   <el-drawer
@@ -14,25 +14,20 @@
   >
     <div class="row">
       <div class="item">
-        <img src="@/assets/file-other.svg" alt="">
-        <div>{{ t('uploadFile' )}}</div>
+        <img src="@/assets/file-other.svg" alt="" />
+        <div>{{ t('uploadFile') }}</div>
 
-        <input
-          multiple
-          type="file"
-          class="file"
-          @change="handleUploadFile"
-        />
+        <input multiple type="file" class="file" @change="handleUploadFile" />
       </div>
 
       <div class="item" @click="handleCreateDir">
-        <img src="@/assets/file-folder.svg" alt="">
-        <div>{{ t('createDir' )}}</div>
+        <img src="@/assets/file-folder.svg" alt="" />
+        <div>{{ t('createDir') }}</div>
       </div>
 
       <div class="item" @click="handleNewFile">
-        <img src="@/assets/file-code.svg" alt="">
-        <div>{{ t('newFile' )}}</div>
+        <img src="@/assets/file-code.svg" alt="" />
+        <div>{{ t('newFile') }}</div>
       </div>
     </div>
   </el-drawer>
@@ -46,7 +41,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -75,16 +70,16 @@ function handleUploadFile(e: any) {
   for (const file of files) {
     allFile.push({ file, route })
   }
-  store.dispatch('createFile', allFile)
+  store.createFile(allFile)
   e.target.value = ''
 }
 
-const handleNewFile = function() {
+const handleNewFile = function () {
   router.push({
     path: '/file/new',
     query: {
-      path: route.query.path || '/'
-    }
+      path: route.query.path || '/',
+    },
   })
 }
 </script>
@@ -98,12 +93,12 @@ const handleNewFile = function() {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #8EC5FC;
-  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+  background-color: #8ec5fc;
+  background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: .05s linear;
+  transition: 0.05s linear;
   &:active {
     transform: scale(0.9);
   }

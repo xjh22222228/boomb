@@ -1,194 +1,194 @@
 // Copyright 2021-present the xiejiahe. All rights reserved. MIT license.
-import Clipboard from "clipboard";
-import i18n from "@/i18n";
-import { FileEncode, NetworkCDN } from "@/types";
-import type { IFile } from "@/store";
-import { getCdn } from "@/services";
-import { ElMessage } from "element-plus";
+import Clipboard from 'clipboard'
+import i18n from '@/i18n'
+import { FileEncode, NetworkCDN } from '@/types'
+import type { IFile } from '@/store'
+import { getCdn } from '@/services'
+import { ElMessage } from 'element-plus'
 import {
   getLocalId,
   getLocalBranch,
   getLocalRepo,
   isGiteeProvider,
-} from "@/utils/storage";
+} from '@/utils/storage'
 
 // images
-import fileCodeImg from "@/assets/file-code.svg";
-import filePdfImg from "@/assets/file-pdf.svg";
-import fileFolderImg from "@/assets/file-folder.svg";
-import fileZipImg from "@/assets/file-zip.svg";
-import fileTxtImg from "@/assets/file-txt.svg";
-import fileDocImg from "@/assets/file-doc.svg";
-import fileOtherImg from "@/assets/file-other.svg";
+import fileCodeImg from '@/assets/file-code.svg'
+import filePdfImg from '@/assets/file-pdf.svg'
+import fileFolderImg from '@/assets/file-folder.svg'
+import fileZipImg from '@/assets/file-zip.svg'
+import fileTxtImg from '@/assets/file-txt.svg'
+import fileDocImg from '@/assets/file-doc.svg'
+import fileOtherImg from '@/assets/file-other.svg'
 
-const isGitee = isGiteeProvider();
-let clipboard: Clipboard | null;
+const isGitee = isGiteeProvider()
+let clipboard: Clipboard | null
 
 export async function getBase64(file: File): Promise<{
-  url: string;
-  rawUrl: string;
+  url: string
+  rawUrl: string
 }> {
-  const fr = new FileReader();
-  fr.readAsDataURL(file);
+  const fr = new FileReader()
+  fr.readAsDataURL(file)
 
   return new Promise((resolve) => {
     fr.onload = function () {
-      const result = fr.result as string;
-      const url = result.split(",")[1];
+      const result = fr.result as string
+      const url = result.split(',')[1]
       resolve({
         url,
         rawUrl: result,
-      });
-    };
-  });
+      })
+    }
+  })
 }
 
 export function getExtname(file: File): string {
-  const s = file.name.split(".").pop() as string;
+  const s = file.name.split('.').pop() as string
 
-  return s ? `.${s}` : s;
+  return s ? `.${s}` : s
 }
 
 export function initClipboard() {
   if (clipboard) {
-    clipboard.destroy();
-    clipboard = null;
+    clipboard.destroy()
+    clipboard = null
   }
 
-  clipboard = new Clipboard(document.querySelectorAll(".copy"));
+  clipboard = new Clipboard(document.querySelectorAll('.copy'))
 
-  clipboard.on("success", function () {
+  clipboard.on('success', function () {
     ElMessage({
-      type: "success",
-      message: i18n.global.t("copyed") + "!",
-    });
-  });
+      type: 'success',
+      message: i18n.global.t('copyed') + '!',
+    })
+  })
 }
 
 export function logout() {
-  localStorage.clear();
-  sessionStorage.clear();
-  location.reload();
+  localStorage.clear()
+  sessionStorage.clear()
+  location.reload()
 }
 
 export function getFileEncode(): FileEncode {
-  const l = localStorage.getItem("fileEncode");
+  const l = localStorage.getItem('fileEncode')
 
   if (l) {
-    return Number(l) as FileEncode;
+    return Number(l) as FileEncode
   }
 
-  return FileEncode.RawName;
+  return FileEncode.RawName
 }
 
 export function getCharCode(str: string): number {
-  let n = 0;
+  let n = 0
   if (!str) {
-    return n;
+    return n
   }
 
   // 1.jpg => 1
-  if (!str.startsWith(".")) {
-    str = str.split(".")[0] || "";
+  if (!str.startsWith('.')) {
+    str = str.split('.')[0] || ''
   }
 
   for (let i = 0; i < str.length; i++) {
-    n += str.charCodeAt(i);
+    n += str.charCodeAt(i)
   }
 
-  return n;
+  return n
 }
 
 export function isMobile() {
-  return "ontouchstart" in window;
+  return 'ontouchstart' in window
 }
 
 export function isImage(fileName: string): boolean {
-  const imageSuffix = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", '.webp'];
+  const imageSuffix = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.svg', '.webp']
 
   for (let v of imageSuffix) {
     if (fileName.endsWith(v)) {
-      return true;
+      return true
     }
   }
 
-  return false;
+  return false
 }
 
 export function getFileUrl(file: IFile): string {
-  const { type, name, path, size } = file;
+  const { type, name, path, size } = file
 
   // Jsdelivr: File size exceeded the configured limit of 20 MB.
-  const MAX_FILE_SIZE = 20 * 1024 * 1024;
+  const MAX_FILE_SIZE = 20 * 1024 * 1024
 
-  if (type === "file") {
+  if (type === 'file') {
     if (isImage(name)) {
       if (isGitee) {
-        return getCdn(NetworkCDN.Gitee, path);
+        return getCdn(NetworkCDN.Gitee, path)
       }
 
-      if (typeof size === "number" && size >= MAX_FILE_SIZE) {
-        return getCdn(NetworkCDN.Github, path);
+      if (typeof size === 'number' && size >= MAX_FILE_SIZE) {
+        return getCdn(NetworkCDN.Github, path)
       }
-      return getCdn(NetworkCDN.Jsdelivr, path);
+      return getCdn(NetworkCDN.Jsdelivr, path)
     }
 
-    if (!path.includes(".")) {
-      return fileOtherImg;
+    if (!path.includes('.')) {
+      return fileOtherImg
     }
 
-    switch (path.split(".").pop()) {
-      case "pdf":
-        return filePdfImg;
+    switch (path.split('.').pop()) {
+      case 'pdf':
+        return filePdfImg
 
-      case "txt":
-        return fileTxtImg;
+      case 'txt':
+        return fileTxtImg
 
-      case "doc":
-      case "docx":
-        return fileDocImg;
+      case 'doc':
+      case 'docx':
+        return fileDocImg
 
-      case "zip":
-      case "rar":
-      case "gzip":
-      case "gz":
-        return fileZipImg;
+      case 'zip':
+      case 'rar':
+      case 'gzip':
+      case 'gz':
+        return fileZipImg
 
       default:
-        return fileCodeImg;
+        return fileCodeImg
     }
   } else {
-    return fileFolderImg;
+    return fileFolderImg
   }
 }
 
-export function generateBreadcrumb(path: string = ""): {
-  name: string;
-  path: string;
+export function generateBreadcrumb(path: string = ''): {
+  name: string
+  path: string
 }[] {
-  path = path === "/" ? "" : path;
-  let pathsList = path.split("/") as any[];
+  path = path === '/' ? '' : path
+  let pathsList = path.split('/') as any[]
 
-  let fullPath = "";
+  let fullPath = ''
   for (let i = 0; i < pathsList.length; i++) {
-    const path = pathsList[i];
-    fullPath += "/" + path;
+    const path = pathsList[i]
+    fullPath += '/' + path
 
     pathsList[i] = {
-      name: !path ? i18n.global.t("all") : path,
-      path: fullPath.startsWith("//")
+      name: !path ? i18n.global.t('all') : path,
+      path: fullPath.startsWith('//')
         ? fullPath.slice(1)
-        : fullPath === "/"
-        ? ""
-        : fullPath,
-    };
+        : fullPath === '/'
+          ? ''
+          : fullPath,
+    }
   }
 
-  return pathsList;
+  return pathsList
 }
 
 export function getEditFileUrl(path: string): string {
-  path = path[0] === "/" ? path.slice(1) : path;
-  const base = isGitee ? "https://gitee.com/" : "https://github.com/";
-  return `${base}${getLocalId()}/${getLocalRepo()}/edit/${getLocalBranch()}/${path}`;
+  path = path[0] === '/' ? path.slice(1) : path
+  const base = isGitee ? 'https://gitee.com/' : 'https://github.com/'
+  return `${base}${getLocalId()}/${getLocalRepo()}/edit/${getLocalBranch()}/${path}`
 }

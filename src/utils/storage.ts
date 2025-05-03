@@ -22,7 +22,7 @@ export function getLocalToken(): string {
 
 export function getLocalIsLogin(): boolean {
   if (typeof isLogin === 'undefined') {
-    return isLogin = !!localStorage.getItem('isLogin')  
+    return (isLogin = !!localStorage.getItem('isLogin'))
   }
   return isLogin
 }
@@ -35,7 +35,7 @@ export function getLocalProvider(): Provider {
   if (p) {
     provider = Number(p)
   }
-  return provider = Number(p || Provider.Github)
+  return (provider = Number(p || Provider.Github))
 }
 
 export function isGiteeProvider(): boolean {

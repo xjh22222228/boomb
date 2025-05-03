@@ -2,15 +2,11 @@
 <template>
   <div class="wrapper" :id="'file-' + fileName">
     <div class="left">
-      <img
-        :src="fileUrl"
-        class="image"
-        :class="{picture: isImg}"
-      />
+      <img :src="fileUrl" class="image" :class="{ picture: isImg }" />
     </div>
 
     <div class="middle" @click="goDir">
-      <div class="name" :class="{dir: !isFile}">{{ fileName }}</div>
+      <div class="name" :class="{ dir: !isFile }">{{ fileName }}</div>
       <div class="size">{{ isFile ? data.sizeLabel : '' }}</div>
 
       <input
@@ -30,7 +26,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import type { IFile } from '@/store'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { updateFileContent } from '@/services'
 import { getBase64, getFileUrl, isImage } from '@/utils'
@@ -41,7 +37,7 @@ const props = defineProps({
   data: {
     type: Object as PropType<IFile>,
     default: () => ({}),
-  }
+  },
 })
 const route = useRoute()
 const router = useRouter()
@@ -53,7 +49,7 @@ const isFile = fileType !== 'dir'
 const isImg = isImage(fileName)
 const fileUrl = getFileUrl(props.data)
 
-const handleUpdateFile = async function(e: any) {
+const handleUpdateFile = async function (e: any) {
   const files = e.target.files
   if (files.length <= 0) return
 
@@ -62,13 +58,13 @@ const handleUpdateFile = async function(e: any) {
 
   updateFileContent(props.data, {
     content: base64,
-    isEncode: false
-  }).then(res => {
+    isEncode: false,
+  }).then((res) => {
     if (isSuccess(res.status)) {
-      store.dispatch('getDir', route.query.path)
+      store.getDir(route.query.path as string)
       ElMessage({
         type: 'success',
-        message: '更新成功, 可能由于缓存未能及时更新'
+        message: '更新成功, 可能由于缓存未能及时更新',
       })
     }
   })
@@ -81,8 +77,8 @@ function goDir() {
     router.push({
       path: '/app',
       query: {
-        path: `/${filePath}`
-      }
+        path: `/${filePath}`,
+      },
     })
   }
 }

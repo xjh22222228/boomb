@@ -2,7 +2,7 @@
 import bytes from 'bytes'
 import router from '@/router'
 import { nextTick } from 'vue'
-import { createStore } from 'vuex'
+import { defineStore } from 'pinia'
 import {
   createFile,
   getGithubUser,
@@ -29,7 +29,7 @@ import type { AxiosResponse } from 'axios'
 let n = 0
 
 // user or org
-export type IUser = {
+export interface IUser {
   login: string
   id: number
   avatar_url: string
@@ -40,7 +40,7 @@ export type IUser = {
   [key: string]: any
 }
 
-export type IFile = {
+export interface IFile {
   name: string
   type: 'dir' | 'file'
   path: string
@@ -50,7 +50,7 @@ export type IFile = {
   [key: string]: any
 }
 
-export type IBranch = {
+export interface IBranch {
   name: string
   protected: boolean
 }
@@ -77,7 +77,7 @@ export interface IUploadQueue extends Pick<IFile, 'size' | 'path' | 'type'> {
   errorMsg?: string
 }
 
-type State = {
+interface State {
   userAll: IUser[]
   user: IUser
   token: string | null
@@ -99,121 +99,116 @@ const defGiteeTokenData = localGiteeTokenData
   ? JSON.parse(localGiteeTokenData)
   : null
 
-export default createStore<State>({
-  state() {
-    return {
-      userAll: [],
-      user: defUser || {},
-      token: getLocalToken(),
-      isLogin: getLocalIsLogin(),
-      branchAll: [],
-      repos: [],
-      showFileEncode: false,
-      giteeTokenData: defGiteeTokenData,
-      uploadQueue: [],
-
-      // 缓存目录列表
-      cacheDir: {},
-      loading: true, // 读取缓存不加载Loading
-    }
-  },
+export const useStore = defineStore('main', {
+  state: (): State => ({
+    userAll: [],
+    user: defUser || {},
+    token: getLocalToken(),
+    isLogin: getLocalIsLogin(),
+    branchAll: [],
+    repos: [],
+    showFileEncode: false,
+    giteeTokenData: defGiteeTokenData,
+    uploadQueue: [],
+    cacheDir: {},
+    loading: true, // 读取缓存不加载Loading
+  }),
 
   getters: {
-    getDir:
-      (state: State) =>
+    getCachedDir:
+      (state) =>
       (route: RouteLocationNormalizedLoaded): IFile[] => {
-        const path = route.query.path as string
+        const path = (route.query.path as string) || '/'
         return state.cacheDir[path] || []
       },
   },
 
-  mutations: {
-    saveFileEncode(state, show: boolean) {
-      state.showFileEncode = show
+  actions: {
+    saveFileEncode(show: boolean) {
+      this.showFileEncode = show
     },
 
-    saveToken(state, token: string) {
-      state.token = token
+    saveToken(token: string) {
+      this.token = token
       localStorage.setItem('token', token)
     },
 
-    saveUser(state, user: IUser) {
-      state.user = user
+    saveUser(user: IUser) {
+      this.user = user
       localStorage.setItem('user', JSON.stringify(user))
     },
 
-    saveDir(state, { data, path }) {
-      state.cacheDir[path] = data
+    saveDir({ data, path = '/' }: { data: IFile[]; path: string }) {
+      this.cacheDir[path] = data
     },
 
-    saveBranchAll(state, branchAll: IBranch[]) {
-      state.branchAll = branchAll.filter((b: IBranch) => !b.protected)
+    saveBranchAll(branchAll: IBranch[]) {
+      this.branchAll = branchAll.filter((b: IBranch) => !b.protected)
     },
 
-    saveLoading(state, loading: boolean) {
-      state.loading = loading
+    saveLoading(loading: boolean) {
+      this.loading = loading
     },
 
-    saveRepos(state, repos: IRepo[]) {
-      state.repos = repos
+    saveRepos(repos: IRepo[]) {
+      this.repos = repos
     },
 
-    saveUserAll(state, users: IUser[]) {
+    saveUserAll(users: IUser[]) {
       users.forEach((user: IUser) => {
-        state.userAll.push({
+        this.userAll.push({
           type: 'Organization',
           ...user,
         })
       })
     },
 
-    saveGiteeTokenData(state, tokenInfo: IGiteeToken) {
-      state.giteeTokenData = tokenInfo
-      state.token = tokenInfo.access_token
+    saveGiteeTokenData(tokenInfo: IGiteeToken) {
+      this.giteeTokenData = tokenInfo
+      this.token = tokenInfo.access_token
       localStorage.setItem('token', tokenInfo.access_token)
       localStorage.setItem('giteeTokenData', JSON.stringify(tokenInfo))
     },
 
-    removeUploadQueueByIdx(state, idx: number) {
-      state.uploadQueue.splice(idx, 1)
+    removeUploadQueueByIdx(idx: number) {
+      this.uploadQueue.splice(idx, 1)
     },
-  },
 
-  actions: {
-    async getUser({ commit, state }) {
-      if (!state.token) return
+    async getUser() {
+      if (!this.token) return
 
       const res = await (isGiteeProvider() ? getGiteeUser() : getGithubUser())
       if (isSuccess(res.status)) {
-        commit('saveUser', res.data)
+        this.saveUser(res.data)
       }
       return res
     },
 
-    async getRepos({ commit }) {
+    async getRepos() {
       const res = await getRepos()
       if (isSuccess(res.status)) {
-        commit('saveRepos', res.data)
+        this.saveRepos(res.data)
       }
     },
 
-    async getOrgs({ commit }) {
+    async getOrgs() {
       const res = await getOrgs()
       if (isSuccess(res.status)) {
-        commit('saveUserAll', res.data)
+        this.saveUserAll(res.data)
       }
     },
 
-    async getDir({ commit, state }, path: string) {
-      if (!state.isLogin) return
+    async getDir(path: string) {
+      path ||= '/'
+      if (!this.isLogin) return
 
       window.scroll(0, 0)
 
       // 先读取缓存
-      if (state.cacheDir[path]) {
-        commit('saveLoading', false)
-        commit('saveDir', {
-          data: state.cacheDir[path],
+      if (this.cacheDir[path]) {
+        this.saveLoading(false)
+        this.saveDir({
+          data: this.cacheDir[path],
           path,
         })
       }
@@ -231,10 +226,10 @@ export default createStore<State>({
               .sort((a: IFile, b: IFile) => (a.size ?? 0) - (b.size ?? 0))
               .filter(
                 (item: IFile) =>
-                  !(item.type === 'file' && item.name === '.gitkeep')
+                  !(item.type === 'file' && item.name === '.gitkeep'),
               )
 
-            commit('saveDir', {
+            this.saveDir({
               data,
               path,
             })
@@ -244,25 +239,22 @@ export default createStore<State>({
           router.replace('/')
         })
         .finally(() => {
-          commit('saveLoading', true)
+          this.saveLoading(true)
         })
     },
 
     // 新建文本文件
-    async newFile(
-      _,
-      {
-        fileName,
-        content,
-        path,
-        isTemp,
-      }: {
-        fileName: string
-        content: string
-        path: string
-        isTemp: boolean
-      }
-    ) {
+    async newFile({
+      fileName,
+      content,
+      path,
+      isTemp,
+    }: {
+      fileName?: string
+      content: string
+      path: string
+      isTemp: boolean
+    }) {
       fileName ||= uuidv4() + '.txt'
 
       const res = await createFile({
@@ -282,8 +274,7 @@ export default createStore<State>({
 
     // 创建文件
     async createFile(
-      { dispatch, getters, state },
-      files: { file: File; route: RouteLocationNormalizedLoaded }[]
+      files: { file: File; route: RouteLocationNormalizedLoaded }[],
     ) {
       const promises: Promise<AxiosResponse>[] = []
       let path: string = ''
@@ -291,7 +282,7 @@ export default createStore<State>({
         const { file, route } = files[i]
         path = route.query.path as string
         const { url: base64 } = await getBase64(file)
-        const dir: IFile[] = getters.getDir(route)
+        const dir = this.getCachedDir(route)
         let fileName = file.name
 
         // Repeat
@@ -328,18 +319,18 @@ export default createStore<State>({
           content: base64,
           path: `${path || ''}/${fileName}`,
           isEncode: false,
-          onUploadProgress(progressEvent: any) {
+          onUploadProgress: (progressEvent: any) => {
             const complete =
               ((progressEvent.loaded / progressEvent.total) * 100) | 0
-            const idx = state.uploadQueue.findIndex(
-              (item) => item.path === payload.path
+            const idx = this.uploadQueue.findIndex(
+              (item: IUploadQueue) => item.path === payload.path,
             )
             if (idx !== -1) {
-              state.uploadQueue[idx].progress = complete >= 100 ? 99 : complete
+              this.uploadQueue[idx].progress = complete >= 100 ? 99 : complete
             }
           },
         }
-        state.uploadQueue.unshift({
+        this.uploadQueue.unshift({
           name: fileName,
           progress: 0,
           url: '',
@@ -362,15 +353,15 @@ export default createStore<State>({
           if (isGiteeProvider()) {
             await buildGiteePages()
           }
-          await dispatch('getDir', path)
+          await this.getDir(path)
           await nextTick()
 
           allRes.forEach((res) => {
             if (res.status === 'fulfilled') {
               const { data, status } = res.value
               const { content } = data
-              const idx = state.uploadQueue.findIndex((item) =>
-                item.path.endsWith(content.path)
+              const idx = this.uploadQueue.findIndex((item) =>
+                item.path.endsWith(content.path),
               )
 
               if (isSuccess(status)) {
@@ -382,10 +373,10 @@ export default createStore<State>({
                   })
                 }
                 if (idx !== -1) {
-                  state.uploadQueue[idx].status = 'success'
-                  state.uploadQueue[idx].progress = 100
-                  state.uploadQueue[idx].url = getFileUrl(
-                    state.uploadQueue[idx] as any
+                  this.uploadQueue[idx].status = 'success'
+                  this.uploadQueue[idx].progress = 100
+                  this.uploadQueue[idx].url = getFileUrl(
+                    this.uploadQueue[idx] as any,
                   )
                 }
 
@@ -395,8 +386,8 @@ export default createStore<State>({
                 })
               } else {
                 if (idx !== -1) {
-                  state.uploadQueue[idx].status = 'error'
-                  state.uploadQueue[idx].errorMsg = 'Failed'
+                  this.uploadQueue[idx].status = 'error'
+                  this.uploadQueue[idx].errorMsg = 'Failed'
                 }
                 ElMessage.error('Failed')
               }
@@ -404,12 +395,12 @@ export default createStore<State>({
 
             if (res.status === 'rejected') {
               const { path } = JSON.parse(res.reason.config.data)
-              const idx = state.uploadQueue.findIndex(
-                (item) => item.name === path
+              const idx = this.uploadQueue.findIndex(
+                (item) => item.name === path,
               )
               if (idx !== -1) {
-                state.uploadQueue[idx].status = 'error'
-                state.uploadQueue[idx].errorMsg = res.reason.message
+                this.uploadQueue[idx].status = 'error'
+                this.uploadQueue[idx].errorMsg = res.reason.message
               }
             }
           })
@@ -421,7 +412,7 @@ export default createStore<State>({
       }
     },
 
-    async mkdir(_, path: string) {
+    async mkdir(path: string) {
       try {
         return await createFile({
           content: '',
@@ -434,20 +425,18 @@ export default createStore<State>({
       }
     },
 
-    async deleteFile(_, file: IFile) {
+    async deleteFile(file: IFile) {
       return await deleteFile(file)
     },
 
-    async deleteDir(_, dirPath: string) {
-      return await deleteDir(dirPath)
+    async deleteDir(dirPath: string) {
+      return deleteDir(dirPath)
     },
 
-    async getBranchAll({ commit }, owner) {
+    async getBranchAll(owner: string) {
       const res = await getBranchAll(owner)
-      commit('saveBranchAll', res.data || [])
+      this.saveBranchAll(res.data || [])
       return res
     },
   },
-
-  modules: {},
 })

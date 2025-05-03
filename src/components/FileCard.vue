@@ -10,7 +10,7 @@
         <div class="file-wrapper">
           <div>
             <el-button v-if="isFile" :icon="Upload" class="mr10">
-              {{ t("changeFile") }}
+              {{ t('changeFile') }}
               <label :for="`f${data.name}`" class="file-label"></label>
               <input
                 type="file"
@@ -30,7 +30,7 @@
                 target="_blank"
                 v-if="isFile && !isImg"
               >
-                {{ t("editFile") }}
+                {{ t('editFile') }}
               </a>
             </div>
             <div>
@@ -129,81 +129,81 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from "vue";
-import { ref } from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import { getCdn, updateFileContent } from "@/services";
-import type { IFile } from "@/store";
-import { getBase64, getFileUrl, isImage, getEditFileUrl } from "@/utils";
-import { ElMessage } from "element-plus";
-import { isSuccess } from "@/utils/http";
-import { useI18n } from "vue-i18n";
-import { Upload, DocumentCopy } from "@element-plus/icons-vue";
-import { NetworkCDN } from "@/types";
-import { isGiteeProvider } from "@/utils/storage";
+import type { PropType } from 'vue'
+import { ref } from 'vue'
+import { useStore } from '@/store'
+import { useRoute, useRouter } from 'vue-router'
+import { getCdn, updateFileContent } from '@/services'
+import type { IFile } from '@/store'
+import { getBase64, getFileUrl, isImage, getEditFileUrl } from '@/utils'
+import { ElMessage } from 'element-plus'
+import { isSuccess } from '@/utils/http'
+import { useI18n } from 'vue-i18n'
+import { Upload, DocumentCopy } from '@element-plus/icons-vue'
+import { NetworkCDN } from '@/types'
+import { isGiteeProvider } from '@/utils/storage'
 
 const props = defineProps({
   data: {
     type: Object as PropType<IFile>,
     default: () => ({}),
   },
-});
+})
 
-const isGitee = isGiteeProvider();
-const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
-const store = useStore();
-const hasError = ref(false);
-const imgLoaded = ref(false);
-const fileName = props.data.name.toLowerCase();
-const fileType = props.data.type;
-const filePath = props.data.path;
-const jsdelivrCDN = getCdn(NetworkCDN.Jsdelivr, filePath);
-const githubCDN = getCdn(NetworkCDN.Github, filePath);
-const giteeCDN = getCdn(NetworkCDN.Gitee, filePath);
-const isImg = isImage(fileName);
-const fileUrl = getFileUrl(props.data);
-const defCDN = isGitee ? giteeCDN : jsdelivrCDN;
-const markdown = ref(`![](${defCDN})`);
+const isGitee = isGiteeProvider()
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
+const hasError = ref(false)
+const imgLoaded = ref(false)
+const fileName = props.data.name.toLowerCase()
+const fileType = props.data.type
+const filePath = props.data.path
+const jsdelivrCDN = getCdn(NetworkCDN.Jsdelivr, filePath)
+const githubCDN = getCdn(NetworkCDN.Github, filePath)
+const giteeCDN = getCdn(NetworkCDN.Gitee, filePath)
+const isImg = isImage(fileName)
+const fileUrl = getFileUrl(props.data)
+const defCDN = isGitee ? giteeCDN : jsdelivrCDN
+const markdown = ref(`![](${defCDN})`)
 const html = ref(
-  `<a href="${defCDN}" target="_blank"><img src="${defCDN}" /></a>`
-);
-const editUrl = getEditFileUrl(filePath);
-const isFile = fileType !== "dir";
+  `<a href="${defCDN}" target="_blank"><img src="${defCDN}" /></a>`,
+)
+const editUrl = getEditFileUrl(filePath)
+const isFile = fileType !== 'dir'
 
 const handleUpdateFile = async function (e: any) {
-  const files = e.target.files;
-  if (files.length <= 0) return;
+  const files = e.target.files
+  if (files.length <= 0) return
 
-  const file = files[0] as File;
-  const { url: base64 } = await getBase64(file);
+  const file = files[0] as File
+  const { url: base64 } = await getBase64(file)
 
   updateFileContent(props.data, {
     content: base64,
     isEncode: false,
   }).then((res) => {
     if (isSuccess(res.status)) {
-      store.dispatch("getDir", route.query.path);
+      store.getDir(route.query.path as string)
       ElMessage({
-        type: "success",
-        message: "更新成功, 可能由于缓存未能及时更新",
-      });
+        type: 'success',
+        message: '更新成功, 可能由于缓存未能及时更新',
+      })
     }
-  });
+  })
 
-  e.target.value = "";
-};
+  e.target.value = ''
+}
 
 function goDir() {
-  if (fileType === "dir") {
+  if (fileType === 'dir') {
     router.replace({
-      path: "/",
+      path: '/',
       query: {
         path: `/${filePath}`,
       },
-    });
+    })
   }
 }
 </script>
@@ -239,7 +239,7 @@ function goDir() {
       display: none;
     }
     &.error:after {
-      background: #fff url("@/assets/error-img.svg") no-repeat;
+      background: #fff url('@/assets/error-img.svg') no-repeat;
       background-size: 50px;
       background-position: center;
     }
@@ -249,14 +249,14 @@ function goDir() {
       object-fit: contain;
     }
     &:after {
-      content: "";
+      content: '';
       z-index: 9;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: #fff url("@/assets/loading.svg") no-repeat;
+      background: #fff url('@/assets/loading.svg') no-repeat;
       background-size: 80px;
       background-position: center;
     }
@@ -271,7 +271,7 @@ function goDir() {
     font-size: 14px;
     margin-top: 8px;
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       z-index: -1;
       top: 60%;

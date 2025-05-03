@@ -6,9 +6,9 @@ import 'normalize.css'
 import './style.scss'
 
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import store from './store'
 import i18n from './i18n'
 import {
   ElButton,
@@ -54,6 +54,7 @@ import FileEncodeRuleDialog from '@/components/FileEncodeRuleDialog.vue'
 import CreateDirDialog from '@/components/CreateDirDialog.vue'
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.component(ElButton.name, ElButton)
 app.component(ElRow.name, ElRow)
@@ -96,4 +97,4 @@ app.component('Language', Language)
 app.component('FileEncodeRuleDialog', FileEncodeRuleDialog)
 app.component('CreateDirDialog', CreateDirDialog)
 
-app.use(store).use(router).use(i18n).mount('#xiejiahe-app')
+app.use(pinia).use(router).use(i18n).mount('#xiejiahe-app')

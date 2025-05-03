@@ -7,27 +7,26 @@
     <d-arrow-left />
   </el-icon>
 
-  <el-drawer
-    v-model="showDrawer"
-    :title="t('uploadQueue')"
-    size="400px"
-  >
+  <el-drawer v-model="showDrawer" :title="t('uploadQueue')" size="400px">
     <div>
       <div
         class="item"
         :class="{
           error: item.status === 'error',
           success: item.status === 'success',
-          uploading: item.status === 'uploading'
+          uploading: item.status === 'uploading',
         }"
-        v-for="(item, idx) of uploadQueue" :key="item.url"
+        v-for="(item, idx) of uploadQueue"
+        :key="item.url"
       >
         <a :href="item.url" class="url" target="_blank">
           <Spin />
           <img class="img" :src="item.url" />
         </a>
         <div class="middle">
-          <span class="progress">{{ item.status === 'error' ? 0 : item.progress }}%</span>
+          <span class="progress"
+            >{{ item.status === 'error' ? 0 : item.progress }}%</span
+          >
           <span class="name">{{ item.name }}</span>
         </div>
         <el-icon class="icon-del" @click="onDelete(idx)"><delete /></el-icon>
@@ -39,20 +38,20 @@
 <script lang="ts" setup>
 import { DArrowLeft, Delete } from '@element-plus/icons-vue'
 import { ref, computed, watch } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useI18n } from 'vue-i18n'
 import Spin from '@/components/Spin.vue'
 
 const { t } = useI18n()
 const showDrawer = ref(false)
 const store = useStore()
-const uploadQueue = computed(() => store.state.uploadQueue)
+const uploadQueue = computed(() => store.$state.uploadQueue)
 
 function onDelete(idx: number) {
-  store.commit('removeUploadQueueByIdx', idx)
+  store.removeUploadQueueByIdx(idx)
 }
 
-watch(store.state.uploadQueue, val => {
+watch(store.$state.uploadQueue, (val) => {
   if (val.length === 0) {
     showDrawer.value = false
   }
@@ -108,13 +107,13 @@ watch(store.state.uploadQueue, val => {
     display: inline-block;
     width: 48px;
     height: 48px;
-    border: .5px solid #f2f2f2;
+    border: 0.5px solid #f2f2f2;
   }
   .img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: .8;
+    opacity: 0.8;
   }
   .middle {
     font-size: 13px;

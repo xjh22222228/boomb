@@ -1,23 +1,22 @@
-
 export enum FileEncode {
   RawName = 1,
   NumRawName,
   UUID,
-  Timestamp
+  Timestamp,
 }
 
 export enum Provider {
   Github = 1,
-  Gitee
+  Gitee,
 }
 
 export enum NetworkCDN {
   Github = 1,
   Jsdelivr,
-  Gitee
+  Gitee,
 }
 
 export enum SortType {
   FileSize = 1, // 文件大小
-  FileName // 文件名
+  FileName, // 文件名
 }

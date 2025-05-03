@@ -7,7 +7,7 @@
   <section class="login">
     <div class="wrapper">
       <h2 class="title">
-        <img :src="`${baseUrl}logo.png`" alt="boomb" draggable="false">
+        <img :src="`${baseUrl}logo.png`" alt="boomb" draggable="false" />
       </h2>
 
       <div class="form">
@@ -75,14 +75,11 @@
           <img
             src="@/assets/github2.svg"
             class="github mr10"
-            @click="goAuth(Provider.Github)" 
+            @click="goAuth(Provider.Github)"
             draggable="false"
-          >
+          />
 
-          <el-tooltip
-            class="box-item"
-            placement="bottom-start"
-          >
+          <el-tooltip class="box-item" placement="bottom-start">
             <template #content>
               <p>仓库必须开通 Gitee Pages 服务</p>
               <p>非付费 Pages 用户需手动更新</p>
@@ -92,7 +89,7 @@
               class="github ml10"
               @click="goAuth(Provider.Gitee)"
               draggable="false"
-            >
+            />
           </el-tooltip>
         </div>
       </div>
@@ -102,9 +99,14 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
-import { getGithubToken, getGiteeToken, validGiteePages, buildGiteePages } from '@/services'
+import {
+  getGithubToken,
+  getGiteeToken,
+  validGiteePages,
+  buildGiteePages,
+} from '@/services'
 import type { IBranch, IRepo, IUser, IGiteeToken } from '@/store'
 import { useI18n } from 'vue-i18n'
 import { isSuccess } from '@/utils/http'
@@ -129,11 +131,11 @@ const valid = computed<boolean>(() => {
   return Boolean(id.value && repo.value && branch.value)
 })
 
-const userAll = computed<IUser[]>(() => store.state.userAll)
-const branchAll = computed<IBranch[]>(() => store.state.branchAll)
-const repos = computed<IRepo[]>(() => store.state.repos)
+const userAll = computed<IUser[]>(() => store.userAll)
+const branchAll = computed<IBranch[]>(() => store.branchAll)
+const repos = computed<IRepo[]>(() => store.repos)
 
-const goAuth = function(p: Provider) {
+const goAuth = function (p: Provider) {
   if (authLoad.value) return
   localStorage.clear()
   sessionStorage.clear()
@@ -146,9 +148,9 @@ const goAuth = function(p: Provider) {
   }
 }
 
-const handleLogin = async function() {
+const handleLogin = async function () {
   if (!token.value || !valid.value) return
-  
+
   localStorage.setItem('repo', repo.value)
   localStorage.setItem('branch', branch.value)
   loading.value = true
@@ -159,15 +161,15 @@ const handleLogin = async function() {
     } catch (error) {
       ElMessage.error({
         message: '该仓库未开通 Gitee Pages 服务',
-        duration: 5000
+        duration: 5000,
       })
-      return    
+      return
     } finally {
       loading.value = false
     }
   }
   localStorage.setItem('isLogin', 'true')
-  localStorage.setItem('user', JSON.stringify(store.state.user))
+  localStorage.setItem('user', JSON.stringify(store.user))
   localStorage.setItem('id', id.value)
   localStorage.setItem('token', token.value)
   location.reload()
@@ -178,7 +180,7 @@ function getBranch() {
   if (id.value && repo.value) {
     branch.value = ''
     loading.value = true
-    store.dispatch('getBranchAll', userRepo).finally(() => {
+    store.getBranchAll(userRepo).finally(() => {
       loading.value = false
     })
   }
@@ -193,26 +195,33 @@ function getRepos() {
     repo.value = ''
     branch.value = ''
     window.localStorage.setItem('id', id.value)
-    store.commit('saveUser', user)
+    store.saveUser(user)
     loading.value = true
-    store.dispatch('getRepos').then(() => {
-      getBranch()
-    }).finally(() => {
-      loading.value = false
-    })
+    store
+      .getRepos()
+      .then(() => {
+        getBranch()
+      })
+      .finally(() => {
+        loading.value = false
+      })
   }
 }
 
 // Default branch
-watch(branchAll, () => {
-  if (branchAll.value.length > 0) {
-    branch.value = branchAll.value[0].name
-  } else {
-    branch.value = ''
-  }
-}, {
-  immediate: true
-})
+watch(
+  branchAll,
+  () => {
+    if (branchAll.value.length > 0) {
+      branch.value = branchAll.value[0].name
+    } else {
+      branch.value = ''
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onMounted(() => {
   const { query } = route
@@ -223,18 +232,18 @@ onMounted(() => {
 
     if (isGiteeProvider()) {
       getGiteeToken(code)
-        .then(res => {
+        .then((res) => {
           if (isSuccess(res.status)) {
             const data = res.data as IGiteeToken
-            store.commit('saveGiteeTokenData', data)
-            store.dispatch('getUser').then(res => {
+            store.saveGiteeTokenData(data)
+            store.getUser().then((res) => {
               if (!res) return
               const user = res.data as IUser
               id.value = user.login
               token.value = data.access_token
-              store.commit('saveUserAll', [user])
+              store.saveUserAll([user])
               localStorage.setItem('id', user.login)
-              store.dispatch('getOrgs')
+              store.getOrgs()
               getRepos()
             })
           }
@@ -244,16 +253,16 @@ onMounted(() => {
         })
     } else {
       getGithubToken(code)
-        .then(res => {
+        .then((res) => {
           if (isSuccess(res.status)) {
             const { accessToken, user } = res.data.data
             id.value = user.login
             token.value = accessToken
-            store.commit('saveUser', user)
-            store.commit('saveUserAll', [user])
+            store.saveUser(user)
+            store.saveUserAll([user])
             localStorage.setItem('id', user.login)
             localStorage.setItem('token', accessToken)
-            store.dispatch('getOrgs')
+            store.getOrgs()
             getRepos()
           }
         })
@@ -272,7 +281,8 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #f0f2f5 url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
+  background: #f0f2f5
+    url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
 }
 
 .login {
