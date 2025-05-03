@@ -79,7 +79,7 @@
             draggable="false"
           />
 
-          <el-tooltip class="box-item" placement="bottom-start">
+          <!-- <el-tooltip class="box-item" placement="bottom-start">
             <template #content>
               <p>仓库必须开通 Gitee Pages 服务</p>
               <p>非付费 Pages 用户需手动更新</p>
@@ -90,7 +90,7 @@
               @click="goAuth(Provider.Gitee)"
               draggable="false"
             />
-          </el-tooltip>
+          </el-tooltip> -->
         </div>
       </div>
     </div>

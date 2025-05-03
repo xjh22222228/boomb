@@ -4,10 +4,7 @@
   </a>
   <p align="center">基于 Github 轻松管理您的存储图库</p>
   <p align="center">
-    <a href="README.md">
-      <img src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg?longCache=true&style=flat-square">
-    </a>
-    <img src="https://img.shields.io/github/v/release/xjh22222228/boomb" />
+    <a href="README.md"><img src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg?longCache=true&style=flat-square"></a>
     <img alt="Vue3" src="https://img.shields.io/static/v1.svg?label=&message=Vue3&style=flat-square&color=42b983">
     <img src="https://img.shields.io/github/license/xjh22222228/boomb" />
   </p>
@@ -15,7 +12,6 @@
 
 ## 特性
 
-- 支持 Github / Gitee
 - 无需部署，开箱即用，用完即走
 - 支持拖拽、粘贴上传
 - 多个 CDN 加速
